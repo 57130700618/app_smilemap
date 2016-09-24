@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.blackcatwalk.sharingpower.Tutorial">
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary1"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/backIm"
+                android:layout_width="45dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@drawable/icon_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="บริจาคสมทบทุน"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linearLayout6">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ร่วมสมทบทุนในการพัฒนาแอพพลิเคชันสมายแมพ โดยเงินที่ได้จากการบริจาค ผู้พัฒนาจะนำไปต่อยอดเกี่ยวกับเทคโนโลยีใหม่ๆ เพื่อเพิ่มประสิทธิภาพให้กับแอพพลิเคชันสมายแมพ และทำให้ผู้ใช้งานได้รับข้อมูลที่ทันสมัยตลอดเวลา"
+                android:textSize="16sp" />
+
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_marginTop="40dp"
+                android:layout_height="50dp"
+                android:src="@drawable/bank_bbl"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="ชื่อบัญชี: นายธนากร งามวิทยชัยสกุล"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="หมายเลขบัญชี: 026-4-30466-8"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="ธนาคาร: กรุงเทพ"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="สาขา: ฟิวเจอร์พาร์ค รังสิต"
+                android:textSize="16sp" />
+
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_marginTop="40dp"
+                android:layout_height="50dp"
+                android:src="@drawable/bank_kbank"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="ชื่อบัญชี: นายธนากร งามวิทยชัยสกุล"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="หมายเลขบัญชี: 183-2-95022-8"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="ธนาคาร: กสิกรไทย"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="สาขา: รังสิต"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="40dp"
+                android:text="ติดต่อผู้พัฒนา: devsmilemap@gmail.com"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="facebook_app_id"></string>
+    <string name="app_name">Smile Map</string>
+    <string name="menu1">การจราจร</string>
+    <string name="menu2">สถานที่</string>
+    <string name="menu3">หอเกียรติยศ</string>
+    <string name="menu4">เกาะแบ่งปัน</string>
+    <string name="title_shared_bus">แชร์ตำแหน่งการจราจร</string>
+    <string name="title_shared_restroom">แชร์ตำแหน่งสถานที่</string>
+    <string name="action_settings">Settings</string>
+    <string name="policy"><u>ข้อตกลงในการใช้งาน</u></string>
+    <string name="policy_restroom1">&#160;- กรุณาแชร์ตำแหน่งที่ถูกต้อง หากตรวจสอบว่ามีการแชร์ตำแหน่งที่ผิดพลาด ระบบจะลบบัญชีการใช้งานถาวร</string>
+    <string name="policy_restroom2">&#160;- หากมีการแชร์ตำแหน่งที่ผิดพลาด กรุณาติดต่อ</string>
+    <string name="text_alert_restroom">โปรดเลือกประเภทสถานที่</string>
+    <string name="text_alert_bus_type">โปรดเลือกประเภทการจราจร</string>
+    <string name="shared_current">แชร์ตำแหน่ง</string>
+    <string name="hint_bus">ระบุหมายเลขรถเมล์</string>
+    <string name="policy_bus3">&#160; กรุณาแชร์ตำแหน่งที่ถูกต้อง หากตรวจสอบว่ามีการแชร์ตำแหน่งที่ผิดพลาด ระบบจะลบบัญชีการใช้งานถาวร</string>
+    <string name="title_open_gps">สถานที่ตั้งไม่ได้เปิดใช้งาน</string>
+    <string name="detail_open_gps">โปรดเปิดใช้งานสถานที่ตั้ง</string>
+    <string name="title_open_network">อินเทอร์เน็ตไม่ได้เปิดใช้งาน</string>
+    <string name="detail_open_network">โปรดตรวจสอบการเชื่อมต่อ</string>
+    <string name="ok_bold"><b>ตกลง</b></string>
+    <string name="developer">developer | blackcatWalk</string>
+    <string name="try_again">ลองอีกครั้ง</string>
+    <string name="start">เริ่มต้นใช้งาน</string>
+    <string name="start_bus_island">เข้าสู่เกาะแบ่งปัน</string>
+    <string name="loading_title">เครือข่ายเชื่อมต่อไม่เสถียร</string>
+    <string name="loading_detail">กำลังทำการเชื่อมต่ออัตโนมัติ</string>
+    <string name="usermanual_bus_title">คู่มือการใช้งาน</string>
+    <string name="usermanual_bus_detail1">- หลังจากแชร์ตำแหน่งเสร็จแล้ว ท่านสามารถเปิดแอปพลิเคชันอื่นๆได้</string>
+    <string name="usermanual_bus_detail3">- การแชร์ตำแหน่งรถเมล์, บีอาที, บีทีเอส, รถตู้, เรือ ท่านจะได้รับคะแนนสะสม 1คะแนน ต่อ 1นาที *</string>
+    <string name="usermanual_bus_detail4">- คะแนนสะสม สามารถนำไปแลกของรางวัลได้ที่เมนูเกาะแบ่งปัน</string>
+    <string name="create_chat_sharedbus">สร้างห้องสนทนา</string>
+    <string name="cencel_shared_bus">ยกเลิกการแชร์</string>
+    <string name="start_shared_bus">แชร์ตำแหน่ง</string>
+    <string name="title_dialog_sharedbus">แชร์ตำแหน่งการจราจร</string>
+    <string name="title_dialog_restroom">แชร์ตำแหน่งสถานที่</string>
+    <string name="current_location">ตำแหน่งปัจจุบัน</string>
+    <string name="bus">รถเมล์: </string>
+    <string name="send_report">ส่ง</string>
+    <string name="detail_report">ระบุรายละเอียดรายงาน</string>
+    <string name="report">รายงาน</string>
+    <string name="hint_input_text">ระบุชื่อตำแหน่ง</string>
+    <string name="forget_password">ลืมรหัสผ่านของฉัน</string>
+    <string name="register">สร้างบัญชีใหม่</string>
+    <string name="skip_login">เข้าสู่ระบบในภายหลัง</string>
+    <string name="login">ลงชื่อเข้าใช้</string>
+    <string name="username">ชื่อผู้ใช้</string>
+    <string name="password">รหัสผ่าน</string>
+
+    <string-array name="type_bts">
+        <item>หมอชิต - แบริ่ง</item>
+        <item>แบริ่ง - หมอชิต</item>
+        <item>สนามกีฬาแห่งชาติ - บางหว้า</item>
+        <item>บางหว้า - สนามกีฬาแห่งชาติ</item>
+    </string-array>
+
+    <string-array name="type_brt">
+        <item>สาทร - ราชพฤกษ์</item>
+        <item>ราชพฤกษ์ - สาทร</item>
+    </string-array>
+
+    <string-array name="type_boat">
+        <item>สะพานตากสิน - สะพานพระราม7</item>
+        <item>สะพานพระราม7 - สะพานตากสิน</item>
+        <item>ท่าเรือวัดศรีบุญเรือง - ท่าเรือประตูน้ำ</item>
+        <item>ท่าเรือประตูน้ำ - ท่าเรือวัดศรีบุญเรือง</item>
+        <item>ท่าเรือประตูน้ำ - ผ่านฟ้าลีลาส</item>
+        <item>ผ่านฟ้าลีลาส - ท่าเรือประตูน้ำ</item>
+    </string-array>
+
+    <string-array name="type_busName">
+        <item>รถธรรมดา</item>
+        <item>รถปรับอากาศ</item>
+    </string-array>
+
+    <string name="title_activity_detail_bus">detail</string>
+
+    <string-array name="bus_number">
+        <item> 1</item>
+        <item> 11</item>
+        <item> 12</item>
+        <item> 13</item>
+        <item> 14</item>
+        <item> 15</item>
+        <item> 16</item>
+        <item> 17</item>
+        <item> 18</item>
+        <item> 101</item>
+        <item> 102</item>
+        <item> 104</item>
+        <item> 105</item>
+        <item> 105</item>
+        <item> 105</item>
+        <item> 107</item>
+        <item> 107</item>
+        <item> 108</item>
+        <item> 109</item>
+        <item> 110</item>
+        <item> 111</item>
+        <item> 113</item>
+        <item> 114</item>
+        <item> 115</item>
+        <item> 116</item>
+        <item> 117</item>
+        <item> 120</item>
+        <item> 122</item>
+        <item> 123</item>
+        <item> 124</item>
+        <item> 125</item>
+        <item> 126</item>
+        <item> 127</item>
+        <item> 129</item>
+        <item> 131</item>
+        <item> 132</item>
+        <item> 133</item>
+        <item> 134</item>
+        <item> 136</item>
+        <item> 137</item>
+        <item> 138</item>
+        <item> 139</item>
+        <item> 140</item>
+        <item> 141</item>
+        <item> 142</item>
+        <item> 143ก</item>
+        <item> 143</item>
+        <item> 145</item>
+        <item> 146</item>
+        <item> 147</item>
+        <item> 149</item>
+        <item> 150</item>
+        <item> 151</item>
+        <item> 156</item>
+        <item> 157</item>
+        <item> 165</item>
+        <item> 166</item>
+        <item> 167</item>
+        <item> 168ก</item>
+        <item> 168</item>
+        <item> 169</item>
+        <item> 170</item>
+        <item> 171</item>
+        <item> 172</item>
+        <item> 175</item>
+        <item> 178</item>
+        <item> 179</item>
+        <item> 180</item>
+        <item> 182</item>
+        <item> 183</item>
+        <item> 185</item>
+        <item> 187</item>
+        <item> 189</item>
+        <item> 191</item>
+        <item> 195</item>
+        <item> 197</item>
+        <item> 2</item>
+        <item> 20</item>
+        <item> 21</item>
+        <item> 22</item>
+        <item> 23</item>
+        <item> 24</item>
+        <item> 25</item>
+        <item> 25</item>
+        <item> 26</item>
+        <item> 27</item>
+        <item> 28</item>
+        <item> 29</item>
+        <item> 203</item>
+        <item> 204</item>
+        <item> 205</item>
+        <item> 206</item>
+        <item> 207</item>
+        <item> 3</item>
+        <item> 30</item>
+        <item> 32</item>
+        <item> 33</item>
+        <item> 34</item>
+        <item> 35</item>
+        <item>36ก</item>
+        <item> 36</item>
+        <item> 37</item>
+        <item> 38</item>
+        <item> 39</item>
+        <item> 4</item>
+        <item> 40</item>
+        <item> 42</item>
+        <item> 43</item>
+        <item> 44</item>
+        <item> 45</item>
+        <item> 46</item>
+        <item> 47</item>
+        <item> 48</item>
+        <item> 49</item>
+        <item> 50</item>
+        <item> 51</item>
+        <item> 52</item>
+        <item> 53</item>
+        <item> 54</item>
+        <item> 56</item>
+        <item> 57</item>
+        <item> 58</item>
+        <item> 59</item>
+        <item> 501</item>
+        <item> 502</item>
+        <item> 503</item>
+        <item> 504</item>
+        <item> 505</item>
+        <item> 507</item>
+        <item> 508</item>
+        <item> 509</item>
+        <item> 510</item>
+        <item> 511</item>
+        <item> 514</item>
+        <item> 515</item>
+        <item> 516</item>
+        <item> 517</item>
+        <item> 519</item>
+        <item> 520</item>
+        <item> 522</item>
+        <item> 524</item>
+        <item> 525</item>
+        <item> 526</item>
+        <item> 529</item>
+        <item> 536</item>
+        <item> 538</item>
+        <item> 539</item>
+        <item> 542</item>
+        <item> 543ก</item>
+        <item> 543</item>
+        <item> 545</item>
+        <item> 547</item>
+        <item> 554</item>
+        <item> 555</item>
+        <item> 556</item>
+        <item> 558</item>
+        <item> 6</item>
+        <item> 60</item>
+        <item> 62</item>
+        <item> 63</item>
+        <item> 64</item>
+        <item> 65</item>
+        <item> 66</item>
+        <item> 67</item>
+        <item> 68</item>
+        <item> 7</item>
+        <item> 7ก</item>
+        <item> 7</item>
+        <item> 70</item>
+        <item> 71</item>
+        <item> 72</item>
+        <item> 73ก</item>
+        <item> 73</item>
+        <item> 74</item>
+        <item> 75</item>
+        <item> 76</item>
+        <item> 77</item>
+        <item> 79</item>
+        <item> 710</item>
+        <item> 720</item>
+        <item> 751</item>
+        <item> 8</item>
+        <item> 80ก</item>
+        <item> 80</item>
+        <item> 81</item>
+        <item> 82</item>
+        <item> 84ก</item>
+        <item> 84</item>
+        <item> 89</item>
+        <item> 9</item>
+        <item> 90</item>
+        <item> 91ก</item>
+        <item> 91</item>
+        <item> 92</item>
+        <item> 93</item>
+        <item> 95ก</item>
+        <item> 95</item>
+        <item> 96</item>
+        <item> 96ก</item>
+        <item> 97</item>
+        <item> 99</item>
+        <item> A1</item>
+        <item> A2</item>
+    </string-array>
+
+    <!-- BusGps -->
+
+    <string name="select_traffic">ค้นหาการจราจร</string>
+    <string name="bus_name">รถเมล์</string>
+    <string name="brt_name">รถโดยสารบีอาที</string>
+    <string name="bts_name">รถไฟฟ้าบีทีเอส</string>
+    <string name="van_name">รถตู้</string>
+    <string name="boat_name">เรือโดยสาร</string>
+    <string name="checkpoint_name">ก่อสร้าง</string>
+    <string name="accident_name">อุบัติเหตุ</string>
+    <string name="public_name">ตำแหน่งสาธารณะ</string>
+
+    <!-- LocationGps -->
+
+    <string name="select_location">ค้นหาสถานที่</string>
+    <string name="restroom_name">ห้องน้ำ</string>
+    <string name="pharmacy_name">ร้านขายยา</string>
+    <string name="clinic">รักษาคน</string>
+    <string name="veterinary_clinic_name">รักษาสัตว์</string>
+    <string name="daily_home_name">ที่พักรายวัน</string>
+    <string name="officer_name">จุดพักผ่อน</string>
+    <string name="garage_name">ร้านปะยาง</string>
+
+    <!-- Google place -->
+
+    <string-array name="place_type">
+        <item>atm</item>
+        <item>bank</item>
+        <item>bus_station</item>
+        <item>doctor</item>
+        <item>police</item>
+        <item>hospital</item>
+        <item>restaurant</item>
+        <item>cafe</item>
+        <item>department_store</item>
+        <item>shopping_mall</item>
+        <item>grocery_or_supermarket</item>
+        <item>beauty_salon</item>
+        <item>gym</item>
+        <item>post_office</item>
+        <item>school</item>
+        <item>university</item>
+        <item>gas_station</item>
+        <item>parking</item>
+        <item>car_repair</item>
+    </string-array>
+
+    <string-array name="place_type_name">
+        <item>เอทีเอ็ม</item>
+        <item>ธนาคาร</item>
+        <item>ป้ายรถเมล์</item>
+        <item>คลีนิค</item>
+        <item>ตำรวจ</item>
+        <item>โรงพยาบาล</item>
+        <item>อาหารและเครื่องดื่ม</item>
+        <item>คาเฟ่</item>
+        <item>ห้างสรรพสินค้า</item>
+        <item>ช้อปปิ้งมอลล์</item>
+        <item>ซุปเปอร์มาร์เก็ต</item>
+        <item>ร้านเสริมสวย</item>
+        <item>ยิม</item>
+        <item>ที่ทำการไปรษณีย์</item>
+        <item>โรงเรียน</item>
+        <item>มหาวิทยาลัย</item>
+        <item>ปั้มน้ำมันและแก็ส</item>
+        <item>ที่จอดรถ</item>
+        <item>อู่ซ่อมรถ</item>
+    </string-array>
+
+    <string name="select_nearby">ค้นหาสถานที่</string>
+    <string name="atm">เอทีเอ็ม</string>
+    <string name="bank">ธนาคาร</string>
+    <string name="bus_station">ป้ายรถเมล์</string>
+    <string name="doctor">คลีนิค</string>
+    <string name="police">ตำรวจ</string>
+    <string name="hospital">โรงพยาบาล</string>
+    <string name="restaurant">อาหารและเครื่องดื่ม</string>
+    <string name="cafe">คาเฟ่</string>
+    <string name="department_store">ห้างสรรพสินค้า</string>
+    <string name="shopping_mall">ช้อปปิ้งมอลล์</string>
+    <string name="grocery_or_supermarket">ซุปเปอร์มาร์เก็ต</string>
+    <string name="beauty_salon">ร้านเสริมสวย</string>
+    <string name="gym">ยิม</string>
+    <string name="post_office">ที่ทำการไปรษณีย์</string>
+    <string name="school">โรงเรียน</string>
+    <string name="university">มหาวิทยาลัย</string>
+    <string name="gas_station">ปั้มน้ำมันและแก็ส</string>
+    <string name="parking">ที่จอดรถ</string>
+    <string name="car_repair">อู่ซ่อมรถ</string>
+
+
+    <string name="title_activity_zzzzzzzzzzzzzz">zzzzzzzzzzzzzz</string>
+    <string name="title_activity_call_emergency">Map</string>
+    <string name="title_activity_aaaaaaaaaaaaaaa">aaaaaaaaaaaaaaa</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_group_main">GroupMain</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="action_add_favourite">Add to Favourites</string>
+    <string name="action_play_next">Play Next</string>
+    <string name="backdrop_title">LOVE MUSIC</string>
+    <string name="backdrop_subtitle">This season top 20 albums</string>
+    <string name="title_activity_group_detail_page1">Map</string>
+    <string name="title_activity_group_detail_page2">Map</string>
+    <string name="title_activity_aaaaa">Map</string>
+    <string name="title_activity_tutorial">Tutorial</string>
+    <string name="title_activity_ttttttt">Map</string>
+
+
+    <!-- =========================================== -->
+    <string name="smile_map">Smile Map</string>
+    <string name="animation_text_1">\"สังคมแผนที่\"</string>
+    <string name="animation_text_2">\"จิตสาธารณะ\"</string>
+    <string name="animation_text_3">\"ประเทศไทย\"</string>
+    <string name="facebook_login">เข้าสู่ระบบโดย Facebook</string>
+    <string name="or">หรือ</string>
+    <string name="login_smilemap">บัญชีอื่นๆ</string>
+    <string name="ok">ตกลง</string>
+    <string name="general_text_1">เพื่อให้ท่านใช้งานแผนที่อย่างมีประสิทธิภาพ โปรดเลือกยืนยัน หรือ ALLOW ในหน้าถัดไป</string>
+    <string name="general_text_2">ระบุข้อมูลผิด 5ครั้ง</string>
+    <string name="general_text_3">ท่านสามารถกดลืมรหัสผ่าน เพื่อยืนยันว่าบัญชีผู้ใช้นี้เป็นของท่าน</string>
+    <string name="general_text_4">ข้อมูลไม่ถูกต้อง</string>
+    <string name="general_text_5">โปรดตรวจสอบที่อยู่อีเมลหรือรหัสผ่าน ที่ท่านระบุใหม่อีกครั้ง</string>
+    <string name="email">อีเมล</string>
+    <string name="login_label">เข้าสู่ระบบ</string>
+    <string name="general_text_6">โปรดป้อนที่อยู่อีเมลที่ถูกต้อง</string>
+    <string name="general_text_7">โปรดป้อนรหัสผ่านอย่างน้อย 8 ตัวอักษร</string>
+    <string name="general_text_8">อีเมลมีคนใช้แล้ว โปรดป้อนที่อยู่อีเมลอื่น</string>
+    <string name="general_text_9">อีเมลมีคนใช้แล้ว โปรดป้อนที่อยู่อีเมลอื่น</string>
+    <string name="step_1_2">step 1/2</string>
+    <string name="general_text_10">ท่านจะใช้อีเมลกับรหัสผ่านนี้เมื่อเข้าสู่ระบบ หรือในกรณีที่ต้องการรีเซ็ทรหัสผ่าน</string>
+    <string name="general_text_11">ป้อนที่อยู่อีเมล</string>
+    <string name="general_text_12">ป้อนรหัสผ่านอย่างน้อย 8 ตัวอักษร</string>
+    <string name="next">ถัดไป</string>
+    <string name="step_2_2">step 2/2</string>
+    <string name="general_text_13">ชื่อผู้ใช้กับเพศ จะทำให้ท่านได้รับประสบการณ์ที่ดีที่สุดจากการใช้งาน Smile Map</string>
+    <string name="general_text_14">ป้อนชื่อผู้ใช้อย่างน้อย 5 ตัวอักษร</string>
+    <string name="sex">เพศ:</string>
+    <string name="male">ชาย</string>
+    <string name="female">หญิง</string>
+    <string name="general_text_15">ท่านจะได้รับประสบการณ์ดีๆในการเดินทาง</string>
+    <string name="general_text_16">ไม่ว่าท่านจะอยู่ที่ไหนของประเทศไทย</string>
+    <string name="general_text_17">ป้อนที่อยู่อีเมลที่ใช้ในการเข้าสู่ระบบ</string>
+    <string name="general_text_18">เราจะส่งรหัสผ่านถึงท่านเพื่อยืนยันว่าบัญชีผู้ใช้นี้เป็นของท่าน</string>
+    <string name="general_text_19">ดำเนินการต่อ</string>
+    <string name="general_text_20">ส่งข้อมูลสำเร็จ</string>
+    <string name="general_text_21">โปรดตรวจสอบอีเมลของท่าน เราส่งรหัสผ่านยืนยันตัวตนไปที่อีเมลเรียบร้อยแล้ว</string>
+
+</resources>

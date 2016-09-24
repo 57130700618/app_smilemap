@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="อุบัติเหตุ"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/btnClose"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/button_close" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/scrollView"
+        android:padding="10dp"
+        android:layout_height="670dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textAlert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:text="เลือกประเภทอุบัติเหตุ"
+                android:textSize="26sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <LinearLayout
+                    android:id="@+id/accident1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <ImageView
+                        android:id="@+id/accidentPic1"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/accident1_gray" />
+
+                    <TextView
+                        android:id="@+id/accidentTxt1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="เล็กน้อย"
+                        android:textSize="23sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/accident2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <ImageView
+                        android:id="@+id/accidentPic2"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/accident2_gray" />
+
+                    <TextView
+                        android:id="@+id/accidentTxt2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="สาหัส"
+                        android:textSize="23sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/accident3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <ImageView
+                        android:id="@+id/accidentPic3"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/accident3_gray" />
+
+                    <TextView
+                        android:id="@+id/accidentTxt3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ชนคน"
+                        android:textSize="23sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <LinearLayout
+                    android:id="@+id/accident4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <ImageView
+                        android:id="@+id/accidentPic4"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/accident4_gray" />
+
+                    <TextView
+                        android:id="@+id/accidentTxt4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="รถเสีย"
+                        android:textSize="23sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/accident5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <ImageView
+                        android:id="@+id/accidentPic5"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/accident5_gray" />
+
+                    <TextView
+                        android:id="@+id/accidentTxt5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="มอไซค์ล้ม"
+                        android:textSize="23sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/accident6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <ImageView
+                        android:id="@+id/accidentPic6"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/accident6_gray" />
+
+                    <TextView
+                        android:id="@+id/accidentTxt6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="อื่นๆ"
+                        android:textSize="23sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/a_codebg_white2"
+                android:gravity="top"
+                android:hint="กรุณากรอกรายละเอียดเกี่ยวกับอุบัติเหตุ"
+                android:imeOptions="actionDone"
+                android:lines="3"
+                android:textSize="28sp"
+                android:maxLength="700"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/btnSend"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="70dp"
+                android:background="@drawable/a_code_button_blue_bold"
+                android:text="แชร์ตำแหน่ง"
+                android:textColor="@color/white"
+                android:textSize="28sp" />
+
+            <TextView
+                android:layout_width="570dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="170dp"
+                android:text="_"
+                android:textColor="@color/colorHide" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

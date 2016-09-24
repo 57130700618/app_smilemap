@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@color/blue"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="คู่มือการใช้งาน"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="600dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/usermanual_bus_detail1"
+                android:textSize="26sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/usermanual_bus_detail3"
+                android:textSize="26sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="- การแชร์ตำแหน่งอุบัติเหตุ ระบบจะลบตำแหน่งออกเมื่อครบ 2ชั่วโมง"
+                android:textSize="26sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="- หากท่านต้องการยกเลิกการแชร์ ให้ทำการกดปุ่มยกเลิกการแชร์ที่เมนูการจราจร"
+                android:textSize="26sp" />
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/a_code_button_blue_bold"
+                android:text="@string/ok_bold"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/checkBoxAlertUsermanual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:textSize="22sp"
+                android:layout_gravity="center_horizontal"
+                android:text="ไม่แสดงแจ้งเตือนนี้ในครั้งถัดไป"
+                android:textColor="@color/gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="*หากตรวจสอบว่ามีการแชร์ตำแหน่งที่ผิดพลาดเพื่อเอาแต้มสะสม ทีมงานขอทำการระงับสิทธิการเข้าใช้งาน ทั้งนี้ขึ้นอยู่กับดุลพินิจของทีมงานเท่านั้น"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:layout_width="570dp"
+        android:layout_height="wrap_content"
+        android:text="__"
+        android:textColor="@color/colorHide" />
+
+</LinearLayout>
