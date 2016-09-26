@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.blackcatwalk.sharingpower.R;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
@@ -13,7 +14,7 @@ import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 
 public class GoogleMapStreet extends AppCompatActivity {
 
-    private ImageView btnClose;
+    private ImageView mBackIm;
     private SupportStreetViewPanoramaFragment streetViewFracment;
 
     @Override
@@ -35,20 +36,13 @@ public class GoogleMapStreet extends AppCompatActivity {
             }
         });
 
-
-        btnClose.setOnClickListener(new View.OnClickListener() {
+        mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
                 onBackPressed();
             }
         });
-    }
-
-    private void bindWidget() {
-        btnClose = (ImageView) findViewById(R.id.btnClose);
-        streetViewFracment = (SupportStreetViewPanoramaFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.streetviewpanorama);
     }
 
     private void showStreetView(LatLng latLng, StreetViewPanorama streetViewPanorama) {
@@ -63,5 +57,11 @@ public class GoogleMapStreet extends AppCompatActivity {
 
         streetViewPanorama.setPosition( latLng, 300 );
         streetViewPanorama.setStreetNamesEnabled( true );
+    }
+
+    private void bindWidget() {
+        mBackIm = (ImageView) findViewById(R.id.backIm);
+        streetViewFracment = (SupportStreetViewPanoramaFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.streetviewpanorama);
     }
 }

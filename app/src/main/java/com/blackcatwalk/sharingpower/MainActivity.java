@@ -7,11 +7,12 @@ import android.os.StrictMode;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 
+import com.blackcatwalk.sharingpower.utility.Control;
+
 
 public class MainActivity extends TabActivity {
 
-    private TabHost tabHost;
-    private Intent intent;
+    private TabHost mTabHost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,151 +24,79 @@ public class MainActivity extends TabActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
-        double sizeInInches = Control.getSizeScrren(this);
+        double _sizeInInches = new Control().getSizeScrren(this);
 
-        int size;
+        int _size;
 
-        if (sizeInInches >= 9.5) {
-            size = 135;
-        } else if (sizeInInches >= 6.5) {
-            size = 95;
+        if (_sizeInInches >= 9.5) {
+            _size = 135;
+        } else if (_sizeInInches >= 6.5) {
+            _size = 95;
         } else {
-            size = 55;
+            _size = 55;
         }
 
-        tabHost = getTabHost();
+        mTabHost = getTabHost();
 
-        TabHost.TabSpec spec;
+        TabHost.TabSpec _spec;
 
-     /*   intent = new Intent().setClass(this, BusGps.class);
-        spec = tabHost.newTabSpec("BUS").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
+        _spec = mTabHost.newTabSpec("one").setIndicator("")
+                .setContent(new Intent().setClass(this, Island.class));
+        mTabHost.addTab(_spec);
 
-        intent = new Intent().setClass(this, LocationGps.class);
-        spec = tabHost.newTabSpec("Two").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
+        _spec = mTabHost.newTabSpec("Two").setIndicator("")
+                .setContent(new Intent().setClass(this, BusGps.class));
+        mTabHost.addTab(_spec);
 
-        intent = new Intent().setClass(this, GroupMain.class);
-        spec = tabHost.newTabSpec("Three").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
+        _spec = mTabHost.newTabSpec("three").setIndicator("")
+                .setContent(new Intent().setClass(this, FavoriteMain.class));
+        mTabHost.addTab(_spec);
 
-        intent = new Intent().setClass(this, FavoriteMain.class);
-        spec = tabHost.newTabSpec("Four").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
-
-        intent = new Intent().setClass(this, Island.class);
-        spec = tabHost.newTabSpec("five").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
-*/
-
-        intent = new Intent().setClass(this, LocationGps.class);
-        spec = tabHost.newTabSpec("one").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
-
-        intent = new Intent().setClass(this, BusGps.class);
-        spec = tabHost.newTabSpec("Two").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
-
-        intent = new Intent().setClass(this, FavoriteMain.class);
-        spec = tabHost.newTabSpec("three").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
-
-        intent = new Intent().setClass(this, Island.class);
-        spec = tabHost.newTabSpec("four").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
-
-     /*   //picture default && set size Tabhost
-        tabHost.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.menu_location_blue);
-        tabHost.getTabWidget().getChildAt(1).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
-        tabHost.getTabWidget().getChildAt(2).setBackgroundResource(R.drawable.menu_group_blue);
-        tabHost.getTabWidget().getChildAt(2).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
-        tabHost.getTabWidget().getChildAt(3).setBackgroundResource(R.drawable.menu_favorite_blue);
-        tabHost.getTabWidget().getChildAt(3).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
-        tabHost.getTabWidget().getChildAt(4).setBackgroundResource(R.drawable.menu_island_blue);
-        tabHost.getTabWidget().getChildAt(4).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
-
-        tabHost.getTabWidget().setCurrentTab(0);
-        tabHost.getTabWidget().getChildAt(0).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
-        tabHost.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.menu_bus_white);*/
+        _spec = mTabHost.newTabSpec("four").setIndicator("")
+                .setContent(new Intent().setClass(this, Island.class));
+        mTabHost.addTab(_spec);
 
 
-        tabHost.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.menu_location_white);
-        tabHost.getTabWidget().getChildAt(0).getLayoutParams().height = (int) (size * this.getResources().getDisplayMetrics().density);
+        mTabHost.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.menu_location_white);
+        mTabHost.getTabWidget().getChildAt(0).getLayoutParams().height = (int) (_size * this.getResources().getDisplayMetrics().density);
 
-        tabHost.getTabWidget().getChildAt(1).getLayoutParams().height = (int) (size * this.getResources().getDisplayMetrics().density);
-        tabHost.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.menu_bus_blue);
+        mTabHost.getTabWidget().getChildAt(1).getLayoutParams().height = (int) (_size * this.getResources().getDisplayMetrics().density);
+        mTabHost.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.menu_bus_blue);
 
-        tabHost.getTabWidget().getChildAt(2).setBackgroundResource(R.drawable.menu_favorite_blue);
-        tabHost.getTabWidget().getChildAt(2).getLayoutParams().height = (int) (size * this.getResources().getDisplayMetrics().density);
+        mTabHost.getTabWidget().getChildAt(2).setBackgroundResource(R.drawable.menu_favorite_blue);
+        mTabHost.getTabWidget().getChildAt(2).getLayoutParams().height = (int) (_size * this.getResources().getDisplayMetrics().density);
 
 
-        tabHost.getTabWidget().getChildAt(3).setBackgroundResource(R.drawable.menu_island_blue);
-        tabHost.getTabWidget().getChildAt(3).getLayoutParams().height = (int) (size * this.getResources().getDisplayMetrics().density);
+        mTabHost.getTabWidget().getChildAt(3).setBackgroundResource(R.drawable.menu_island_blue);
+        mTabHost.getTabWidget().getChildAt(3).getLayoutParams().height = (int) (_size * this.getResources().getDisplayMetrics().density);
 
-        tabHost.getTabWidget().setCurrentTab(0);
+        mTabHost.getTabWidget().setCurrentTab(0);
 
-        tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+        mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
-    /*  for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
 
-            tabHost.setBackgroundResource(R.color.blueBold);
-            if (i == 0) {
-                tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_bus_blue);
-            } else if (i == 1) {
-                tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_location_blue);
-            } else if (i == 2) {
-                tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_group_blue);
-            } else if (i == 3) {
-                tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_favorite_blue);
-            } else if (i == 4) {
-                tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_island_blue);
-            }
-        }
+                for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
 
-        if (tabHost.getCurrentTab() == 0)
-            tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_bus_white);
-        else if (tabHost.getCurrentTab() == 1)
-            tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_location_white);
-        else if (tabHost.getCurrentTab() == 2)
-            tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_group_white);
-        else if (tabHost.getCurrentTab() == 3) {
-            tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_favorite_white);
-        } else if (tabHost.getCurrentTab() == 4) {
-            tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_island_white);
-        }*/
-
-                for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
-
-                  //  tabHost.setBackgroundResource(R.color.blueBold);
                     if (i == 0) {
-                        tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_location_blue);
+                        mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_location_blue);
                     } else if (i == 1) {
-                        tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_bus_blue);
+                        mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_bus_blue);
                     } else if (i == 2) {
-                        tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_favorite_blue);
+                        mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_favorite_blue);
                     } else if (i == 3) {
-                        tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_island_blue);
+                        mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_island_blue);
                     }
                 }
 
-                if (tabHost.getCurrentTab() == 0)
-                    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_location_white);
-                else if (tabHost.getCurrentTab() == 1)
-                    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_bus_white);
-                else if (tabHost.getCurrentTab() == 2)
-                    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_favorite_white);
-                else if (tabHost.getCurrentTab() == 3) {
-                    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_island_white);
+                if (mTabHost.getCurrentTab() == 0)
+                    mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_location_white);
+                else if (mTabHost.getCurrentTab() == 1)
+                    mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_bus_white);
+                else if (mTabHost.getCurrentTab() == 2)
+                    mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_favorite_white);
+                else if (mTabHost.getCurrentTab() == 3) {
+                    mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_island_white);
                 }
             }
         });
@@ -175,3 +104,75 @@ public class MainActivity extends TabActivity {
 
 }
 
+/*
+
+        intent = new Intent().setClass(this, BusGps.class);
+        spec = mTabHost.newTabSpec("BUS").setIndicator("")
+                .setContent(intent);
+        mTabHost.addTab(spec);
+
+        intent = new Intent().setClass(this, LocationGps.class);
+        spec = mTabHost.newTabSpec("Two").setIndicator("")
+                .setContent(intent);
+        mTabHost.addTab(spec);
+
+        intent = new Intent().setClass(this, GroupMain.class);
+        spec = mTabHost.newTabSpec("Three").setIndicator("")
+                .setContent(intent);
+        mTabHost.addTab(spec);
+
+        intent = new Intent().setClass(this, FavoriteMain.class);
+        spec = mTabHost.newTabSpec("Four").setIndicator("")
+                .setContent(intent);
+        mTabHost.addTab(spec);
+
+        intent = new Intent().setClass(this, Island.class);
+        spec = mTabHost.newTabSpec("five").setIndicator("")
+                .setContent(intent);
+        mTabHost.addTab(spec);
+
+
+
+     //picture default && set size Tabhost
+        mTabHost.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.menu_location_blue);
+        mTabHost.getTabWidget().getChildAt(1).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
+        mTabHost.getTabWidget().getChildAt(2).setBackgroundResource(R.drawable.menu_group_blue);
+        mTabHost.getTabWidget().getChildAt(2).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
+        mTabHost.getTabWidget().getChildAt(3).setBackgroundResource(R.drawable.menu_favorite_blue);
+        mTabHost.getTabWidget().getChildAt(3).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
+        mTabHost.getTabWidget().getChildAt(4).setBackgroundResource(R.drawable.menu_island_blue);
+        mTabHost.getTabWidget().getChildAt(4).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
+
+        mTabHost.getTabWidget().setCurrentTab(0);
+        mTabHost.getTabWidget().getChildAt(0).getLayoutParams().height = (int) (60 * this.getResources().getDisplayMetrics().density);
+        mTabHost.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.menu_bus_white);
+
+
+        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+
+            mTabHost.setBackgroundResource(R.color.blueBold);
+            if (i == 0) {
+                mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_bus_blue);
+            } else if (i == 1) {
+                mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_location_blue);
+            } else if (i == 2) {
+                mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_group_blue);
+            } else if (i == 3) {
+                mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_favorite_blue);
+            } else if (i == 4) {
+                mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.menu_island_blue);
+            }
+        }
+
+        if (mTabHost.getCurrentTab() == 0)
+            mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_bus_white);
+        else if (mTabHost.getCurrentTab() == 1)
+            mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_location_white);
+        else if (mTabHost.getCurrentTab() == 2)
+            mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_group_white);
+        else if (mTabHost.getCurrentTab() == 3) {
+            mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_favorite_white);
+        } else if (mTabHost.getCurrentTab() == 4) {
+            mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.menu_island_white);
+        }
+ */

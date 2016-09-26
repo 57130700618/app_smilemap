@@ -15,24 +15,18 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 
+import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
+import com.blackcatwalk.sharingpower.utility.ControlFile;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -52,6 +46,8 @@ public class LoginMain extends AppCompatActivity {
     private Timer mTimer = new Timer();
     private Animation mAnimationIn = new AlphaAnimation(0.0f, 1.0f);
     private Animation mAnimationOut = new AlphaAnimation(1.0f, 0.0f);
+    private ControlCheckConnect mControlCheckConnect;
+    private ControlFile mControlFile;
 
     // -------------- User Interface ------------------//
     private Button mLoginFacebookBtn;
@@ -64,8 +60,6 @@ public class LoginMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
 
-
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         mCallbackFacebook = CallbackManager.Factory.create();
 
@@ -73,10 +67,62 @@ public class LoginMain extends AppCompatActivity {
 
         bindWidget();
 
+        mControlCheckConnect = new ControlCheckConnect();
+        mControlFile = new ControlFile();
+
         requestRunTimePermission();
 
-        mAnimationIn.setDuration(2000);
-        mAnimationOut.setDuration(2000);
+        setAnimation();
+
+        mLoginSmileMapBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (check()) {
+                    startActivity(new Intent(LoginMain.this, LoginSub.class));
+                }
+            }
+        });
+
+        mLoginFacebookBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (check()) {
+                    facebookLogin();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!mControlCheckConnect.checkInternet(this)) {
+            mControlCheckConnect.alertInternet(this);
+        }
+
+        if (!mControlCheckConnect.checkGPS(this)) {
+            mControlCheckConnect.alertGps(this);
+        }
+
+        AppEventsLogger.activateApp(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEventsLogger.deactivateApp(this);
+    }
+
+    @Override
+    protected void onActivityResult(int _requestCode, int _resultCode, Intent _data) {
+        super.onActivityResult(_requestCode, _resultCode, _data);
+        mCallbackFacebook.onActivityResult(_requestCode, _resultCode, _data);
+    }
+
+    private void setAnimation() {
+        mAnimationIn.setDuration(3000);
+        mAnimationOut.setDuration(3000);
 
         mAnimationTxt.setText(R.string.animation_text_1);
         TimerTask myTask = new TimerTask() {
@@ -88,12 +134,13 @@ public class LoginMain extends AppCompatActivity {
                 });
             }
         };
-        mTimer.schedule(myTask, 0, 5000); // TimerTask, delay, period
+        mTimer.schedule(myTask, 0, 6000); // TimerTask, delay, period
 
         mAnimationOut.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -105,6 +152,9 @@ public class LoginMain extends AppCompatActivity {
                         mAnimationTxt.setText(R.string.animation_text_3);
                         break;
                     case 2:
+                        mAnimationTxt.setText(R.string.animation_text_4);
+                        break;
+                    case 3:
                         mAnimationTxt.setText(R.string.animation_text_1);
                         mCountText = -1;
                         break;
@@ -114,62 +164,9 @@ public class LoginMain extends AppCompatActivity {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
-
-        mLoginSmileMapBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(check()){
-                    startActivity(new Intent(LoginMain.this,LoginSub.class));
-                }
+            public void onAnimationRepeat(Animation animation) {
             }
         });
-
-        mLoginFacebookBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(check()){
-                    facebookLogin();
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!Control.checkInternet(this)) {
-            Control.alertInternet(this);
-        }
-
-        if (!Control.checkGPS(this)) {
-            Control.alertGps(this);
-        }
-
-        AppEventsLogger.activateApp(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Control.hDialog();
-
-        AppEventsLogger.deactivateApp(this);
-    }
-
-    @Override
-    protected void onActivityResult(int _requestCode, int _resultCode, Intent _data) {
-        super.onActivityResult(_requestCode, _resultCode, _data);
-        mCallbackFacebook.onActivityResult(_requestCode, _resultCode, _data);
-    }
-
-    private void bindWidget() {
-        mAnimationTxt = (TextView) findViewById(R.id.animationTxt);
-        mLoginSmileMapBtn = (Button) findViewById(R.id.loginSmileMapBtn);
-        mLoginFacebookBtn = (Button) findViewById(R.id.loginFacebookBtn);
-        mTempLoginFacebookBtn = (LoginButton) findViewById(R.id.tempLoginFacebookBtn);
     }
 
     private void facebookLogin() {
@@ -186,9 +183,6 @@ public class LoginMain extends AppCompatActivity {
                             public void onCompleted(
                                     JSONObject json_object,
                                     GraphResponse response) {
-
-                                if (Control.checkInternet(LoginMain.this)) {
-
                                     try {
                                         // JSONObject profile_pic_data, profile_pic_url;
 
@@ -202,8 +196,6 @@ public class LoginMain extends AppCompatActivity {
                                             _sex = "ชาย";
                                         }
 
-                                        final String _tempSex = _sex;
-
                                        /* final String _urlPic;
 
                                         profile_pic_data = new JSONObject(json_object.get("picture").toString());
@@ -211,48 +203,12 @@ public class LoginMain extends AppCompatActivity {
 
                                         _urlPic = profile_pic_url.getString("url");*/
 
-                                        Control.sDialog(LoginMain.this);
-
-                                        RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
-                                        StringRequest jor = new StringRequest(Request.Method.POST,Control.getMSetDatabase(),
-                                                new Response.Listener<String>() {
-                                                    @Override
-                                                    public void onResponse(String response) {
-                                                        Control.setUserNameToFile(LoginMain.this, _userName);
-                                                        Control.setStausLoginToFile(LoginMain.this, "1");
-
-                                                        startActivity(new Intent(LoginMain.this, MainActivity.class));
-                                                        finish();
-                                                    }
-                                                },
-                                                new Response.ErrorListener() {
-                                                    @Override
-                                                    public void onErrorResponse(VolleyError error) {
-                                                        Control.hDialog();
-                                                    }
-                                                }) {
-                                            @Override
-                                            protected Map<String, String> getParams() {
-                                                Map<String, String> params = new HashMap<String, String>();
-                                                params.put("main", "register");
-                                                params.put("password", Control.md5(_password + String.valueOf(Control.randomNumber())));
-                                                params.put("email", _userName);
-                                                params.put("nickname", _nickName);
-                                                params.put("sex", _tempSex);
-                                                params.put("facebook", "1");
-                                                // params.put("picture", _urlPic);
-                                                return params;
-                                            }
-                                        };
-                                        jor.setShouldCache(false);
-                                        requestQueue.add(jor);
+                                        new ControlDatabase(LoginMain.this).setDabaseLoginMain(_userName, _password,
+                                                _nickName, _sex);
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                } else {
-                                    Control.alertInternet(LoginMain.this);
-                                }
                             }
                         });
                 Bundle permission_param = new Bundle();
@@ -271,6 +227,14 @@ public class LoginMain extends AppCompatActivity {
         });
     }
 
+    public void updateFile(String _userName) {
+        mControlFile.setFile(this, _userName,"userName");
+        mControlFile.setFile(this, "1","stausLogin");
+
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
     private void requestRunTimePermission() {
 
         Nammu.init(this);
@@ -283,7 +247,7 @@ public class LoginMain extends AppCompatActivity {
             public void permissionGranted() {
                 mCheckPermission = true;
 
-                if (Control.getStausLogin(LoginMain.this).equals("1")) {
+                if (mControlFile.getFile(LoginMain.this,"stausLogin").equals("1")) {
                     startActivity(new Intent(LoginMain.this, MainActivity.class));
                     finish();
                 }
@@ -303,7 +267,7 @@ public class LoginMain extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public boolean check(){
+    public boolean check() {
         if (mCheckPermission == false) {
             AlertDialog.Builder builder = new AlertDialog.Builder(LoginMain.this);
             builder.setMessage(getString(R.string.general_text_1));
@@ -323,6 +287,13 @@ public class LoginMain extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void bindWidget() {
+        mAnimationTxt = (TextView) findViewById(R.id.animationTxt);
+        mLoginSmileMapBtn = (Button) findViewById(R.id.loginSmileMapBtn);
+        mLoginFacebookBtn = (Button) findViewById(R.id.loginFacebookBtn);
+        mTempLoginFacebookBtn = (LoginButton) findViewById(R.id.tempLoginFacebookBtn);
     }
 }
 

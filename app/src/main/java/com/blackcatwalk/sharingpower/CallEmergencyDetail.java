@@ -1,54 +1,72 @@
 package com.blackcatwalk.sharingpower;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.blackcatwalk.sharingpower.customAdapter.CallEmergencyDetailCustomListAdapter;
+import com.blackcatwalk.sharingpower.google.GoogleMapNearby;
+import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
+import com.blackcatwalk.sharingpower.utility.ControlProgress;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class CallEmergencyDetail extends AppCompatActivity {
 
+
+    private String mClassReferrence;
+    private String mType;
+    private double mLatitude;
+    private double mLongitude;
+    public CallEmergencyDetailCustomListAdapter adapter;
+    public List<String> mNameList = new ArrayList<String>();
+    public List<String> mTelList = new ArrayList<String>();
+
     // ----------------- Google_Map -------------------//
     private GoogleApiClient mGoogleApiClient;
-    private double currentLatitude = 0;
-    private double currentLongitude = 0;
     private Location mLastLocation;
 
-    private int count = 0;
-    private int size = 0;
-    private String classReferrence = null;
+    // ---------------- User Interface ------------- //
+    private ListView mListView;
+    private TextView mLabelTv;
+    private ImageView mBackIm;
 
-    private ListView listView;
-    private List<String> nameList = new ArrayList<String>();
-    private List<String> telList = new ArrayList<String>();
 
-    private String type;
+    public void setmClassReferrence(String _classReferrence) {
+        this.mClassReferrence = _classReferrence;
+    }
 
-    private CallEmergencyDetailCustomListAdapter adapter;
+    public String getmType(){
+        return mType;
+    }
+
+    public String getmClassReferrence() {
+        return mClassReferrence;
+    }
+
+    public double getmLatitude() {
+        return mLatitude;
+    }
+
+    public double getmLongitude() {
+        return mLongitude;
+    }
 
     @SuppressWarnings({"MissingPermission"})
     @Override
@@ -57,15 +75,13 @@ public class CallEmergencyDetail extends AppCompatActivity {
         setContentView(R.layout.activity_call_emergency_detail);
         getSupportActionBar().hide();
 
-        sDialog();
+        bindWidget();
 
-        Bundle bundle = getIntent().getExtras();
-        type = bundle.getString("type");
+        ControlProgress.showProgressDialogDonTouch(this);
 
-        TextView headName = (TextView) findViewById(R.id.headName);
+        mType = getIntent().getExtras().getString("type");
 
-        ImageView btnClose = (ImageView) findViewById(R.id.btnClose);
-        btnClose.setOnClickListener(new View.OnClickListener() {
+        mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -73,92 +89,75 @@ public class CallEmergencyDetail extends AppCompatActivity {
             }
         });
 
-        listView = (ListView) findViewById(R.id.listView1);
+        adapter = new CallEmergencyDetailCustomListAdapter(CallEmergencyDetail.this, mNameList, mTelList);
 
-        adapter = new CallEmergencyDetailCustomListAdapter(CallEmergencyDetail.this, nameList, telList);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + telList.get(position)));
-                startActivity(intent);
+                startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mTelList.get(position))));
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                final AlertDialog.Builder builder = new AlertDialog.Builder(CallEmergencyDetail.this);
-                builder.setMessage(nameList.get(position));
-
-                builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                AlertDialog alert = builder.create();
-                alert.show();
-
-                Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                pbutton.setTextColor(Color.parseColor("#147cce"));
-                pbutton.setTypeface(null, Typeface.BOLD);
-
+                showAlertDialog(position);
                 return true;
             }
         });
 
-        if (type.equals("general")) {
-            headName.setText("สายด่วน แจ้งเหตุ");
+        if (mType.equals("general")) {
+            mLabelTv.setText("สายด่วน แจ้งเหตุ");
 
-            nameList.add("แจ้งเหตุด่วน-เหตุร้ายทุกชนิด");
-            telList.add("191");
+            mNameList.add("แจ้งเหตุด่วน-เหตุร้ายทุกชนิด");
+            mTelList.add("191");
 
-            nameList.add("หน่วยแพทย์ฉุกเฉิน(ทั่วไทย)");
-            telList.add("1669");
+            mNameList.add("หน่วยแพทย์ฉุกเฉิน(ทั่วไทย)");
+            mTelList.add("1669");
 
-            nameList.add("หน่วยแพทย์ฉุกเฉิน(กทม.)");
-            telList.add("1646");
+            mNameList.add("หน่วยแพทย์ฉุกเฉิน(กทม.)");
+            mTelList.add("1646");
 
-            nameList.add("หน่วยกู้ชีพ วชิรพยาบาล");
-            telList.add("1554");
-
-            //---------------------------------------
-
-            nameList.add("กรมเจ้าท่า, เหตุด่วนทางน้ำ");
-            telList.add("1199");
-
-            nameList.add("สายด่วนตำรวจท่องเที่ยว");
-            telList.add("1155");
-
-            nameList.add("สายด่วนทางหลวง");
-            telList.add("1586");
-
-            nameList.add("รับแจ้งอัคคีภัย สัตว์เข้าบ้าน");
-            telList.add("199");
-
-            nameList.add("รับแจ้งรถหาย, ถูกขโมย");
-            telList.add("1192");
-
-            nameList.add("ศูนย์เตือนภัยพิบัติแห่งชาติ");
-            telList.add("192");
-
-            nameList.add("ศูนย์ควบคุมและสั่งการจราจร");
-            telList.add("1197");
+            mNameList.add("หน่วยกู้ชีพ วชิรพยาบาล");
+            mTelList.add("1554");
 
             //---------------------------------------
 
-            nameList.add("สถานีวิทยุร่วมด้วยช่วยกัน");
-            telList.add("1677");
+            mNameList.add("กรมเจ้าท่า, เหตุด่วนทางน้ำ");
+            mTelList.add("1199");
 
-            nameList.add("สถานีวิทยุ จส.100");
-            telList.add("1586");
+            mNameList.add("สายด่วนตำรวจท่องเที่ยว");
+            mTelList.add("1155");
+
+            mNameList.add("สายด่วนทางหลวง");
+            mTelList.add("1586");
+
+            mNameList.add("รับแจ้งอัคคีภัย สัตว์เข้าบ้าน");
+            mTelList.add("199");
+
+            mNameList.add("รับแจ้งรถหาย, ถูกขโมย");
+            mTelList.add("1192");
+
+            mNameList.add("ศูนย์เตือนภัยพิบัติแห่งชาติ");
+            mTelList.add("192");
+
+            mNameList.add("ศูนย์ควบคุมและสั่งการจราจร");
+            mTelList.add("1197");
+
+            //---------------------------------------
+
+            mNameList.add("สถานีวิทยุร่วมด้วยช่วยกัน");
+            mTelList.add("1677");
+
+            mNameList.add("สถานีวิทยุ จส.100");
+            mTelList.add("1586");
 
             adapter.notifyDataSetChanged();
-            Control.hDialog();
+            ControlProgress.hideDialog();
         } else {
+            final ControlCheckConnect _controlCheckConnect = new ControlCheckConnect();
+
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -169,39 +168,15 @@ public class CallEmergencyDetail extends AppCompatActivity {
 
                             if (mLastLocation != null) {
 
-                                currentLatitude = mLastLocation.getLatitude();
-                                currentLongitude = mLastLocation.getLongitude();
+                                mLatitude = mLastLocation.getLatitude();
+                                mLongitude = mLastLocation.getLongitude();
 
-                                classReferrence = "CallNearby";
-
-                                StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-                                sb.append("location=" + currentLatitude + "," + currentLongitude);
-                                sb.append("&radius=5000");
-                                sb.append("&types=" + type);
-                                sb.append("&sensor=true");
-                                sb.append("&key=AIzaSyAwJatyU0DGovYEOKYYbDu2KzE0mKEzUPY");
-                                sb.append("&language=th");
-
-                                // Creating locationSpinnerMinicalGray new non-ui thread task to download Google place json data
-                                PlacesTask placesTask = new PlacesTask();
-                                // Invokes the "doInBackground()" method of the class PlaceTask
-                                placesTask.execute(sb.toString());
+                                setmClassReferrence("CallNearby");
+                                //Search Data Nearby
+                                new GoogleMapNearby(CallEmergencyDetail.this);
                             } else {
-                                Control.hDialog();
-                                final Dialog dialog = new Dialog(CallEmergencyDetail.this);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.activity_dialog_current_gps);
-                                dialog.setCancelable(false);
-
-                                Button btnClose = (Button) dialog.findViewById(R.id.btnClose);
-                                btnClose.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.cancel();
-                                        finish();
-                                    }
-                                });
-                                dialog.show();
+                                ControlProgress.hideDialog();
+                                _controlCheckConnect.alertCurrentGps(CallEmergencyDetail.this);
                             }
                         }
 
@@ -215,17 +190,17 @@ public class CallEmergencyDetail extends AppCompatActivity {
                     .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
                         public void onConnectionFailed(ConnectionResult connectionResult) {
-                            Control.alertCurrentGps(CallEmergencyDetail.this);
+                            _controlCheckConnect.alertCurrentGps(CallEmergencyDetail.this);
                         }
                     })
                     .build();
 
             mGoogleApiClient.connect();
 
-            if (type.equals("hospital")) {
-                headName.setText("โรงพยาบาลโดยรอบ");
+            if (mType.equals("hospital")) {
+                mLabelTv.setText("โรงพยาบาลโดยรอบ");
             } else {
-                headName.setText("สถานีตำรวจโดยรอบ");
+                mLabelTv.setText("สถานีตำรวจโดยรอบ");
             }
         }
     }
@@ -240,19 +215,27 @@ public class CallEmergencyDetail extends AppCompatActivity {
         }
     }
 
-    public void sDialog() {
-        Control.pDialog = new ProgressDialog(this,R.style.MyTheme);
-        Control.pDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
-        Control.pDialog.setIndeterminateDrawable(this.getResources().getDrawable(R.drawable.aaaaaaaaaaaaaaa));
-        Control.pDialog.setCancelable(false);
-        Control.pDialog.show();
+    private void showAlertDialog(int _position) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(CallEmergencyDetail.this);
+        builder.setMessage(mNameList.get(_position));
+        builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(Color.parseColor("#147cce"));
+        pbutton.setTypeface(null, Typeface.BOLD);
     }
 
-    private void alertBox() {
+    public void showAlertDialogNotFoundTelephone() {
 
         String tempType = null;
 
-        switch (type) {
+        switch (mType) {
             case "hospital":
                 tempType = "โรงพยาบาล";
                 break;
@@ -279,175 +262,9 @@ public class CallEmergencyDetail extends AppCompatActivity {
         pbutton.setTypeface(null, Typeface.BOLD);
     }
 
-
-    //----------------------------------- get Data ----------------------------------------------
-
-    /**
-     * A class, to download Google Places
-     */
-    public class PlacesTask extends AsyncTask<String, Integer, String> {
-
-        String data = null;
-
-        // Invoked by execute() method of this object
-        @Override
-        protected String doInBackground(String... url) {
-            try {
-                data = Control.downloadUrl(url[0]);
-            } catch (Exception e) {
-
-            }
-            return data;
-        }
-
-        // Executed after the complete execution of doInBackground() method
-        @Override
-        protected void onPostExecute(String result) {
-
-            // Start parsing the Google places in JSON format
-            // Invokes the "doInBackground()" method of the class ParseTask..
-            switch (classReferrence) {
-                case "CallNearby":
-                    ParserTaskNearby ParserTaskNearby = new ParserTaskNearby();
-                    ParserTaskNearby.execute(result);
-                    break;
-                case "CallDetail":
-                    ParserTaskDetail ParserTaskDetail = new ParserTaskDetail();
-                    ParserTaskDetail.execute(result);
-                    break;
-            }
-        }
-    }
-
-    /**
-     * A class to parse the Google Places in JSON format
-     */
-    public class ParserTaskNearby extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
-
-        JSONObject jObject;
-
-        // Invoked by execute() method of this object
-        @Override
-        protected List<HashMap<String, String>> doInBackground(String... jsonData) {
-
-            List<HashMap<String, String>> places = null;
-            PlaceJSONParser placeJsonParser = new PlaceJSONParser();
-
-            try {
-                jObject = new JSONObject(jsonData[0]);
-
-                /** Getting the parsed data as a List construct */
-                places = placeJsonParser.parse(jObject);
-
-            } catch (Exception e) {
-            }
-            return places;
-        }
-
-        // Executed after the complete execution of doInBackground() method
-        @Override
-        protected void onPostExecute(List<HashMap<String, String>> list) {
-
-            if (list != null) {
-                if (list.size() > 0) {
-                    for (int i = 0; i < list.size(); i++) {
-
-                        // Getting a place from the places list
-                        HashMap<String, String> hmPlace = list.get(i);
-                        StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
-                        sb.append("reference=" + hmPlace.get("reference"));
-                        sb.append("&sensor=true");
-                        sb.append("&key=AIzaSyAwJatyU0DGovYEOKYYbDu2KzE0mKEzUPY");
-                        sb.append("&language=th");
-
-                        classReferrence = "CallDetail";
-
-                        // Creating locationSpinnerMinicalGray new non-ui thread task to download Google place details
-                        PlacesTask placesTask = new PlacesTask();
-                        // Invokes the "doInBackground()" method of the class PlaceTask
-                        placesTask.execute(sb.toString());
-                        size++;
-                    }
-                } else {
-                    alertBox();
-                    Control.hDialog();
-                }
-            }else {
-                finish();
-            }
-        }
-    }
-
-    /**
-     * A class to parse the Google Place Details in JSON format
-     */
-    public class ParserTaskDetail extends AsyncTask<String, Integer, HashMap<String, String>> {
-
-        JSONObject jObject;
-        private boolean check = false;
-
-        // Invoked by execute() method of this object
-        @Override
-        protected HashMap<String, String> doInBackground(String... jsonData) {
-
-            HashMap<String, String> hPlaceDetails = null;
-            PlaceDetailsJSONParser placeDetailsJsonParser = new PlaceDetailsJSONParser();
-
-            try {
-                jObject = new JSONObject(jsonData[0]);
-
-                // Start parsing Google place details in JSON format
-                hPlaceDetails = placeDetailsJsonParser.parse(jObject);
-
-            } catch (Exception e) {
-            }
-            return hPlaceDetails;
-        }
-
-        // Executed after the complete execution of doInBackground() method
-        @Override
-        protected void onPostExecute(HashMap<String, String> hPlaceDetails) {
-
-            if(Control.checkInternet(getApplicationContext())){
-                switch (type) {
-                    case "hospital":
-                        if (hPlaceDetails.get("name").substring(0, 4).equals("ร.พ.") ||
-                                hPlaceDetails.get("name").substring(0, 9).equals("โรงพยาบาล") ||
-                                hPlaceDetails.get("name").substring(0, 5).equals("ศูนย์")) {
-                            check = true;
-                        }
-                        break;
-                    case "police":
-                        if (hPlaceDetails.get("name").substring(0, 5).equals("สถานี") ||
-                                hPlaceDetails.get("name").substring(0, 3).equals("สน.") ||
-                                hPlaceDetails.get("name").substring(0, 5).equals("ศูนย์")) {
-                            check = true;
-                        }
-                        break;
-                }
-
-                if (!hPlaceDetails.get("formatted_phone").substring(0, 1).equals("-") && check == true) {
-                    nameList.add(hPlaceDetails.get("name"));
-                    telList.add(hPlaceDetails.get("formatted_phone"));
-
-                    count++;
-                } else {
-                    size--;
-                }
-
-                if (size == count) {
-                    if (size != 0) {
-                        count = 0;
-                        size = 0;
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        alertBox();
-                    }
-                    Control.hDialog();
-                }
-            }else{
-                finish();
-            }
-        }
+    private void bindWidget() {
+        mLabelTv = (TextView) findViewById(R.id.labelTv);
+        mBackIm = (ImageView) findViewById(R.id.backIm);
+        mListView = (ListView) findViewById(R.id.listView);
     }
 }

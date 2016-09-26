@@ -7,10 +7,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.blackcatwalk.sharingpower.customAdapter.NearByPlaceCustomListAdapter;
 
 
 public class NearbyPlacesMain extends AppCompatActivity {
+
+    private ImageView mBackIm;
+    private ListView mListView;
+    private NearByPlaceCustomListAdapter mAdpter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +23,9 @@ public class NearbyPlacesMain extends AppCompatActivity {
         setContentView(R.layout.activity_nearby_location);
         getSupportActionBar().hide(); // hide ActionBar
 
-        TextView headName = (TextView) findViewById(R.id.headName);
-        headName.setText("รอบตัวสถานที่");
+        bindWidget();
 
-        ImageView btnClose = (ImageView) findViewById(R.id.btnClose);
-        btnClose.setOnClickListener(new View.OnClickListener() {
+        mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -40,11 +43,10 @@ public class NearbyPlacesMain extends AppCompatActivity {
         String[] list = {"BTS station", "MRT station"
                 , "Airport Rail Link", "BRT station", "Boat station", "Temples"};
 
-        NearByPlaceCustomListAdapter adapter = new NearByPlaceCustomListAdapter(getApplicationContext(), list, resId);
+        mAdpter = new NearByPlaceCustomListAdapter(getApplicationContext(), list, resId);
 
-        ListView listView = (ListView) findViewById(R.id.listView1);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setAdapter(mAdpter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DetailStation.class);
                 switch (position) {
@@ -70,5 +72,10 @@ public class NearbyPlacesMain extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void bindWidget() {
+        mBackIm = (ImageView) findViewById(R.id.backIm);
+        mListView = (ListView) findViewById(R.id.listView);
     }
 }

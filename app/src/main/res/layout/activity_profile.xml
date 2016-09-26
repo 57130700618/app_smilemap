@@ -17,23 +17,23 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="ข้อมูลส่วนตัว"
-                android:textColor="@color/white"
-                android:textSize="@dimen/label_sub_20sp"/>
+                android:textSize="@dimen/label_sub_20sp" />
 
             <ImageView
-                android:id="@+id/menu"
+                android:id="@+id/menuIm"
                 android:layout_width="43dp"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
@@ -70,14 +70,13 @@
                 app:civ_border_width="1dp" />
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/nameTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:textSize="25sp"
                 android:textStyle="bold" />
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -104,7 +103,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/countTraffic"
+                        android:id="@+id/countTrafficTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="23sp"
@@ -127,7 +126,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/countLocation"
+                        android:id="@+id/countLocationTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="23sp"
@@ -150,7 +149,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/point"
+                        android:id="@+id/pointTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="23sp"
@@ -184,7 +183,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/staus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="สถานะของฉัน"
@@ -192,15 +190,15 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/stausDetail"
+                    android:id="@+id/stausDetailTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:textColor="@color/grayfont"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"
+                    android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/nickName"
+                    android:id="@+id/nickNameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -209,7 +207,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/nickNameDetail"
+                    android:id="@+id/nickNameDetailTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grayfont"
@@ -224,13 +222,12 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/sumHour"
+                    android:id="@+id/sumHourTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="50dp"
                     android:textColor="@color/grayfont"
                     android:textSize="16sp" />
-
 
             </LinearLayout>
 

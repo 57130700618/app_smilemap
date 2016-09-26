@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/layoutLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary1"
@@ -17,20 +16,19 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="40dp"
                 android:text="รอบตัวบุคคล"
-                android:textColor="@color/white"
                 android:textSize="@dimen/label_sub_20sp" />
 
         </RelativeLayout>

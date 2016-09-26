@@ -16,23 +16,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:padding="10dp"
+            android:layout_marginLeft="@dimen/label_main_marginLeft"
+            android:padding="@dimen/label_main_padding"
             android:text="เกาะแบ่งปัน"
-            android:textColor="@color/white"
+            style="@style/label_sub"
             android:textSize="@dimen/label_main_20sp" />
-
-        <ImageView
-            android:layout_width="45dp"
-            android:layout_height="50dp"
-            android:visibility="invisible"
-            android:padding="10dp"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
@@ -74,7 +68,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/rank"
+                    android:id="@+id/rankBtn"
                     android:layout_width="80dp"
                     android:layout_height="60dp"
                     android:background="@drawable/a_code_buntton_orage"
@@ -97,7 +91,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/call"
+                    android:id="@+id/callBtn"
                     android:layout_width="80dp"
                     android:layout_height="60dp"
                     android:background="@drawable/a_code_button_red2"
@@ -130,7 +124,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/nearbyCurrent"
+                    android:id="@+id/nearbyCurrentBtn"
                     android:layout_width="80dp"
                     android:layout_height="60dp"
                     android:background="@drawable/a_code_buntton_pink"
@@ -152,7 +146,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/nearbyLocation"
+                    android:id="@+id/nearbyLocationBtn"
                     android:layout_width="80dp"
                     android:layout_height="60dp"
                     android:background="@drawable/a_code_button_green1"
@@ -174,7 +168,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/settings"
+                    android:id="@+id/settingsBtn"
                     android:layout_width="80dp"
                     android:layout_height="60dp"
                     android:background="@drawable/a_code_buntton_gray"
@@ -191,12 +185,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ScrollView>
 
 </LinearLayout>
 

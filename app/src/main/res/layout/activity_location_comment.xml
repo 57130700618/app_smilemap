@@ -11,26 +11,25 @@
         android:background="@color/colorPrimary1"
         android:orientation="horizontal">
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="ความคิดเห็น"
-                android:textColor="@color/white"
-                android:textSize="@dimen/label_sub_20sp"/>
+                android:textSize="@dimen/label_sub_20sp" />
 
         </RelativeLayout>
 
@@ -39,10 +38,10 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ListView
-            android:id="@+id/list_view"
+            android:id="@+id/listview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -63,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-
             android:background="@color/white">
 
             <RelativeLayout
@@ -71,20 +69,20 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/editText"
+                    android:id="@+id/commentEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginRight="50dp"
                     android:background="@android:color/transparent"
                     android:hint="แสดงความคิดเห็น"
                     android:inputType="textMultiLine"
                     android:maxLength="800"
-                    android:layout_marginLeft="5dp"
                     android:maxLines="4"
                     android:padding="10dp" />
 
                 <ImageView
-                    android:id="@+id/send"
+                    android:id="@+id/sendBtn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.blackcatwalk.sharingpower.Tutorial">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary1"
@@ -20,18 +17,18 @@
 
             <ImageView
                 android:id="@+id/backIm"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="วิธีการใช้งาน"
-                android:textColor="@color/white"
                 android:textSize="@dimen/label_sub_20sp" />
 
             <ImageView
@@ -47,6 +44,7 @@
                 android:src="@drawable/ic_video_library" />
 
         </RelativeLayout>
+
     </LinearLayout>
 
     <ScrollView
@@ -84,8 +82,8 @@
             <ImageView
                 android:layout_width="180dp"
                 android:layout_height="120dp"
-                android:layout_marginTop="15dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
                 android:src="@drawable/tutorial_p1" />
 
             <TextView
@@ -107,9 +105,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:text="เรียกดูตำแหน่งสถานที่"
                 android:textSize="17sp"
-                android:layout_marginTop="30dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -122,8 +120,8 @@
             <ImageView
                 android:layout_width="180dp"
                 android:layout_height="120dp"
-                android:layout_marginTop="15dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
                 android:src="@drawable/tutorial_p4" />
 
             <TextView

@@ -25,14 +25,14 @@
 
     <supports-screens
         android:anyDensity="true"
-        android:largeScreens="true"
+        android:largeScreens="false"
         android:normalScreens="true"
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="false" />
 
     <application
-        android:name=".AppController"
+        android:name=".utility.AppController"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -61,6 +61,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LoginSub"
             android:screenOrientation="portrait" />
@@ -122,9 +123,6 @@
             android:label="รายการโปรด"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".InboxMain"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Setting"
             android:screenOrientation="portrait" />
         <activity
@@ -137,7 +135,7 @@
             android:name=".CallEmergencyDetail"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Location_comment_main"
+            android:name=".LocationCommentMain"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ProfileSetting"
@@ -155,32 +153,6 @@
             android:name=".Donate"
             android:screenOrientation="portrait" />
 
-        <!--
-            <activity
-            android:name=".GroupMain"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".Group_detail_page1"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".Group_detail_page2"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".Group_add_marker"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".Group_add_post"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".Group_create"
-            android:screenOrientation="portrait" />
-        -->
-
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -190,18 +162,14 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
-        <!--
-            <meta-data
-            android:name="com.blackcatwalk.sharingpower.GlideConfiguration"
-            android:value="GlideModule" />
-        -->
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
@@ -211,3 +179,36 @@
     </application>
 
 </manifest>
+
+
+    <!--
+               <meta-data
+               android:name="com.blackcatwalk.sharingpower.GlideConfiguration"
+               android:value="GlideModule" />
+           -->
+
+    <!--
+              <activity
+              android:name=".GroupMain"
+              android:screenOrientation="portrait" />
+
+          <activity
+              android:name=".Group_detail_page1"
+              android:screenOrientation="portrait" />
+
+          <activity
+              android:name=".Group_detail_page2"
+              android:screenOrientation="portrait" />
+
+          <activity
+              android:name=".Group_add_marker"
+              android:screenOrientation="portrait" />
+
+          <activity
+              android:name=".Group_add_post"
+              android:screenOrientation="portrait" />
+
+          <activity
+              android:name=".Group_create"
+              android:screenOrientation="portrait" />
+          -->

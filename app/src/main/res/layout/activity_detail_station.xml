@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/layoutLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary1"
@@ -17,10 +16,10 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
@@ -28,14 +27,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="40dp"
                 android:text="รอบตัวสถานที่"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                style="@style/label_sub"
+                android:textSize="@dimen/label_sub_20sp" />
 
             <ImageView
-                android:id="@+id/sort"
+                android:id="@+id/sortIm"
                 android:layout_width="45dp"
                 android:layout_height="50dp"
                 android:padding="10dp"
@@ -57,19 +54,20 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/stationName"
+            android:id="@+id/stationNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="27sp"/>
+            android:textSize="25sp"/>
 
     </LinearLayout>
 
     <ListView
-        android:id="@+id/list_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@color/white" />
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:cacheColorHint="#00000000"
+        android:scrollbars="none" />
 
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="facebook_app_id"></string>
+    <string name="facebook_app_id">617290305115407</string>
     <string name="app_name">Smile Map</string>
     <string name="menu1">การจราจร</string>
     <string name="menu2">สถานที่</string>
@@ -399,9 +399,10 @@
 
     <!-- =========================================== -->
     <string name="smile_map">Smile Map</string>
-    <string name="animation_text_1">\"สังคมแผนที่\"</string>
-    <string name="animation_text_2">\"จิตสาธารณะ\"</string>
-    <string name="animation_text_3">\"ประเทศไทย\"</string>
+    <string name="animation_text_1">\"สังคมแผนที่ประเทศไทย\"</string>
+    <string name="animation_text_2">\"จิตสาธารณะ ช่วยเหลือสังคม\"</string>
+    <string name="animation_text_3">\"ไม่พลาดกิจกรรมสำคัญๆ\"</string>
+    <string name="animation_text_4">\"ชีวิตที่สุขสบายมากขึ้น\"</string>
     <string name="facebook_login">เข้าสู่ระบบโดย Facebook</string>
     <string name="or">หรือ</string>
     <string name="login_smilemap">บัญชีอื่นๆ</string>
@@ -414,17 +415,18 @@
     <string name="email">อีเมล</string>
     <string name="login_label">เข้าสู่ระบบ</string>
     <string name="general_text_6">โปรดป้อนที่อยู่อีเมลที่ถูกต้อง</string>
-    <string name="general_text_7">โปรดป้อนรหัสผ่านอย่างน้อย 8 ตัวอักษร</string>
+    <string name="general_text_7">โปรดป้อนรหัสผ่านอย่างน้อย 8อักขระ</string>
     <string name="general_text_8">อีเมลมีคนใช้แล้ว โปรดป้อนที่อยู่อีเมลอื่น</string>
     <string name="general_text_9">อีเมลมีคนใช้แล้ว โปรดป้อนที่อยู่อีเมลอื่น</string>
     <string name="step_1_2">step 1/2</string>
     <string name="general_text_10">ท่านจะใช้อีเมลกับรหัสผ่านนี้เมื่อเข้าสู่ระบบ หรือในกรณีที่ต้องการรีเซ็ทรหัสผ่าน</string>
     <string name="general_text_11">ป้อนที่อยู่อีเมล</string>
-    <string name="general_text_12">ป้อนรหัสผ่านอย่างน้อย 8 ตัวอักษร</string>
+    <string name="general_text_12">ป้อนรหัสผ่านอย่างน้อย 8อักขระ</string>
     <string name="next">ถัดไป</string>
     <string name="step_2_2">step 2/2</string>
     <string name="general_text_13">ชื่อผู้ใช้กับเพศ จะทำให้ท่านได้รับประสบการณ์ที่ดีที่สุดจากการใช้งาน Smile Map</string>
-    <string name="general_text_14">ป้อนชื่อผู้ใช้อย่างน้อย 5 ตัวอักษร</string>
+    <string name="general_text_14_1">ป้อนชื่อผู้ใช้อย่างน้อย 5อักขระ</string>
+    <string name="general_text_14">โปรดป้อนชื่อผู้ใช้อย่างน้อย 5อักขระ</string>
     <string name="sex">เพศ:</string>
     <string name="male">ชาย</string>
     <string name="female">หญิง</string>

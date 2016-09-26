@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/parent"
     android:layout_height="match_parent"
     android:background="@drawable/a_codebg_white1"
     android:orientation="vertical">
@@ -16,10 +17,10 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
@@ -28,7 +29,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="แก้ไขข้อมูลส่วนตัว"
-                android:textColor="@color/white"
+                style="@style/label_sub"
                 android:textSize="@dimen/label_sub_20sp"/>
 
         </RelativeLayout>
@@ -50,16 +51,17 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:text="ชื่อผู้ใช้"
+                android:layout_marginTop="10dp"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/nickname"
+                android:id="@+id/nameEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/a_codebg_white2"
-                android:hint="ป้อนชื่อผู้ใช้อย่างน้อย 5 ตัวอักษร"
+                android:hint="ป้อนชื่อผู้ใช้อย่างน้อย  5อักขระ"
                 android:imeOptions="actionDone"
                 android:maxLength="20"
                 android:padding="10dp"
@@ -76,7 +78,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/staus"
+                android:id="@+id/stausEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -90,18 +92,18 @@
                 android:textSize="17sp" />
 
             <TextView
-                android:id="@+id/alertText"
+                android:id="@+id/alertTextTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="โปรดป้อนชื่อผู้ใช้อย่างน้อย 5 ตัวอักษร"
+                android:text="โปรดป้อนชื่อผู้ใช้อย่างน้อย 5อักขระ"
                 android:textColor="@color/red"
                 android:textSize="15sp"
                 android:visibility="invisible" />
 
             <Button
-                android:id="@+id/update"
+                android:id="@+id/updateBtn"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="20dp"
@@ -114,13 +116,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="60dp"
                 android:background="@color/light_gray"
                 android:orientation="horizontal" />
 
 
             <LinearLayout
-                android:id="@+id/password"
+                android:id="@+id/passwordLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -144,7 +146,7 @@
                 android:orientation="horizontal" />
 
             <LinearLayout
-                android:id="@+id/logout"
+                android:id="@+id/logoutLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
@@ -159,7 +161,6 @@
                     android:textSize="16dp" />
 
             </LinearLayout>
-
 
         </LinearLayout>
 

@@ -14,44 +14,36 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.blackcatwalk.sharingpower.customAdapter.FavoriteCustomListAdapter;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
+import com.blackcatwalk.sharingpower.utility.ControlKeyboard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class FavoriteMain extends AppCompatActivity {
 
+    private String mTempUrl;
+    private ControlDatabase mControlDatabase;
+    private ControlKeyboard mControlKeyBoard;
+    public List<Favorite> mFavoriteList = new ArrayList<Favorite>();
+    public Favorite mItem;
+
     // ----------- User Interface  --------------//
-    private List<Favorite> favoriteList = new ArrayList<Favorite>();
-    private ListView listView;
-    private FavoriteCustomListAdapter adapter;
-    private TextView mFavotiteTv;
-    private ImageView mFavotiteIm;
+    private ListView mListView;
+    private ImageView mRefreshIm;
+    private ImageView mSortIm;
+    public FavoriteCustomListAdapter mAdapter;
+    public TextView mFavotiteTv;
+    public ImageView mFavotiteIm;
 
-    // ----------- Url set form database --------------//
-    private String set = "https://www.smilemap.me/android/set.php";
-
-    // ----------- Url get form database --------------//
-    private static final String url = "https://www.smilemap.me/android/get.php?main=favorite&sub=";
-    private String tempUrl;
+    public String getmTempUrl() {
+        return mTempUrl;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,283 +51,169 @@ public class FavoriteMain extends AppCompatActivity {
         setContentView(R.layout.activity_favorite);
         getSupportActionBar().hide();
 
-        Control.sDialog(this);
+        bindWidget();
 
-        tempUrl = url + Control.getUsername(this);
+        mControlDatabase = new ControlDatabase(this);
+        mControlKeyBoard = new ControlKeyboard();
 
-        listView = (ListView) findViewById(R.id.list_view);
-        mFavotiteTv = (TextView) findViewById(R.id.favoriteTv);
         mFavotiteTv.setVisibility(View.INVISIBLE);
-        mFavotiteIm = (ImageView) findViewById(R.id.favoriteIm);
         mFavotiteIm.setVisibility(View.INVISIBLE);
-        adapter = new FavoriteCustomListAdapter(this, favoriteList);
 
-        listView.setAdapter(adapter);
+        mAdapter = new FavoriteCustomListAdapter(this, mFavoriteList);
+        mListView.setAdapter(mAdapter);
 
-        ImageView refresh = (ImageView) findViewById(R.id.refresh);
-        refresh.setOnClickListener(new View.OnClickListener() {
+        mRefreshIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                favoriteList = null;
-                favoriteList = new ArrayList<Favorite>();
-
-                adapter = new FavoriteCustomListAdapter(FavoriteMain.this, favoriteList);
-                listView.setAdapter(adapter);
-
-                Control.sDialog(FavoriteMain.this);
-                getDatabase();
+                refreshData();
             }
         });
 
-        ImageView sort = (ImageView) findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
+        mSortIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final String[] lists = {"สถานที่", "วันที่"};
-                new AlertDialog.Builder(FavoriteMain.this).setTitle("เรียงลำดับ").setItems(lists, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        favoriteList = null;
-                        favoriteList = new ArrayList<Favorite>();
-
-                        adapter = new FavoriteCustomListAdapter(FavoriteMain.this, favoriteList);
-                        listView.setAdapter(adapter);
-
-                        tempUrl = null;
-                        tempUrl = url + Control.getUsername(FavoriteMain.this);
-
-                        switch (which) {
-                            case 0:
-                                tempUrl = tempUrl + "&job=location";
-                                break;
-                            case 1:
-                                tempUrl = tempUrl + "&job=date";
-                                break;
-                        }
-                        Control.sDialog(FavoriteMain.this);
-                        getDatabase();
-
-                        dialog.cancel();
-                    }
-                }).show();
+                showDialogSort();
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showDialogMenu(position);
+            }
+        });
 
-                                        {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                                                final Favorite item = favoriteList.get(position);
-
-                                                final String[] lists = {"ดูแผนที่", "แก้ไข", "ลบรายการ",};
-                                                new AlertDialog.Builder(FavoriteMain.this).setTitle("รายการโปรด").setItems(lists, new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-
-
-                                                        switch (which) {
-                                                            case 0:
-                                                                Intent map = new Intent(getApplicationContext(), DetailMap.class);
-                                                                map.putExtra("latFavorite", item.getLat());
-                                                                map.putExtra("lngFavorite", item.getLng());
-                                                                map.putExtra("typeFavorite", item.getType());
-                                                                map.putExtra("detailFavorite", item.getDetail());
-                                                                map.putExtra("typeMoveMap", 9);
-                                                                startActivity(map);
-                                                                break;
-                                                            case 1:
-                                                                final Dialog dialogFavorite = new Dialog(FavoriteMain.this);
-                                                                dialogFavorite.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                                                dialogFavorite.setContentView(R.layout.activity_dialog_favorite_detail);
-
-                                                                Control.showKeyboard(FavoriteMain.this);
-
-                                                                final EditText editDetailName = (EditText) dialogFavorite.findViewById(R.id.editDetailName);
-                                                                editDetailName.setText(item.getDetail());
-                                                                editDetailName.setSelection(editDetailName.getText().length());
-
-                                                                ImageView btnClose = (ImageView) dialogFavorite.findViewById(R.id.btnClose);
-                                                                btnClose.setOnClickListener(new View.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(View v) {
-                                                                        Control.hideKeyboard(FavoriteMain.this);
-                                                                        dialogFavorite.cancel();
-                                                                    }
-                                                                });
-
-                                                                Button save = (Button) dialogFavorite.findViewById(R.id.btnSave);
-                                                                save.setOnClickListener(new View.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(View v) {
-
-                                                                        final String detailName = editDetailName.getText().toString();
-
-                                                                        RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
-                                                                        StringRequest jor = new StringRequest(Request.Method.POST, set,
-                                                                                new Response.Listener<String>() {
-                                                                                    @Override
-                                                                                    public void onResponse(String response) {
-                                                                                        favoriteList = null;
-                                                                                        favoriteList = new ArrayList<Favorite>();
-
-                                                                                        adapter = new FavoriteCustomListAdapter(FavoriteMain.this, favoriteList);
-                                                                                        listView.setAdapter(adapter);
-
-                                                                                        Control.sDialog(FavoriteMain.this);
-                                                                                        getDatabase();
-                                                                                    }
-                                                                                },
-                                                                                new Response.ErrorListener() {
-                                                                                    @Override
-                                                                                    public void onErrorResponse(VolleyError error) {
-                                                                                        Toast.makeText(getApplicationContext(), "บันทึกไม่สำเร็จ", Toast.LENGTH_LONG).show();
-                                                                                    }
-                                                                                }) {
-                                                                            @Override
-                                                                            protected Map<String, String> getParams() {
-
-
-                                                                                Map<String, String> params = new HashMap<String, String>();
-                                                                                params.put("main", "favorite");
-                                                                                params.put("job", "updatefavorite");
-                                                                                params.put("username", Control.getUsername(FavoriteMain.this));
-                                                                                params.put("lat", item.getLat().toString());
-                                                                                params.put("lng", item.getLng().toString());
-                                                                                params.put("detailold", item.getDetail());
-                                                                                params.put("detailnew", detailName);
-                                                                                params.put("type", item.getType());
-
-                                                                                return params;
-                                                                            }
-                                                                        };
-                                                                        jor.setShouldCache(false);
-                                                                        requestQueue.add(jor);
-
-                                                                        dialogFavorite.cancel();
-                                                                    }
-                                                                });
-                                                                dialogFavorite.show();
-
-                                                                break;
-                                                            case 2:
-
-                                                                AlertDialog.Builder builder = new AlertDialog.Builder(FavoriteMain.this);
-                                                                builder.setMessage("ลบรายการนี้หรือไม่");
-                                                                builder.setPositiveButton("ลบรายการ", new DialogInterface.OnClickListener() {
-                                                                    public void onClick(DialogInterface dialog, int which) {
-
-                                                                        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-                                                                        StringRequest jor = new StringRequest(Request.Method.POST, set,
-                                                                                new Response.Listener<String>() {
-                                                                                    @Override
-                                                                                    public void onResponse(String response) {
-                                                                                        favoriteList = null;
-                                                                                        favoriteList = new ArrayList<Favorite>();
-
-                                                                                        adapter = new FavoriteCustomListAdapter(FavoriteMain.this, favoriteList);
-                                                                                        listView.setAdapter(adapter);
-
-                                                                                        Control.sDialog(FavoriteMain.this);
-                                                                                        getDatabase();
-                                                                                    }
-                                                                                },
-                                                                                new Response.ErrorListener() {
-                                                                                    @Override
-                                                                                    public void onErrorResponse(VolleyError error) {
-                                                                                    }
-                                                                                }) {
-                                                                            @Override
-                                                                            protected Map<String, String> getParams() {
-                                                                                Map<String, String> params = new HashMap<String, String>();
-                                                                                params.put("main", "favorite");
-                                                                                params.put("job", "deletefavorite");
-                                                                                params.put("username", Control.getUsername(FavoriteMain.this));
-                                                                                params.put("lat", item.getLat().toString());
-                                                                                params.put("lng", item.getLng().toString());
-                                                                                params.put("type", item.getType());
-                                                                                params.put("detailold", item.getDetail());
-
-                                                                                return params;
-                                                                            }
-                                                                        };
-                                                                        jor.setShouldCache(false);
-                                                                        requestQueue.add(jor);
-
-                                                                        dialog.cancel();
-                                                                    }
-                                                                });
-                                                                builder.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
-                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                        dialog.cancel();
-                                                                    }
-                                                                });
-
-                                                                AlertDialog alert = builder.create();
-                                                                alert.show();
-                                                                Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                                                                pbutton.setTextColor(Color.parseColor("#147cce"));
-                                                                pbutton.setTypeface(null, Typeface.BOLD);
-                                                                Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
-                                                                nbutton.setTextColor(Color.parseColor("#147cce"));
-                                                                nbutton.setTypeface(null, Typeface.BOLD);
-                                                                break;
-                                                        }
-                                                        dialog.cancel();
-                                                    }
-                                                }).show();
-                                            }
-                                        }
-
-        );
+        mTempUrl = "&job=all";
         getDatabase();
     }
 
-    public void getDatabase() {
+    private void getDatabase() {
+        mControlDatabase.getDatabaseFavoriteMain();
+    }
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(tempUrl + "&ramdom=" + Control.randomNumber(), new Response.Listener<JSONArray>() {
-
+    private void showDialogSort() {
+        final String[] _lists = {"สถานที่", "วันที่"};
+        new AlertDialog.Builder(FavoriteMain.this).setTitle("เรียงลำดับ").setItems(_lists, new DialogInterface.OnClickListener() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onClick(DialogInterface dialog, int which) {
 
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject obj = response.getJSONObject(i);
-                        Favorite item = new Favorite();
+                mTempUrl = null;
 
-                        item.setDetail(obj.getString("detail"));
-                        item.setLat(obj.getDouble("lat"));
-                        item.setLng(obj.getDouble("lng"));
-                        item.setTime(obj.getString("update_date"));
-                        item.setType(obj.getString("type"));
-                        favoriteList.add(item);
-
-                    } catch (JSONException ex) {
-                        ex.printStackTrace();
-                    }
+                switch (which) {
+                    case 0:
+                        mTempUrl = "&job=location";
+                        break;
+                    case 1:
+                        mTempUrl = "&job=date";
+                        break;
                 }
-                if(response.length() > 0){
-                    mFavotiteIm.setVisibility(View.INVISIBLE);
-                    mFavotiteTv.setVisibility(View.INVISIBLE);
-                }else{
-                    mFavotiteIm.setVisibility(View.VISIBLE);
-                    mFavotiteTv.setVisibility(View.VISIBLE);
-                }
-                Control.hDialog();
-                adapter.notifyDataSetChanged();
+
+                refreshData();
+                dialog.cancel();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+        }).show();
+    }
 
+    public void refreshData() {
+        mFavoriteList = null;
+        mFavoriteList = new ArrayList<Favorite>();
+
+        mAdapter = new FavoriteCustomListAdapter(FavoriteMain.this, mFavoriteList);
+        mListView.setAdapter(mAdapter);
+
+        getDatabase();
+    }
+
+    private void showDialogMenu(int _position) {
+
+        mItem = mFavoriteList.get(_position);
+
+        final String[] lists = {"ดูแผนที่", "แก้ไข", "ลบรายการ",};
+        new AlertDialog.Builder(FavoriteMain.this).setTitle("รายการโปรด").setItems(lists, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                switch (which) {
+                    case 0:
+                        startActivity(new Intent(getApplicationContext(), DetailMap.class)
+                                .putExtra("latFavorite", mItem.getLat()).putExtra("lngFavorite", mItem.getLng())
+                                .putExtra("typeFavorite", mItem.getType()).putExtra("typeFavorite", mItem.getType())
+                                .putExtra("detailFavorite", mItem.getDetail()).putExtra("typeMoveMap", 9));
+                        break;
+                    case 1:
+                        showDialogEdit();
+                        break;
+                    case 2:
+                        showDialogDelete();
+                        break;
+                }
+                dialog.cancel();
+            }
+        }).show();
+    }
+
+    private void showDialogEdit() {
+        final Dialog _dialog = new Dialog(this);
+        _dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        _dialog.setContentView(R.layout.activity_dialog_favorite_detail);
+
+        ControlKeyboard.showKeyboard(FavoriteMain.this);
+
+        final EditText editDetailName = (EditText) _dialog.findViewById(R.id.editDetailName);
+        editDetailName.setText(mItem.getDetail());
+        editDetailName.setSelection(editDetailName.getText().length());
+
+        ImageView btnClose = (ImageView) _dialog.findViewById(R.id.btnClose);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mControlKeyBoard.hideKeyboard(FavoriteMain.this);
+                _dialog.cancel();
             }
         });
-        AppController.getmInstance().
-                addToRequesQueue(jsonArrayRequest);
+
+        Button save = (Button) _dialog.findViewById(R.id.btnSave);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mControlDatabase.setFavoriteMain(editDetailName.getText().toString(), "updatefavorite");
+                _dialog.cancel();
+            }
+        });
+        _dialog.show();
+    }
+
+    private void showDialogDelete() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(FavoriteMain.this);
+        builder.setMessage("ลบรายการนี้หรือไม่");
+        builder.setPositiveButton("ลบรายการ", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                mControlDatabase.setFavoriteMain("", "deletefavorite");
+                dialog.cancel();
+            }
+        });
+        builder.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(Color.parseColor("#147cce"));
+        pbutton.setTypeface(null, Typeface.BOLD);
+        Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+        nbutton.setTextColor(Color.parseColor("#147cce"));
+        nbutton.setTypeface(null, Typeface.BOLD);
+    }
+
+    private void bindWidget() {
+        mRefreshIm = (ImageView) findViewById(R.id.refreshIm);
+        mSortIm = (ImageView) findViewById(R.id.sortIm);
+        mListView = (ListView) findViewById(R.id.listview);
+        mFavotiteTv = (TextView) findViewById(R.id.favoriteTv);
+        mFavotiteIm = (ImageView) findViewById(R.id.favoriteIm);
     }
 }
 

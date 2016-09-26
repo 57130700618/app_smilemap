@@ -16,21 +16,20 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/backImv"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
                 android:id="@+id/titleTv"
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/label_sub_20sp" />
 
             <ImageView
                 android:id="@+id/reportBtn"
@@ -42,13 +41,14 @@
                 android:layout_marginRight="5dp"
                 android:padding="10dp"
                 android:src="@drawable/icon_report" />
+
         </RelativeLayout>
 
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/white">
 
         <ScrollView
@@ -62,8 +62,8 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <fragment
                         android:id="@+id/streetviewFm"
@@ -129,8 +129,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:layout_marginBottom="70dp"
+                        android:layout_marginTop="5dp"
                         android:text="*ค่าระยะทางและเวลาอาจจะคลาดเคลื่อน เนื่องจากสภาพการจราจรที่ติดขัด รวมถึงปัจจัยอื่นๆ"
                         android:textSize="13sp" />
 

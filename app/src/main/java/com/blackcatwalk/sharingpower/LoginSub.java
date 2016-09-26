@@ -16,7 +16,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,16 +23,9 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.blackcatwalk.sharingpower.utility.Control;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
+import com.blackcatwalk.sharingpower.utility.ControlFile;
 
 public class LoginSub extends AppCompatActivity {
 
@@ -41,6 +33,9 @@ public class LoginSub extends AppCompatActivity {
     private String mPassWord = "";
     private int mCountInvalid = 0;
     private boolean mCheckShowPassword = true;
+    private ControlFile mControlFile;
+    private Control mControl;
+    private ControlDatabase mControlDatabae;
 
     // -------------- User Interface ------------------//
     private ImageView mBackIm;
@@ -61,7 +56,9 @@ public class LoginSub extends AppCompatActivity {
 
         bindWidget();
 
-        Control.hideKeyboardEditext(this);
+        mControlFile = new ControlFile();
+        mControl = new Control();
+        mControlDatabae = new ControlDatabase(this);
 
         mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +96,7 @@ public class LoginSub extends AppCompatActivity {
         mEmailEt.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                mEmailEt.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 if (mEmailEt.getText().toString().length() > 0) {
                     mClearEmailBtn.setVisibility(View.VISIBLE);
                 }
@@ -186,27 +184,6 @@ public class LoginSub extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Control.hideKeyboard(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Control.hDialog();
-    }
-
-    private void bindWidget() {
-        mBackIm = (ImageView) findViewById(R.id.backIm);
-        mEmailEt = (EditText) findViewById(R.id.emailEt);
-        mClearEmailBtn = (Button) findViewById(R.id.clearEmailBtn);
-        mPasswordEt = (EditText) findViewById(R.id.passwordEt);
-        mShowPasswordIm = (ImageView) findViewById(R.id.showPasswordIm);
-        mLoginBtn = (Button) findViewById(R.id.loginBtn);
-        mRegisterBtn = (Button) findViewById(R.id.registerBtn);
-        mForgetPasswordBtn = (Button) findViewById(R.id.forgetPasswordBtn);
-        mLayoutSc = (ScrollView) findViewById(R.id.layoutSc);
-        mLayoutSc.setVerticalScrollBarEnabled(false);
-        mLayoutSc.setHorizontalScrollBarEnabled(false);
     }
 
     private void checkLogin() {
@@ -217,68 +194,32 @@ public class LoginSub extends AppCompatActivity {
 
             mClearEmailBtn.setVisibility(View.INVISIBLE);
 
-            mPassWord = Control.md5(mPassWord);
+            mPassWord = mControl.md5(mPassWord);
 
-            Control.sDialog(this);
-
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, Control.getMGetDatabase() + "login&email="
-                    + mUserName + "&password=" + mPassWord + "&ramdom=" + Control.randomNumber(), null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-                            try {
-
-                                JSONArray ja = response.getJSONArray("users");
-
-                                String test = "";
-                                JSONObject jsonObject = null;
-
-                                for (int i = 0; i < ja.length(); i++) {
-                                    jsonObject = ja.getJSONObject(i);
-                                    test = jsonObject.getString("check");
-                                }
-
-                                Control.hDialog();
-                                if (test.equals("true")) {
-                                    saveStausLoginToFile();
-                                } else {
-                                    mCountInvalid++;
-
-                                    if (mCountInvalid >= 5) {
-                                        alertDialog(getString(R.string.general_text_2),
-                                                getString(R.string.general_text_3), true);
-
-                                    } else {
-                                        alertDialog(getString(R.string.general_text_4),
-                                                getString(R.string.general_text_5), false);
-                                    }
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
-                    }
-            );
-            jor.setShouldCache(false);
-            requestQueue.add(jor);
+            mControlDatabae.getDatabaseLoginub(mUserName, mPassWord);
         }
     }
 
-    private void saveStausLoginToFile() {
+    public void saveStausLoginToFile() {
 
-        Control.setUserNameToFile(this, mUserName);
-        Control.setStausLoginToFile(this, "1");
+        mControlFile.setFile(this, mUserName, "userName");
+        mControlFile.setFile(this, "1" , "stausLogin");
 
         startActivity(new Intent(this, MainActivity.class));
         finish();
+    }
+
+    public void countInvalid() {
+        mCountInvalid++;
+
+        if (mCountInvalid >= 5) {
+            alertDialog(getString(R.string.general_text_2),
+                    getString(R.string.general_text_3), true);
+
+        } else {
+            alertDialog(getString(R.string.general_text_4),
+                    getString(R.string.general_text_5), false);
+        }
     }
 
     private void alertDialog(String title, String Message, final boolean check) {
@@ -306,4 +247,19 @@ public class LoginSub extends AppCompatActivity {
         pbutton.setTextColor(Color.parseColor("#147cce"));
         pbutton.setTypeface(null, Typeface.BOLD);
     }
+
+    private void bindWidget() {
+        mBackIm = (ImageView) findViewById(R.id.backIm);
+        mEmailEt = (EditText) findViewById(R.id.emailEt);
+        mClearEmailBtn = (Button) findViewById(R.id.clearEmailBtn);
+        mPasswordEt = (EditText) findViewById(R.id.passwordEt);
+        mShowPasswordIm = (ImageView) findViewById(R.id.showPasswordIm);
+        mLoginBtn = (Button) findViewById(R.id.loginBtn);
+        mRegisterBtn = (Button) findViewById(R.id.registerBtn);
+        mForgetPasswordBtn = (Button) findViewById(R.id.forgetPasswordBtn);
+        mLayoutSc = (ScrollView) findViewById(R.id.layoutSc);
+        mLayoutSc.setVerticalScrollBarEnabled(false);
+        mLayoutSc.setHorizontalScrollBarEnabled(false);
+    }
+
 }

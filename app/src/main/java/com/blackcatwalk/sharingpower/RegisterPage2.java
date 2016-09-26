@@ -17,15 +17,8 @@ import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.blackcatwalk.sharingpower.utility.Control;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
 
 public class RegisterPage2 extends AppCompatActivity {
 
@@ -52,8 +45,6 @@ public class RegisterPage2 extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_register_page2);
 
-        Control.showKeyboard(this);
-
         bindWidget();
 
         Bundle bundle = getIntent().getExtras();
@@ -61,7 +52,7 @@ public class RegisterPage2 extends AppCompatActivity {
         mEmail = bundle.getString("email");
 
         mTempPassword = mPassword;
-        mPassword = Control.md5(mPassword);
+        mPassword = new Control().md5(mPassword);
 
         mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +83,7 @@ public class RegisterPage2 extends AppCompatActivity {
                     mClearTextBtn.setVisibility(View.INVISIBLE);
                     if (mNicknameEt.getText().toString().length() < 5) {
                         checkForm();
-                    }else{
+                    } else {
                         mAlertTv.setTextColor(Color.parseColor("#717171"));
                         mAlertTv.setText("ชื่อผู้ใช้ถูกต้อง");
                     }
@@ -150,51 +141,20 @@ public class RegisterPage2 extends AppCompatActivity {
         }
 
         if (mNickname.length() < 5) {
-            mAlertTv.setTextColor(Color.parseColor("#f25d5d"));
+            mAlertTv.setTextColor(Color.parseColor("#F4511E"));
             mAlertTv.setText(R.string.general_text_14);
         } else {
-            if (Control.checkInternet(RegisterPage2.this)) {
-
-                Control.sDialog(RegisterPage2.this);
-
-                RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
-                StringRequest jor = new StringRequest(Request.Method.POST, Control.getMSetDatabase(),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                Control.hDialog();
-                                Intent login = new Intent(getApplicationContext(), RegisterPage3.class);
-                                login.putExtra("email", mEmail);
-                                login.putExtra("password", mTempPassword);
-                                login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(login);
-                                finish();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Control.hDialog();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("main", "register");
-                        params.put("password", mPassword);
-                        params.put("email", mEmail);
-                        params.put("nickname", mNickname);
-                        params.put("sex", mSex);
-                        return params;
-                    }
-                };
-                jor.setShouldCache(false);
-                requestQueue.add(jor);
-
-            } else {
-                Control.alertInternet(RegisterPage2.this);
-            }
+            new ControlDatabase(this).getDatabaseRegisPage2(mEmail, mPassword, mNickname, mSex);
         }
+    }
+
+    public void sendData() {
+        Intent login = new Intent(getApplicationContext(), RegisterPage3.class);
+        login.putExtra("email", mEmail);
+        login.putExtra("password", mTempPassword);
+        login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(login);
+        finish();
     }
 
     private void bindWidget() {

@@ -8,7 +8,12 @@ import android.widget.ImageView;
 
 public class Island extends AppCompatActivity {
 
-    Intent intent;
+    private ImageView mProfileBtn;
+    private ImageView mNearbyLocationBtn;
+    private ImageView mNearbyCurrentBtn;
+    private ImageView mCallBtn;
+    private ImageView mSettingsBtn;
+    private ImageView mRankBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,59 +21,59 @@ public class Island extends AppCompatActivity {
         setContentView(R.layout.activity_island);
         getSupportActionBar().hide();
 
-        ImageView profileBtn = (ImageView) findViewById(R.id.profileBtn);
-        profileBtn.setOnClickListener(new View.OnClickListener() {
+        bindWidget();
+
+        mProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), Profile.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), Profile.class));
             }
         });
 
-        ImageView rank = (ImageView) findViewById(R.id.rank);
-        rank.setOnClickListener(new View.OnClickListener() {
+        mRankBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), RankMain.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), RankMain.class));
             }
         });
 
-        ImageView nearbyCurrent = (ImageView) findViewById(R.id.nearbyCurrent);
-        nearbyCurrent.setOnClickListener(new View.OnClickListener() {
+        mNearbyCurrentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), NearbyCurrent.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), NearbyCurrent.class));
             }
         });
 
-        ImageView nearbyLocation = (ImageView) findViewById(R.id.nearbyLocation);
-        nearbyLocation.setOnClickListener(new View.OnClickListener() {
+
+        mNearbyLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), NearbyPlacesMain.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), NearbyPlacesMain.class));
             }
         });
 
-        ImageView call = (ImageView) findViewById(R.id.call);
-        call.setOnClickListener(new View.OnClickListener() {
+
+        mCallBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), CallEmergency.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), CallEmergency.class));
             }
         });
 
-        ImageView setting = (ImageView) findViewById(R.id.settings);
-        setting.setOnClickListener(new View.OnClickListener() {
+        mSettingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), Setting.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), Setting.class));
             }
         });
+    }
 
+    private void bindWidget() {
+        mProfileBtn = (ImageView) findViewById(R.id.profileBtn);
+        mRankBtn = (ImageView) findViewById(R.id.rankBtn);
+        mCallBtn = (ImageView) findViewById(R.id.callBtn);
+        mNearbyCurrentBtn = (ImageView) findViewById(R.id.nearbyCurrentBtn);
+        mNearbyLocationBtn = (ImageView) findViewById(R.id.nearbyLocationBtn);
+        mSettingsBtn = (ImageView) findViewById(R.id.settingsBtn);
     }
 }

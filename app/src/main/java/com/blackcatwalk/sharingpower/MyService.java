@@ -1,3 +1,4 @@
+
 package com.blackcatwalk.sharingpower;
 
 import android.app.Notification;
@@ -22,6 +23,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
+import com.blackcatwalk.sharingpower.utility.ControlFile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -35,6 +38,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 
 public class MyService extends Service {
@@ -47,6 +51,8 @@ public class MyService extends Service {
     private double mCurrentLatitude;
     private double mCurrentLongitude;
 
+    private ControlCheckConnect mControlCheckConnect;
+
     //---------------- Data to/form Database ----------------
     private String mUsername;
     private String mType = "";
@@ -58,9 +64,25 @@ public class MyService extends Service {
     private String mAmountPerson = "";
     private int mCountPoint = 0;
 
+    //---------------- Config Database ----------------
+
+    private final String mSetDatabase = "https://www.smilemap.me/android/set.php";
+    private final String mGetDatabase = "https://www.smilemap.me/android/get.php?main=";
+
+    public String getMSetDatabase() {
+        return mSetDatabase;
+    }
+
+    public String getMGetDatabase() {
+        return mGetDatabase;
+    }
+
+
     @Override
     public void onCreate() {
-        mUsername = Control.getUsername(this);
+        super.onCreate();
+        mUsername = ControlFile.getUsername(this);
+        mControlCheckConnect = new ControlCheckConnect();
         getDatabase();
         mThread = new MyThread();
     }
@@ -140,7 +162,8 @@ public class MyService extends Service {
                     notification("ท่านกำลังแชร์ตำแหน่งการจราจรอยู่", "ทีมงานขอกราบขอบพระคุณจิตสาธารณะในครั้งนี้");
                 }
 
-                if (!Control.checkInternet(getApplicationContext()) || !Control.checkGPS(getApplicationContext())) {
+                if (!mControlCheckConnect.checkInternet(getApplicationContext())
+                        || !mControlCheckConnect.checkGPS(getApplicationContext())) {
                     mCountDontConnectGpsInternet++;
                     if (mCountDontConnectGpsInternet > 8) {
                         mCountDontConnectGpsInternet = 0;
@@ -229,8 +252,8 @@ public class MyService extends Service {
     public void getDatabase() {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, Control.getMGetDatabase()
-                + "game&sub=" + mUsername + "&ramdom=" + Control.randomNumber(), null,
+        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, getMGetDatabase()
+                + "game&sub=" + mUsername + "&ramdom=" + randomNumber(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -269,7 +292,7 @@ public class MyService extends Service {
         if (mThread.mFinish == false) {
 
             RequestQueue _requestQueue = Volley.newRequestQueue(this);
-            StringRequest _jor = new StringRequest(Request.Method.POST, Control.getMSetDatabase(),
+            StringRequest _jor = new StringRequest(Request.Method.POST, getMSetDatabase(),
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -306,8 +329,12 @@ public class MyService extends Service {
             _requestQueue.add(_jor);
         }
     }
+
+    private int randomNumber() {
+        Random rand = new Random();
+        return rand.nextInt(5000) + 1;
+    }
+
 }
-
-
 
 

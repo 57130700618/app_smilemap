@@ -3,12 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/layoutLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary1"
@@ -19,24 +17,23 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/btnClose"
+                android:id="@+id/backIm"
                 android:layout_width="45dp"
                 android:layout_height="50dp"
                 android:padding="10dp"
                 android:src="@drawable/icon_back" />
 
             <TextView
-                android:id="@+id/label"
+                android:id="@+id/labelTv"
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="40dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/label_sub_20sp"/>
+                android:textSize="@dimen/label_sub_20sp" />
 
             <ImageView
-                android:id="@+id/main"
+                android:id="@+id/mainIm"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
@@ -104,10 +101,10 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:background="@color/line_gray"
-                    android:padding="1dp"/>
+                    android:padding="1dp" />
 
                 <ImageView
-                    android:id="@+id/btnCureentLocation"
+                    android:id="@+id/cureentLocationBtn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginRight="15dp"
@@ -122,7 +119,7 @@
         </LinearLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/btnNavigation"
+            android:id="@+id/navigationBtn"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_above="@+id/linearLayout1"
@@ -130,8 +127,8 @@
             android:layout_marginBottom="20dp"
             android:layout_marginRight="15dp"
             android:src="@drawable/icon_shared_1"
-        />
-        android:visibility="gone"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
@@ -141,7 +138,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/txtDetail"
+                android:id="@+id/txtDetailTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -213,8 +210,8 @@
             android:layout_above="@+id/linearLayout"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
-            android:visibility="gone"
-            android:layout_toEndOf="@+id/btnNavigation">
+            android:layout_toEndOf="@+id/btnNavigation"
+            android:visibility="gone">
 
             <fragment
                 android:id="@+id/smallGoogleStreet"

@@ -15,8 +15,8 @@ public class NearbyCurrent extends AppCompatActivity {
         setContentView(R.layout.activity_nearby_current);
         getSupportActionBar().hide();
 
-        ImageView btnClose = (ImageView) findViewById(R.id.btnClose);
-        btnClose.setOnClickListener(new View.OnClickListener() {
+        ImageView backIm = (ImageView) findViewById(R.id.backIm);
+        backIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -28,9 +28,7 @@ public class NearbyCurrent extends AppCompatActivity {
         currentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent detailBrt = new Intent(getApplicationContext(), DetailMap.class);
-                detailBrt.putExtra("typeMoveMap", 7);
-                startActivity(detailBrt);
+                startActivity(new Intent(getApplicationContext(), DetailMap.class).putExtra("typeMoveMap", 7));
             }
         });
 
@@ -38,9 +36,7 @@ public class NearbyCurrent extends AppCompatActivity {
         customBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent detailBrt = new Intent(getApplicationContext(), DetailMap.class);
-                detailBrt.putExtra("typeMoveMap", 8);
-                startActivity(detailBrt);
+                startActivity(new Intent(getApplicationContext(), DetailMap.class).putExtra("typeMoveMap", 8));
             }
         });
     }

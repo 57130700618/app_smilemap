@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/layoutLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary1"
@@ -18,10 +16,10 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
@@ -29,13 +27,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="40dp"
                 android:text="จัดอันดับ"
-                android:textColor="@color/white"
+               style="@style/label_sub"
                 android:textSize="@dimen/label_sub_20sp" />
 
             <ImageView
-                android:id="@+id/settings"
+                android:id="@+id/settingsIm"
                 android:layout_width="43dp"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
@@ -45,7 +42,6 @@
                 android:layout_marginRight="5dp"
                 android:padding="10dp"
                 android:src="@drawable/icon_menu" />
-
 
         </RelativeLayout>
 
@@ -66,7 +62,6 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/trophies" />
 
-
         <ImageView
             android:layout_width="60dp"
             android:layout_height="40dp"
@@ -83,7 +78,6 @@
             android:layout_centerVertical="true"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-
 
             <TextView
                 android:id="@+id/textView4"
@@ -111,9 +105,9 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/list_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/white"
         android:cacheColorHint="#00000000"
         android:divider="@null"

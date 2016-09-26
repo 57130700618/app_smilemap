@@ -16,20 +16,20 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
+                android:id="@+id/titleTv"
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/titleTv"
-                android:textColor="@color/white"
-                android:textSize="@dimen/label_sub_20sp"/>
+                android:textSize="@dimen/label_sub_20sp" />
 
             <ImageView
                 android:id="@+id/reportBtn"
@@ -41,7 +41,6 @@
                 android:layout_marginRight="5dp"
                 android:padding="10dp"
                 android:src="@drawable/icon_report" />
-
 
             <ImageView
                 android:id="@+id/favoriteBtn"
@@ -58,8 +57,8 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/white">
 
         <ScrollView
@@ -73,8 +72,8 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <fragment
                         android:id="@+id/streetviewpanorama"
@@ -107,7 +106,7 @@
                         android:paddingLeft="35dp">
 
                         <Button
-                            android:id="@+id/comment"
+                            android:id="@+id/commentBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:background="@drawable/a_code_button_green"
@@ -118,7 +117,7 @@
                             android:textSize="14sp" />
 
                         <Button
-                            android:id="@+id/vote"
+                            android:id="@+id/voteBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:layout_marginTop="20dp"
@@ -151,7 +150,7 @@
                                 android:src="@drawable/icon_five_star" />
 
                             <TextView
-                                android:id="@+id/text_five"
+                                android:id="@+id/fiveStarTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
@@ -174,7 +173,7 @@
                                 android:src="@drawable/icon_four_star" />
 
                             <TextView
-                                android:id="@+id/text_four"
+                                android:id="@+id/fourStarTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
@@ -197,7 +196,7 @@
                                 android:src="@drawable/icon_three_star" />
 
                             <TextView
-                                android:id="@+id/text_three"
+                                android:id="@+id/threeStarTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
@@ -221,7 +220,7 @@
                                 android:src="@drawable/icon_two_star" />
 
                             <TextView
-                                android:id="@+id/text_two"
+                                android:id="@+id/twoStarTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
@@ -244,7 +243,7 @@
                                 android:src="@drawable/icon_one_star" />
 
                             <TextView
-                                android:id="@+id/text_one"
+                                android:id="@+id/oneStarTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
@@ -271,7 +270,7 @@
                         android:background="@color/light_gray" />
 
                     <TextView
-                        android:id="@+id/detailLocation"
+                        android:id="@+id/detailLocationTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
@@ -315,7 +314,7 @@
         </ScrollView>
 
         <Button
-            android:id="@+id/btnNavigation"
+            android:id="@+id/navigationBtn"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
@@ -327,6 +326,5 @@
             android:textStyle="bold" />
 
     </RelativeLayout>
-
 
 </LinearLayout>

@@ -16,10 +16,10 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/back"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:id="@+id/backIm"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
@@ -28,7 +28,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="ตั้งค่า"
-                android:textColor="@color/white"
+               style="@style/label_sub"
                 android:textSize="@dimen/label_sub_20sp" /> />
 
         </RelativeLayout>
@@ -57,7 +57,7 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/traffic"
+                android:id="@+id/trafficLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -80,7 +80,7 @@
                 android:orientation="horizontal" />
 
             <LinearLayout
-                android:id="@+id/nearby"
+                android:id="@+id/nearbyLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -104,7 +104,7 @@
                 android:orientation="horizontal" />
 
             <LinearLayout
-                android:id="@+id/typemap"
+                android:id="@+id/typemapLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -137,7 +137,7 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/facebook"
+                android:id="@+id/facebookLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -162,7 +162,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/instagram"
+                android:id="@+id/instagramLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -186,7 +186,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/twitter"
+                android:id="@+id/twitterLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

@@ -22,6 +22,5 @@ public class Donate extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 }

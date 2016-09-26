@@ -3,50 +3,50 @@ package com.blackcatwalk.sharingpower;
 
 public class Favorite  {
 
-    private String type;
-    private String time;
-    private String detail;
-    private Double lat;
-    private Double lng;
+    private String mType;
+    private String mTime;
+    private String mDetail;
+    private Double mLat;
+    private Double mLng;
 
-    public void setType(String type) {
-        this.type = type;
+    public void setType(String _type) {
+        this.mType = _type;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTime(String _time) {
+        this.mTime = _time;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
+    public void setDetail(String _detail) {
+        this.mDetail = _detail;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setLat(double _lat) {
+        this.mLat = _lat;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
+    public void setLng(double _lng) {
+        this.mLng = _lng;
     }
 
     public String getType() {
-        return type;
+        return mType;
     }
 
     public String getTime() {
-        return time;
+        return mTime;
     }
 
     public String getDetail() {
-        return detail;
+        return mDetail;
     }
 
     public Double getLat() {
-        return lat;
+        return mLat;
     }
 
     public Double getLng() {
-        return lng;
+        return mLng;
     }
 
 }

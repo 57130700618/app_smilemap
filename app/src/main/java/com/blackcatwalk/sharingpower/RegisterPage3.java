@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.blackcatwalk.sharingpower.utility.ControlFile;
+
 public class RegisterPage3 extends AppCompatActivity {
 
     // -------------- User Interface ------------------//
@@ -41,8 +43,10 @@ public class RegisterPage3 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Control.setUserNameToFile(RegisterPage3.this, mEmail);
-                Control.setStausLoginToFile(RegisterPage3.this, "1");
+                ControlFile _controlFile = new ControlFile();
+
+                _controlFile.setFile(RegisterPage3.this, mEmail, "userName");
+                _controlFile.setFile(RegisterPage3.this, "1", "stausLogin");
 
                 startActivity(new Intent(getApplicationContext(), MainActivity.class).
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
@@ -55,7 +59,6 @@ public class RegisterPage3 extends AppCompatActivity {
         mEmailTv = (TextView) findViewById(R.id.emailTv);
         mPasswordTv = (TextView) findViewById(R.id.passwordTv);
         mLoginBtn = (Button) findViewById(R.id.loginBtn);
-
     }
 }
 

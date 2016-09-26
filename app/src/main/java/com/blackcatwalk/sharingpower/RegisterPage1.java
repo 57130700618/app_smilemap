@@ -21,20 +21,12 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
 
 public class RegisterPage1 extends AppCompatActivity {
 
     private boolean mCheckShowPassword = true;
+    private ControlDatabase mControlDatabase;
 
     // -------------- User Interface ------------------//
     private ImageView mBackIm;
@@ -56,9 +48,9 @@ public class RegisterPage1 extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_register_page1);
 
-        Control.showKeyboard(this);
-
         bindWidget();
+
+        mControlDatabase = new ControlDatabase(this);
 
         mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,75 +161,46 @@ public class RegisterPage1 extends AppCompatActivity {
         mPassword = mPasswordEt.getText().toString();
 
         if (!isValidEmail(mEmail) || mEmail.length() <=0 ) {
-            mAlertTv.setTextColor(Color.parseColor("#f25d5d"));
+            mAlertTv.setTextColor(Color.parseColor("#F4511E"));
             mAlertTv.setText(R.string.general_text_6);
             return;
         }
 
         if (mPassword.length() < 8) {
-            mAlertTv.setTextColor(Color.parseColor("#f25d5d"));
+            mAlertTv.setTextColor(Color.parseColor("#F4511E"));
             mAlertTv.setText(R.string.general_text_7);
             return;
         }
 
-        Control.sDialog(RegisterPage1.this);
+        mControlDatabase.getDatabaseRegisPage1(mEmail);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, Control.getMGetDatabase() + "register&job=" +
-                "email&email=" + mEmail + "&ramdom=" + Control.randomNumber(), null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+    }
 
-                        try {
-                            JSONArray _ja = response.getJSONArray("users");
+    public final static boolean isValidEmail(String _target) {
+        return !TextUtils.isEmpty(_target) && android.util.Patterns.EMAIL_ADDRESS.matcher(_target).matches();
+    }
 
-                            JSONObject _jsonObject = null;
-                            String _temp = "";
-
-                            for (int i = 0; i < _ja.length(); i++) {
-                                _jsonObject = _ja.getJSONObject(i);
-                                _temp = _jsonObject.getString("check");
-                            }
-                            Control.hDialog();
-
-                            if (_temp.equals("false")) {
-                                Intent registerPage2 = new Intent(getApplicationContext(), RegisterPage2.class);
-                                registerPage2.putExtra("email", mEmail);
-                                registerPage2.putExtra("password", mPassword);
-                                startActivity(registerPage2);
-                                mAlertTv.setTextColor(Color.parseColor("#717171"));
-                                mAlertTv.setText(R.string.general_text_10);
-                            } else {
-                                mAlertTv.setTextColor(Color.parseColor("#f25d5d"));
-                                mAlertTv.setText(R.string.general_text_8);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterPage1.this);
-                                builder.setMessage(R.string.general_text_9);
-                                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                });
-                                AlertDialog alert = builder.create();
-                                alert.show();
-                                Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                                pbutton.setTextColor(Color.parseColor("#147cce"));
-                                pbutton.setTypeface(null, Typeface.BOLD);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Control.hDialog();
-                    }
+    public void checkEmail(String _temp) {
+        if (_temp.equals("false")) {
+            startActivity(new Intent(getApplicationContext(), RegisterPage2.class)
+                    .putExtra("email", mEmail).putExtra("password", mPassword));
+            mAlertTv.setTextColor(Color.parseColor("#717171"));
+            mAlertTv.setText(R.string.general_text_10);
+        } else {
+            mAlertTv.setTextColor(Color.parseColor("#F4511E"));
+            mAlertTv.setText(R.string.general_text_8);
+            AlertDialog.Builder builder = new AlertDialog.Builder(RegisterPage1.this);
+            builder.setMessage(R.string.general_text_9);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
                 }
-        );
-        jor.setShouldCache(false);
-        requestQueue.add(jor);
-
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+            pbutton.setTextColor(Color.parseColor("#147cce"));
+            pbutton.setTypeface(null, Typeface.BOLD);
+        }
     }
 
     private void bindWidget() {
@@ -251,10 +214,5 @@ public class RegisterPage1 extends AppCompatActivity {
         mLayoutSc = (ScrollView) findViewById(R.id.layoutSc);
         mLayoutSc.setVerticalScrollBarEnabled(false);
         mLayoutSc.setHorizontalScrollBarEnabled(false);
-
-    }
-
-    public final static boolean isValidEmail(String _target) {
-        return !TextUtils.isEmpty(_target) && android.util.Patterns.EMAIL_ADDRESS.matcher(_target).matches();
     }
 }

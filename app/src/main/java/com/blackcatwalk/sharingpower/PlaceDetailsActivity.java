@@ -1,16 +1,9 @@
 package com.blackcatwalk.sharingpower;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
@@ -18,313 +11,231 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.blackcatwalk.sharingpower.google.GoogleNavigator;
+import com.blackcatwalk.sharingpower.google.PlaceDetailsJSONParser;
+import com.blackcatwalk.sharingpower.utility.Control;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
+import com.blackcatwalk.sharingpower.utility.ControlKeyboard;
+import com.blackcatwalk.sharingpower.utility.ControlProgress;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 
 public class PlaceDetailsActivity extends Activity {
 
-    private WebView mWvPlaceDetails;
-    private Button btnNavigation;
-    private String temp = null;
-    private String type = null;
-    private String tempType = null;
-    private TextView typeName;
+    private ControlDatabase mControlDatabase;
+    private String mLat;
+    private String mLng;
+    private double mSizeInInches;
 
-    // ----------------- Url to database ------------------//
-    private String set = "https://www.smilemap.me/android/set.php";
+    // ----------------------- User Intetface ------------
+    private WebView mWebView;
+    private Button mNavigatorBtn;
+    private String mTypeEng = null;
+    private String mTypeThai = null;
+    private TextView mTypeNameTv;
+    private ImageView mFavoriteBtn;
+    private ImageView mBackIm;
+    private ControlKeyboard mControlKeyboard;
 
-    // ----------- FIle System --------------//
-    private static final String fileUserName = "Username.txt";
-    private static final int readSize = 100; // Read 100byte
-
-
-    private String lat;
-    private String lng;
-
-    private String username;
-
-    private double sizeInInches;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
 
-        sizeInInches = Control.getSizeScrren(this);
+        bindWidget();
 
-        Control.sDialog(this);
+        ControlProgress.showProgressDialogDonTouch(this);
 
-        // Getting place reference from the map
-        String reference = getIntent().getStringExtra("reference");
-        type = getIntent().getStringExtra("type");
+        mSizeInInches = new Control().getSizeScrren(this);
+        mControlDatabase = new ControlDatabase(this);
+        mControlKeyboard = new ControlKeyboard();
 
-        typeName = (TextView) findViewById(R.id.typeName);
+        mTypeEng = getIntent().getStringExtra("type");
 
-        switch (type) {
-            case "atm":
-                tempType = "เอทีเอ็ม";
-                break;
-            case "bank":
-                tempType = "ธนาคาร";
-                break;
-            case "bus_station":
-                tempType = "ป้ายรถเมล์";
-                break;
-            case "doctor":
-                tempType = "คลีนิค";
-                break;
-            case "police":
-                tempType = "ตำรวจ";
-                break;
-            case "hospital":
-                tempType = "โรงพยาบาล";
-                break;
-            case "restaurant":
-                tempType = "อาหารและเครื่องดื่ม";
-                break;
-            case "cafe":
-                tempType = "คาเฟ่";
-                break;
-            case "department_store":
-                tempType = "ห้างสรรพสินค้า";
-                break;
-            case "shopping_mall":
-                tempType = "ช้อปปิ้งมอลล์";
-                break;
-            case "grocery_or_supermarket":
-                tempType = "ซุปเปอร์มาร์เก็ต";
-                break;
-            case "beauty_salon":
-                tempType = "ร้านเสริมสวย";
-                break;
-            case "gym":
-                tempType = "ยิม";
-                break;
-            case "post_office":
-                tempType = "ที่ทำการไปรษณีย์";
-                break;
-            case "school":
-                tempType = "โรงเรียน";
-                break;
-            case "university":
-                tempType = "มหาวิทยาลัย";
-                break;
-            case "gas_station":
-                tempType = "ปั้มน้ำมันและแก็ส";
-                break;
-            case "parking":
-                tempType = "ที่จอดรถ";
-                break;
-            case "car_repair":
-                tempType = "อู่ซ่อมรถ";
-                break;
-            case "restroom":
-                tempType = "ห้องน้ำ";
-                break;
-            case "pharmacy":
-                tempType = "ร้านขายยา";
-                break;
-            case "clinic":
-                tempType = "คลีนิค";
-                break;
-            case "veterinary_clinic":
-                tempType = "คลีนิครักษาสัตว์";
-                break;
-            case "daily_home":
-                tempType = "ที่พักรายวัน";
-                break;
-            case "officer":
-                tempType = "จัดพักผ่อน";
-                break;
-            case "garage":
-                tempType = "ร้านปะยาง";
-                break;
-        }
+        setDataNearby();
+        setTypeThai();
 
-        ImageView btnClose = (ImageView) findViewById(R.id.btnClose);
-        btnClose.setOnClickListener(new View.OnClickListener() {
+        mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
                 finish();
             }
         });
-        mWvPlaceDetails = (WebView) findViewById(R.id.wv_place_details);
-        mWvPlaceDetails.getSettings().setUseWideViewPort(false);
 
-        btnNavigation = (Button) findViewById(R.id.btnNavigation);
-        btnNavigation.setOnClickListener(new View.OnClickListener() {
+        mWebView.getSettings().setUseWideViewPort(false);
+
+        mNavigatorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final String[] lists = {"ขับรถ", "เดิน"};
-                new AlertDialog.Builder(PlaceDetailsActivity.this).setTitle("เลือกประเภทการเดินทาง").setItems(lists, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        final String parse = "google.navigation:q=" + lat + "," + lng;
-
-                        switch (which) {
-                            case 0:
-                                temp = parse + "&mode=d";
-                                break;
-                            case 1:
-                                temp = parse + "&mode=w";
-                                break;
-                        }
-                        dialog.cancel();
-
-                        AlertDialog.Builder buildercheck = new AlertDialog.Builder(PlaceDetailsActivity.this);
-                        buildercheck.setTitle(Html.fromHtml("<b>" + "โปรดตรวจสอบว่าท่านไม่ได้อยู่จุดอับสัญญาณ" + "</b>"));
-                        buildercheck.setMessage("เมนูนำทางอาจใช้เวลาในการโหลดข้อมูลนาน เมื่อท่านอยู่จุดอับสัญญาณ");
-                        buildercheck.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Uri gmmIntentUri = Uri.parse(temp);
-                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                                mapIntent.setPackage("com.google.android.apps.maps");
-                                startActivity(mapIntent);
-
-                                dialog.cancel();
-                            }
-                        });
-                        AlertDialog alert = buildercheck.create();
-                        alert.show();
-                        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                        pbutton.setTextColor(Color.parseColor("#147cce"));
-                        pbutton.setTypeface(null, Typeface.BOLD);
-                    }
-                }).show();
+                new GoogleNavigator().showDialogNavigator(getApplicationContext(),String.valueOf(mLat),String.valueOf(mLng));
             }
         });
 
-        ImageView favoriteBtn = (ImageView) findViewById(R.id.favoriteBtn);
-        favoriteBtn.setOnClickListener(new View.OnClickListener() {
+        mFavoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                final Dialog dialog = new Dialog(PlaceDetailsActivity.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.activity_dialog_favorite_detail);
-
-                final EditText editDetailName = (EditText) dialog.findViewById(R.id.editDetailName);
-
-                ImageView btnClose = (ImageView) dialog.findViewById(R.id.btnClose);
-                btnClose.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-
-                Button save = (Button) dialog.findViewById(R.id.btnSave);
-                save.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        try {
-                            FileInputStream fIn = openFileInput(fileUserName);
-                            InputStreamReader reader = new InputStreamReader(fIn);
-
-                            char[] buffer = new char[readSize];
-                            username = "";
-                            int charReadCount;
-                            while ((charReadCount = reader.read(buffer)) > 0) {
-                                String readString = String.copyValueOf(buffer, 0, charReadCount);
-
-                                username += readString;
-                                buffer = new char[readSize];
-                            }
-                            reader.close();
-
-                        } catch (IOException ioe) {
-                            ioe.printStackTrace();
-                        }
-
-                        final String detailName = editDetailName.getText().toString();
-
-                        if (Control.checkInternet(PlaceDetailsActivity.this)) {
-
-                            RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
-                            StringRequest jor = new StringRequest(Request.Method.POST, set,
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            Toast.makeText(getApplicationContext(), "บันทึกสำเร็จ", Toast.LENGTH_LONG).show();
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            Toast.makeText(getApplicationContext(), "บันทึกไม่สำเร็จ", Toast.LENGTH_LONG).show();
-                                        }
-                                    }) {
-                                @Override
-                                protected Map<String, String> getParams() {
-
-                                    Map<String, String> params = new HashMap<String, String>();
-                                    params.put("main", "favorite");
-                                    params.put("job", "savefavorite");
-                                    params.put("username", username);
-                                    params.put("lat", lat);
-                                    params.put("lng", lng);
-                                    params.put("detailnew", detailName);
-                                    params.put("type", type);
-
-                                    return params;
-                                }
-                            };
-                            jor.setShouldCache(false);
-                            requestQueue.add(jor);
-
-                            dialog.cancel();
-                        } else {
-                            Control.hDialog();
-                            Control.alertCurrentInternet(PlaceDetailsActivity.this);
-                        }
-                        dialog.cancel();
-                    }
-                });
-
-                dialog.show();
-
-
+                showDialogFavorite();
             }
         });
+    }
 
+    private void setDataNearby() {
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
-        sb.append("reference=" + reference);
+        sb.append("reference=" + getIntent().getStringExtra("reference"));
         sb.append("&sensor=true");
         sb.append("&key=AIzaSyAwJatyU0DGovYEOKYYbDu2KzE0mKEzUPY");
         sb.append("&language=th");
 
         // Creating locationSpinnerMinicalGray new non-ui thread task to download Google place details
         PlacesTask placesTask = new PlacesTask();
-
-        // Invokes the "doInBackground()" method of the class PlaceTask
         placesTask.execute(sb.toString());
     }
 
-    /**
-     * A method to download json data from url
-     */
+    private void setTypeThai() {
+        switch (mTypeEng) {
+            case "atm":
+                mTypeThai = "เอทีเอ็ม";
+                break;
+            case "bank":
+                mTypeThai = "ธนาคาร";
+                break;
+            case "bus_station":
+                mTypeThai = "ป้ายรถเมล์";
+                break;
+            case "doctor":
+                mTypeThai = "คลีนิค";
+                break;
+            case "police":
+                mTypeThai = "ตำรวจ";
+                break;
+            case "hospital":
+                mTypeThai = "โรงพยาบาล";
+                break;
+            case "restaurant":
+                mTypeThai = "อาหารและเครื่องดื่ม";
+                break;
+            case "cafe":
+                mTypeThai = "คาเฟ่";
+                break;
+            case "department_store":
+                mTypeThai = "ห้างสรรพสินค้า";
+                break;
+            case "shopping_mall":
+                mTypeThai = "ช้อปปิ้งมอลล์";
+                break;
+            case "grocery_or_supermarket":
+                mTypeThai = "ซุปเปอร์มาร์เก็ต";
+                break;
+            case "beauty_salon":
+                mTypeThai = "ร้านเสริมสวย";
+                break;
+            case "gym":
+                mTypeThai = "ยิม";
+                break;
+            case "post_office":
+                mTypeThai = "ที่ทำการไปรษณีย์";
+                break;
+            case "school":
+                mTypeThai = "โรงเรียน";
+                break;
+            case "university":
+                mTypeThai = "มหาวิทยาลัย";
+                break;
+            case "gas_station":
+                mTypeThai = "ปั้มน้ำมันและแก็ส";
+                break;
+            case "parking":
+                mTypeThai = "ที่จอดรถ";
+                break;
+            case "car_repair":
+                mTypeThai = "อู่ซ่อมรถ";
+                break;
+            case "restroom":
+                mTypeThai = "ห้องน้ำ";
+                break;
+            case "pharmacy":
+                mTypeThai = "ร้านขายยา";
+                break;
+            case "clinic":
+                mTypeThai = "คลีนิค";
+                break;
+            case "veterinary_clinic":
+                mTypeThai = "คลีนิครักษาสัตว์";
+                break;
+            case "daily_home":
+                mTypeThai = "ที่พักรายวัน";
+                break;
+            case "officer":
+                mTypeThai = "จัดพักผ่อน";
+                break;
+            case "garage":
+                mTypeThai = "ร้านปะยาง";
+                break;
+        }
+    }
+
+    private void showDialogFavorite() {
+        final Dialog _dialog = new Dialog(PlaceDetailsActivity.this);
+        _dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        _dialog.setContentView(R.layout.activity_dialog_favorite_detail);
+
+        final EditText editDetailName = (EditText) _dialog.findViewById(R.id.editDetailName);
+
+        ImageView btnClose = (ImageView) _dialog.findViewById(R.id.btnClose);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _dialog.cancel();
+            }
+        });
+
+        Button save = (Button) _dialog.findViewById(R.id.btnSave);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mControlKeyboard.hideKeyboard(PlaceDetailsActivity.this);
+                mControlDatabase.setFavoriteDatabaseLocationDetail(String.valueOf(mLat).toString(),
+                        String.valueOf(mLng).toString(), editDetailName.getText().toString(), mTypeEng);
+                _dialog.cancel();
+            }
+        });
+
+        _dialog.show();
+    }
+
+     // A class, to download Google Place Details
+    private class PlacesTask extends AsyncTask<String, Integer, String> {
+
+        String data = null;
+
+        // Invoked by execute() method of this object
+        @Override
+        protected String doInBackground(String... url) {
+            try {
+                data = downloadUrl(url[0]);
+            } catch (Exception e) { }
+            return data;
+        }
+
+        // Executed after the complete execution of doInBackground() method
+        @Override
+        protected void onPostExecute(String result) {
+            ParserTask parserTask = new ParserTask();
+            parserTask.execute(result);
+        }
+    }
+
+    // A method to download json data from url
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
@@ -362,37 +273,7 @@ public class PlaceDetailsActivity extends Activity {
         return data;
     }
 
-    /**
-     * A class, to download Google Place Details
-     */
-    private class PlacesTask extends AsyncTask<String, Integer, String> {
-
-        String data = null;
-
-        // Invoked by execute() method of this object
-        @Override
-        protected String doInBackground(String... url) {
-            try {
-                data = downloadUrl(url[0]);
-            } catch (Exception e) {
-
-            }
-            return data;
-        }
-
-        // Executed after the complete execution of doInBackground() method
-        @Override
-        protected void onPostExecute(String result) {
-            ParserTask parserTask = new ParserTask();
-            // Start parsing the Google place details in JSON format
-            // Invokes the "doInBackground()" method of the class ParseTask
-            parserTask.execute(result);
-        }
-    }
-
-    /**
-     * A class to parse the Google Place Details in JSON format
-     */
+   // A class to parse the Google Place Details in JSON format
     private class ParserTask extends AsyncTask<String, Integer, HashMap<String, String>> {
 
         JSONObject jObject;
@@ -422,8 +303,8 @@ public class PlaceDetailsActivity extends Activity {
 
             String name = hPlaceDetails.get("name");
             //String vicinity = hPlaceDetails.get("vicinity");
-            lat = hPlaceDetails.get("lat");
-            lng = hPlaceDetails.get("lng");
+            mLat = hPlaceDetails.get("mLat");
+            mLng = hPlaceDetails.get("mLng");
             String formatted_address = hPlaceDetails.get("formatted_address");
             String formatted_phone = hPlaceDetails.get("formatted_phone");
             //String website = hPlaceDetails.get("website");
@@ -434,22 +315,22 @@ public class PlaceDetailsActivity extends Activity {
 
             String data ;
 
-            if (sizeInInches >= 9.5) {
+            if (mSizeInInches >= 9.5) {
                 data = "<html>" +
                         "<body><h1><center>" + name + "</center></h1>" +
                         //"<hr />" +
-                        //"<p>LocationGps : " + lat + "," + lng + "</p>" +
+                        //"<p>LocationGps : " + mLat + "," + mLng + "</p>" +
                         "<h3><p>ที่อยู่: " + formatted_address + "</p>" +
                         "<p>เบอร์โทรศัพท์: " + formatted_phone + "</p><br></h3>" +
                         //"<p>เว็บไซค์ : " + website + "</p>" +
 
                         //"<p>เปิดการนำเส้นทางได้ที่ By Google MAP : <a href='" + url + "'>" + url + "</p>" +
                         "</body></html>";
-            } else if (sizeInInches >= 6.5) {
+            } else if (mSizeInInches >= 6.5) {
                 data = "<html>" +
                         "<body><h1><center>" + name + "</center></h1>" +
                         //"<hr />" +
-                        //"<p>LocationGps : " + lat + "," + lng + "</p>" +
+                        //"<p>LocationGps : " + mLat + "," + mLng + "</p>" +
                         "<h3><p>ที่อยู่: " + formatted_address + "</p>" +
                         "<p>เบอร์โทรศัพท์: " + formatted_phone + "</p><br></h3>" +
                         //"<p>เว็บไซค์ : " + website + "</p>" +
@@ -460,7 +341,7 @@ public class PlaceDetailsActivity extends Activity {
                 data = "<html>" +
                         "<body><h2><center>" + name + "</center></h2>" +
                         //"<hr />" +
-                        //"<p>LocationGps : " + lat + "," + lng + "</p>" +
+                        //"<p>LocationGps : " + mLat + "," + mLng + "</p>" +
                         "<p>ที่อยู่: " + formatted_address + "</p>" +
                         "<p>เบอร์โทรศัพท์: " + formatted_phone + "</p><br>" +
                         //"<p>เว็บไซค์ : " + website + "</p>" +
@@ -471,10 +352,18 @@ public class PlaceDetailsActivity extends Activity {
             }
 
             // Setting the data in WebView
-            mWvPlaceDetails.loadDataWithBaseURL("", data, mimeType, encoding, "");
-            typeName.setText("> "+tempType);
+            mWebView.loadDataWithBaseURL("", data, mimeType, encoding, "");
+            mTypeNameTv.setText("> "+ mTypeThai);
 
-            Control.hDialog();
+            ControlProgress.hideDialog();
         }
+    }
+
+    private void bindWidget() {
+        mBackIm = (ImageView) findViewById(R.id.backIm);
+        mFavoriteBtn = (ImageView) findViewById(R.id.favoriteBtn);
+        mTypeNameTv = (TextView) findViewById(R.id.typeNameTv);
+        mWebView = (WebView) findViewById(R.id.webView);
+        mNavigatorBtn = (Button) findViewById(R.id.navigatorBtn);
     }
 }

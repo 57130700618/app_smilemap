@@ -10,25 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
 
 public class CallEmergency extends AppCompatActivity {
 
-    private Intent intent;
-
-    // ----------- Url set form database --------------//
-    private String set = "https://www.smilemap.me/android/set.php";
-    private LinearLayout backgroundAdsLy;
+    private ImageView mBackIm;
+    private LinearLayout mGeneralLy;
+    private LinearLayout mHospitalLy;
+    private LinearLayout mPoliceLy;
+    private LinearLayout mReportLy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +27,9 @@ public class CallEmergency extends AppCompatActivity {
         setContentView(R.layout.activity_call_emergency);
         getSupportActionBar().hide();
 
-        ImageView btnClose = (ImageView) findViewById(R.id.btnClose);
-        btnClose.setOnClickListener(new View.OnClickListener() {
+        bindWidget();
+
+        mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -45,97 +37,70 @@ public class CallEmergency extends AppCompatActivity {
             }
         });
 
-        LinearLayout general = (LinearLayout) findViewById(R.id.general);
-        general.setOnClickListener(new View.OnClickListener() {
+        mGeneralLy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(CallEmergency.this, CallEmergencyDetail.class);
-                intent.putExtra("type", "general");
-                startActivity(intent);
+                startActivity("general");
             }
         });
 
-        LinearLayout hospital = (LinearLayout) findViewById(R.id.hospital);
-        hospital.setOnClickListener(new View.OnClickListener() {
+        mHospitalLy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(CallEmergency.this, CallEmergencyDetail.class);
-                intent.putExtra("type", "hospital");
-                startActivity(intent);
+                startActivity("hospital");
             }
         });
 
-        LinearLayout police = (LinearLayout) findViewById(R.id.police);
-        police.setOnClickListener(new View.OnClickListener() {
+        mPoliceLy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(CallEmergency.this, CallEmergencyDetail.class);
-                intent.putExtra("type", "police");
-                startActivity(intent);
+                startActivity("police");
             }
         });
 
-        LinearLayout report = (LinearLayout) findViewById(R.id.report);
-        report.setOnClickListener(new View.OnClickListener() {
+        mReportLy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(CallEmergency.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.activity_dialog_report_call);
+                openDialog();
+            }
+        });
+    }
 
-                ImageView btnClose = (ImageView) dialog.findViewById(R.id.btnClose);
-                btnClose.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
+    private void startActivity(String _typename) {
+        startActivity(new Intent(CallEmergency.this, CallEmergencyDetail.class).putExtra("type", _typename));
+    }
 
-                final EditText editText = (EditText) dialog.findViewById(R.id.editText);
+    private void openDialog() {
+        final Dialog _dialog = new Dialog(CallEmergency.this);
+        _dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        _dialog.setContentView(R.layout.activity_dialog_report_call);
 
-                Button btnSend = (Button) dialog.findViewById(R.id.btnSend);
-                btnSend.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-
-                        if (Control.checkInternet(CallEmergency.this)) {
-
-                            RequestQueue requestQueue = Volley.newRequestQueue(CallEmergency.this);
-                            StringRequest jor = new StringRequest(Request.Method.POST, set,
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            Toast.makeText(getApplicationContext(), "ส่งข้อมูลสำเร็จ", Toast.LENGTH_SHORT).show();
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            Toast.makeText(getApplicationContext(), "ส่งข้อมูลไม่สำเร็จ", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }) {
-                                @Override
-                                protected Map<String, String> getParams() {
-
-                                    Map<String, String> params = new HashMap<String, String>();
-                                    params.put("main", "report");
-                                    params.put("username", Control.getUsername(CallEmergency.this));
-                                    params.put("detail", editText.getText().toString());
-                                    params.put("type_report", "nearby_call");
-                                    return params;
-                                }
-                            };
-                            jor.setShouldCache(false);
-                            requestQueue.add(jor);
-
-                            dialog.cancel();
-                        } else {
-                            Control.alertCurrentInternet(CallEmergency.this);
-                        }
-                    }
-                });
-                dialog.show();
+        ImageView _btnClose = (ImageView) _dialog.findViewById(R.id.btnClose);
+        _btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _dialog.cancel();
             }
         });
 
+        final EditText _editText = (EditText) _dialog.findViewById(R.id.editText);
+
+        Button _btnSend = (Button) _dialog.findViewById(R.id.btnSend);
+        _btnSend.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ControlDatabase _controlDatabae = new ControlDatabase(CallEmergency.this);
+                _controlDatabae.CallEmergency(_editText.getText().toString());
+                _dialog.cancel();
+            }
+        });
+        _dialog.show();
+    }
+
+    private void bindWidget() {
+        mBackIm = (ImageView) findViewById(R.id.backIm);
+        mGeneralLy = (LinearLayout) findViewById(R.id.generalLy);
+        mHospitalLy = (LinearLayout) findViewById(R.id.hospitalLy);
+        mPoliceLy = (LinearLayout) findViewById(R.id.policeLy);
+        mReportLy = (LinearLayout) findViewById(R.id.reportLy);
     }
 }

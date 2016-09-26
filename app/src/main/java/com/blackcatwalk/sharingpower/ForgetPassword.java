@@ -7,7 +7,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -17,15 +19,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
+import com.blackcatwalk.sharingpower.utility.ControlProgress;
 
 public class ForgetPassword extends AppCompatActivity {
 
@@ -37,9 +32,6 @@ public class ForgetPassword extends AppCompatActivity {
     private Button mClearEdittextBtn;
     private Button mNextBtn;
 
-    // ----------- Data send to database --------------//
-    private String mEmail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +39,6 @@ public class ForgetPassword extends AppCompatActivity {
         setContentView(R.layout.activity_forget_password);
 
         bindWidget();
-
-        Control.showKeyboard(this);
 
         mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,52 +88,35 @@ public class ForgetPassword extends AppCompatActivity {
     }
 
     private void checkForgetPassword() {
-        mEmail = mEmailEt.getText().toString();
-
-        if (!Control.isValidEmail(mEmail)) {
-            mAlertEmailTv.setTextColor(Color.parseColor("#f25d5d"));
+        if (!isValidEmail(mEmailEt.getText().toString())) {
+            mAlertEmailTv.setTextColor(Color.parseColor("#F4511E"));
             mAlertEmailTv.setText(R.string.general_text_6);
         } else {
-            Control.sDialog(ForgetPassword.this);
-            RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
-            StringRequest jor = new StringRequest(Request.Method.POST, Control.getMGetDatabaseResetPassword(),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Control.hDialog();
-                            AlertDialog.Builder builder = new AlertDialog.Builder(ForgetPassword.this);
-                            builder.setCancelable(false);
-                            builder.setTitle(R.string.general_text_20);
-                            builder.setMessage(R.string.general_text_21);
-                            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    onBackPressed();
-                                    finish();
-                                }
-                            });
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                            Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                            pbutton.setTextColor(Color.parseColor("#147cce"));
-                            pbutton.setTypeface(null, Typeface.BOLD);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Control.hDialog();
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("email", mEmail);
-                    return params;
-                }
-            };
-            jor.setShouldCache(false);
-            requestQueue.add(jor);
+            ControlProgress.showProgressDialog(ForgetPassword.this);
+            new ControlDatabase(this).setForgetPassword(mEmailEt.getText().toString());
         }
+    }
+
+    public void showDialogSuccess(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ForgetPassword.this);
+        builder.setCancelable(false);
+        builder.setTitle(R.string.general_text_20);
+        builder.setMessage(R.string.general_text_21);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                onBackPressed();
+                finish();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(Color.parseColor("#147cce"));
+        pbutton.setTypeface(null, Typeface.BOLD);
+    }
+
+    public boolean isValidEmail(String target) {
+        return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
     private void bindWidget() {

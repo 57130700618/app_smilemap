@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:padding="8dp">
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/sequeneNumber"
@@ -14,16 +18,6 @@
         android:layout_toLeftOf="@+id/linearLayout3"
         android:layout_toStartOf="@+id/linearLayout3"
         android:textSize="15sp" />
-
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/tempthumbnail"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="8dp"
-        app:civ_border_color="#ffd500"
-        app:civ_border_width="2dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -38,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textSize="19sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -46,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/amountTime"
@@ -57,5 +51,17 @@
             android:textSize="13sp" />
 
     </LinearLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/tempthumbnail"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="8dp"
+        app:civ_border_color="#ffd500"
+        app:civ_border_width="2dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="37dp" />
 
 </RelativeLayout>

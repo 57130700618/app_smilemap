@@ -18,18 +18,18 @@
 
             <ImageView
                 android:id="@+id/backIm"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="@string/login_label"
-                android:textColor="@color/white"
                 android:textSize="@dimen/label_sub_20sp" />
 
         </RelativeLayout>
@@ -123,33 +123,45 @@
                 android:layout_height="40dp"
                 android:layout_below="@+id/password"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:background="@color/blue"
                 android:text="@string/login"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/registerBtn"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
-                android:background="@color/colorHide"
-                android:text="@string/register"
-                android:textColor="@color/gray"
-                android:textSize="15sp" />
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/forgetPasswordBtn"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="50dp"
-                android:background="@color/colorHide"
-                android:text="@string/forget_password"
-                android:textColor="@color/gray"
-                android:textSize="15sp" />
+                <Button
+                    android:id="@+id/forgetPasswordBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/colorHide"
+                    android:padding="10dp"
+                    android:text="@string/forget_password"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/registerBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/colorHide"
+                    android:padding="10dp"
+                    android:text="@string/register"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+
         </LinearLayout>
 
     </ScrollView>

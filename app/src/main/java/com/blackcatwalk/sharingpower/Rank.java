@@ -4,74 +4,74 @@ import java.text.NumberFormat;
 
 public class Rank {
 
-    private String sequeneNumber;
-    private String name;
-    private String point;
-    private String sumHour;
-    private String sex;
-    private String nickName;
-    private String staus;
+    private String mSequeneNumber;
+    private String mName;
+    private String mPoint;
+    private String mSumHour;
+    private String mSex;
+    private String mNickName;
+    private String mStaus;
     //private String picture;
-    private NumberFormat temp = NumberFormat.getInstance();
-    private double tempDouble;
+    private NumberFormat mTemp = NumberFormat.getInstance();
+    private double mTempDouble;
 
     public Rank(){}
 
-    public void setSequeneNumber(String sequeneNumber) {
-        this.sequeneNumber = sequeneNumber;
+    public void setmSequeneNumber(String _sequeneNumber) {
+        this.mSequeneNumber = _sequeneNumber;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setmName(String _name) {
+        this.mName = _name;
     }
 
     /*public void setPicture(String picture) {
         this.picture = picture;
     }*/
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setmSex(String _sex) {
+        this.mSex = _sex;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setmNickName(String _nickName) {
+        this.mNickName = _nickName;
     }
 
-    public void setStaus(String staus) {
-        this.staus = staus;
+    public void setmStaus(String _staus) {
+        this.mStaus = _staus;
     }
 
-    public void setPoint(int point) {
-        if(point > 0){
-            tempDouble = (double) point;
-            this.point = temp.format(tempDouble);
+    public void setmPoint(int _point) {
+        if(_point > 0){
+            mTempDouble = (double) _point;
+            this.mPoint = mTemp.format(mTempDouble);
         }else{
-            this.point = "-";
+            this.mPoint = "-";
         }
     }
 
-    public void setSumHour(int sumHour) {
-        if(sumHour > 0){
-            tempDouble = (double) sumHour;
-            this.sumHour  = temp.format(tempDouble);
+    public void setmSumHour(int _sumHour) {
+        if(_sumHour > 0){
+            mTempDouble = (double) _sumHour;
+            this.mSumHour = mTemp.format(mTempDouble);
         }else{
-            this.sumHour = "-";
+            this.mSumHour = "-";
         }
     }
 
-    public String getSequeneNumber() { return sequeneNumber; }
+    public String getmSequeneNumber() { return mSequeneNumber; }
 
-    public String getName() { return name; }
+    public String getmName() { return mName; }
 
     //public String getPicture() { return picture; }
 
-    public String getPoint() { return point; }
+    public String getmPoint() { return mPoint; }
 
-    public String getSumHour() { return sumHour; }
+    public String getmSumHour() { return mSumHour; }
 
-    public String getSex() { return sex; }
+    public String getmSex() { return mSex; }
 
-    public String getNickName() { return nickName; }
+    public String getmNickName() { return mNickName; }
 
-    public String getStaus() { return staus; }
+    public String getmStaus() { return mStaus; }
 }

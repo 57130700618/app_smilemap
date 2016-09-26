@@ -36,13 +36,14 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.blackcatwalk.sharingpower.customAdapter.BusGpsCustomSpinnerAdapter;
+import com.blackcatwalk.sharingpower.customAdapter.CustomSpinnerBusLocattionNerbyMenu;
+import com.blackcatwalk.sharingpower.google.JsonParserDirections;
+import com.blackcatwalk.sharingpower.utility.Control;
+import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
+import com.blackcatwalk.sharingpower.utility.ControlFile;
+import com.blackcatwalk.sharingpower.utility.ControlProgress;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -72,19 +73,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.text.DecimalFormat;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BusGps extends AppCompatActivity implements LocationListener {
 
@@ -127,20 +128,15 @@ public class BusGps extends AppCompatActivity implements LocationListener {
     private String busNo;
     private String busType = "bus";
 
-    // ----------- Url get form database --------------//
-    private String getBusUrl = "https://www.smilemap.me/android/get.php?main=bus&sub=";
+
     private String tempUrl;
 
-    // ----------- Url set form database --------------//
-    private String setBusUrl = "https://www.smilemap.me/android/set.php";
 
     // ---------------- FIle System -------------------//
     private static final String fileStausShared = "stausShared.txt";
     private static final int readSize = 100; // Read 100byte
     private String stausShared = "0+";  // 1 = showStausShared
 
-    private static final String fileUserName = "Username.txt";
-    private String username;
 
     private static final String fileSetting = "setting.txt";
     private String stausTaffic = "1"; // 1 = showTraffic
@@ -148,7 +144,6 @@ public class BusGps extends AppCompatActivity implements LocationListener {
     private String tempResultNearby = null;
     private String maptype = "0"; // 0 = normal , 1 = map_satelltte
 
-    private static final String fileAlertUsermanual = "showUsermanual.txt";
     private String stausAlertUsermanual = "show";
 
     private BusGpsCustomSpinnerAdapter adapter;
@@ -159,15 +154,19 @@ public class BusGps extends AppCompatActivity implements LocationListener {
     private ShareDialog shareDialog;
 
 
-    private String _name = null;
-    private String _type = null;
-    private String _category = null;
-    private String _busFree = null;
-    private String _detailBus = null;
-    private String _amountPerson = null;
+    private String _nameTemp = null;
+    private String _typeTemp = null;
+    private String _categoryTemp = null;
+    private String _busFreeTemp = null;
+    private String _detailBusTemp = null;
+    private String _amountPersonTemp = null;
     private String _colorMarker = null;
 
     private double mSizeInInches;
+    private ControlDatabase mControlDatabae;
+    private ControlCheckConnect mControlCheckConnect;
+    private ControlProgress mControlProgress;
+    private ControlFile mControlFile;
 
     @SuppressWarnings({"MissingPermission"})
     @Override
@@ -176,7 +175,11 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         setContentView(R.layout.activity_maps);
         getSupportActionBar().hide();
 
-        mSizeInInches = Control.getSizeScrren(this);
+        mSizeInInches = new Control().getSizeScrren(this);
+        mControlDatabae = new ControlDatabase(this);
+        mControlCheckConnect = new ControlCheckConnect();
+        mControlProgress = new ControlProgress();
+        mControlFile = new ControlFile();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -194,18 +197,18 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bangkok, 8));
                 mMap.getUiSettings().setCompassEnabled(false);
                 mMap.setTrafficEnabled(true);
-                readFile(fileSetting);
+                readFileSetting();
 
                 mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
 
                         if (!marker.getTitle().equals("ตำแหน่งปัจจุบัน")) {
-                            Control.sDialog(BusGps.this);
+                            mControlProgress.showProgressDialogDonTouch(BusGps.this);
                             clickMaker = marker;
                             LatLng destination = marker.getPosition();
 
                             // Getting URL to the Google Directions API
-                            String url = Control.getDirectionsUrl(currentLocation, destination);
+                            String url = getDirectionsUrl(currentLocation, destination);
 
                             DownloadTask downloadTask = new DownloadTask();
                             // Start downloading json data from Google Directions API
@@ -264,7 +267,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                 .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(ConnectionResult connectionResult) {
-                        Control.alertCurrentGps(BusGps.this);
+                        mControlCheckConnect.alertCurrentGps(BusGps.this);
                     }
                 }).build();
 
@@ -273,7 +276,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         userManualIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BusGps.this, Tutorial.class).putExtra("type","traffic"));
+                startActivity(new Intent(BusGps.this, Tutorial.class).putExtra("type", "traffic"));
             }
 
 
@@ -283,7 +286,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
             @Override
             public void onClick(View v) {
                 if (mMap != null) {
-                    readFile("setting.txt");
+                    readFileSetting();
 
                     final Dialog dialog = new Dialog(BusGps.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -431,7 +434,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                 if (currentLocation != null) {
                     sharedBus();
                 } else {
-                    Control.alertCurrentGps(BusGps.this);
+                    mControlCheckConnect.alertCurrentGps(BusGps.this);
                 }
             }
         });
@@ -449,21 +452,21 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                 if (currentLocation != null) {
                     moveAnimateCamera(currentLocation);
                 } else {
-                    Control.alertCurrentGps(BusGps.this);
+                    mControlCheckConnect.alertCurrentGps(BusGps.this);
                 }
             }
         });
 
-        CustomSpinner bus_data[] = new CustomSpinner[]{
-                new CustomSpinner(R.drawable.spinner_search_gray, getString(R.string.select_traffic)),
-                new CustomSpinner(R.drawable.traffic_spinner_bus_gray, getString(R.string.bus_name)),
-                new CustomSpinner(R.drawable.traffic_spinner_bts_gray, getString(R.string.bts_name)),
-                new CustomSpinner(R.drawable.traffic_spinner_brt_gray, getString(R.string.brt_name)),
-                new CustomSpinner(R.drawable.traffic_spinner_van_gray, getString(R.string.van_name)),
-                new CustomSpinner(R.drawable.traffic_spinner_public_gray, getString(R.string.public_name)),
-                new CustomSpinner(R.drawable.traffic_spinner_boat_gray, getString(R.string.boat_name)),
-                new CustomSpinner(R.drawable.traffic_spinner_accident_gray, getString(R.string.accident_name)),
-                new CustomSpinner(R.drawable.traffic_spinner_checkpoint_gray, getString(R.string.checkpoint_name))};
+        CustomSpinnerBusLocattionNerbyMenu bus_data[] = new CustomSpinnerBusLocattionNerbyMenu[]{
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.spinner_search_gray, getString(R.string.select_traffic)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.traffic_spinner_bus_gray, getString(R.string.bus_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.traffic_spinner_bts_gray, getString(R.string.bts_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.traffic_spinner_brt_gray, getString(R.string.brt_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.traffic_spinner_van_gray, getString(R.string.van_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.traffic_spinner_public_gray, getString(R.string.public_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.traffic_spinner_boat_gray, getString(R.string.boat_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.traffic_spinner_accident_gray, getString(R.string.accident_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.traffic_spinner_checkpoint_gray, getString(R.string.checkpoint_name))};
 
         adapter = new BusGpsCustomSpinnerAdapter(this, R.layout.activity_spinner, bus_data);
         spinner.setAdapter(adapter);
@@ -510,7 +513,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                             break;
                     }
 
-                    Control.sDialog(BusGps.this);
+                    mControlProgress.showProgressDialogDonTouch(BusGps.this);
                     getDatabase();
 
                     if (checkBtnSharedBus == false) {
@@ -519,7 +522,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                         moveAnimateCamera(currentLocation);
                     }
                 } else {
-                    Control.alertCurrentGps(BusGps.this);
+                    mControlCheckConnect.alertCurrentGps(BusGps.this);
                 }
             }
 
@@ -529,75 +532,17 @@ public class BusGps extends AppCompatActivity implements LocationListener {
             }
         });
 
-        readFile(fileUserName);
-        readFile(fileStausShared);
+        readFile();
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void checkVersionApp() {
-
-        Control.sDialog(this);
-
-        final String _versionApp = Control.getVersionApp(this);
-
-        String _url = "https://www.smilemap.me/android/get.php?main=version";
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-
-        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, _url + "&ramdom=" + Control.randomNumber(), null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            JSONArray ja = response.getJSONArray("version");
-
-                            String _versionAppForDatabase = "";
-                            JSONObject jsonObject = null;
-
-                            for (int i = 0; i < ja.length(); i++) {
-                                jsonObject = ja.getJSONObject(i);
-                                _versionAppForDatabase = jsonObject.getString("version");
-                            }
-
-                            Control.hDialog();
-
-                            if (!_versionAppForDatabase.equals(_versionApp)) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BusGps.this);
-                                builder.setCancelable(false);
-                                builder.setTitle("อัพเดทเวอร์ชันใหม่");
-                                builder.setMessage("แอพพลิเคชันสมายแมพที่ท่านใช้งานอยู่ยังไม่ใช่เวอร์ชันปัจจุบัน " +
-                                        "กรุณาอัพเดทเป็นเวอร์ชันใหม่ new version." + _versionAppForDatabase);
-                                builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Control.openGooglePlay(BusGps.this,"ads");
-                                    }
-                                });
-                                builder.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-                                AlertDialog alert = builder.create();
-                                alert.show();
-                                Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                                pbutton.setTextColor(Color.parseColor("#147cce"));
-                                pbutton.setTypeface(null, Typeface.BOLD);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Control.hDialog();
-                    }
-                }
-        );
-        jor.setShouldCache(false);
-        requestQueue.add(jor);
+        mControlDatabae.getDatabaseBusGpsVersion();
     }
 
     private void bindWidget() {
@@ -611,83 +556,9 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         btnCureentLocation = (ImageView) findViewById(R.id.btnCureentLocation);
     }
 
-    private void readFile(String tempFileName) {
-
-        String temp = "";
-
-        try {
-            FileInputStream fIn = openFileInput(tempFileName);
-            InputStreamReader reader = new InputStreamReader(fIn);
-
-            char[] buffer = new char[readSize];
-            int charReadCount;
-            while ((charReadCount = reader.read(buffer)) > 0) {
-                String readString = String.copyValueOf(buffer, 0, charReadCount);
-
-                temp += readString;
-                buffer = new char[readSize];
-            }
-            reader.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-        if (temp.length() > 1) {
-
-            switch (tempFileName) {
-                case "Username.txt":
-                    username = temp;
-                    break;
-                case "stausShared.txt":
-                    stausShared = "";
-                    stausShared = temp;
-                    if (stausShared.substring(0, 1).equals("1")) {    // Set staus shared
-                        checkBtnSharedBus = true;
-                        btnStopShared.setVisibility(View.VISIBLE);
-                        busType = stausShared.substring(2, stausShared.indexOf("*"));
-                        tempBusType = busType;
-                        selectTraffic = Integer.parseInt(stausShared.substring(stausShared.indexOf("*") + 1, stausShared.length()));
-                    }
-                    break;
-                case "setting.txt":
-                    stausTaffic = temp.substring(0, 1);
-                    maptype = temp.substring(1, 2);
-                    resultNearby = temp.substring(2, temp.length());
-
-                    if (mMap != null) {
-                        if (stausTaffic.equals("1")) {
-                            mMap.setTrafficEnabled(true);
-                        } else {
-                            mMap.setTrafficEnabled(false);
-                        }
-
-                        if (maptype.equals("0")) {
-                            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                        } else {
-                            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                        }
-                    }
-                    break;
-                case "showUsermanual.txt":
-                    if (temp.equals("not")) {
-                        stausAlertUsermanual = "not";
-                    }
-                    break;
-            }
-        }
-    }
 
     private void saveFile() {
-        try {
-            FileOutputStream fOut = openFileOutput(fileSetting, MODE_PRIVATE);
-            OutputStreamWriter writer = new OutputStreamWriter(fOut);
-
-            writer.write(stausTaffic + maptype + resultNearby);
-            writer.flush();
-            writer.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+        mControlFile.setSetting(this, stausTaffic, maptype, resultNearby);
     }
 
     @Override
@@ -704,28 +575,74 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
-        Control.hDialog();
+        mControlProgress.hideDialog();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        readFile(fileSetting);
+
+        readFileSetting();
 
         if (mGoogleApiClient.isConnected()) {
             tempUrl = null;
-            tempUrl = getBusUrl + busType + "&lat=" + currentLatitude + "&lng=" + currentLongitude + "&distance=" + resultNearby;
+            tempUrl = busType + "&lat=" + currentLatitude + "&lng=" + currentLongitude + "&distance=" + resultNearby;
             startLocationUpdates();
         }
 
-        if (!Control.checkInternet(this)) {
-            Control.alertInternet(this);
+        if (!mControlCheckConnect.checkInternet(this)) {
+            mControlCheckConnect.alertInternet(this);
         }
 
-        if (!Control.checkGPS(this)) {
-            Control.alertGps(this);
+        if (!mControlCheckConnect.checkGPS(this)) {
+            mControlCheckConnect.alertGps(this);
         }
 
+    }
+
+    private void readFile() {
+
+        if (mControlFile.getFile(this,"userManual").equals("not")) {
+            stausAlertUsermanual = "not";
+        }
+
+        String _temp = mControlFile.getFile(this,"stausShared");
+
+        if (_temp.length() > 1) {
+            stausShared = _temp;
+            if (stausShared.substring(0, 1).equals("1")) {    // Set staus shared
+                checkBtnSharedBus = true;
+                btnStopShared.setVisibility(View.VISIBLE);
+                busType = stausShared.substring(2, stausShared.indexOf("*"));
+                tempBusType = busType;
+                selectTraffic = Integer.parseInt(stausShared.substring(stausShared.indexOf("*") + 1, stausShared.length()));
+            }
+        }
+    }
+
+    private void readFileSetting() {
+
+        String _temp = mControlFile.getFile(this,"stausShared");
+
+        if (_temp.length() > 1) {
+            stausTaffic = _temp.substring(0, 1);
+            maptype = _temp.substring(1, 2);
+            resultNearby = _temp.substring(2, _temp.length());
+
+            if (mMap != null) {
+                if (stausTaffic.equals("1")) {
+                    mMap.setTrafficEnabled(true);
+                } else {
+                    mMap.setTrafficEnabled(false);
+                }
+
+                if (maptype.equals("0")) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                } else {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                }
+            }
+        }
     }
 
     @Override
@@ -734,7 +651,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         if (mGoogleApiClient.isConnected()) {
             stopLocationUpdate();
         }
-        Control.hDialog();
+        mControlProgress.hideDialog();
     }
 
     //  ------------------  google map -----------------//
@@ -760,9 +677,9 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         getDatabase();
     }
 
-    private void addMarkerDatabase(String busNo, double latitude, double longitude, String busTypeTemp,
-                                   int busFree, String busDetail, String tempUsername, String color,
-                                   double distanceTemp, String amountPerSon) {
+    public void addMarkerDatabase(String busNo, double latitude, double longitude, String busTypeTemp,
+                                  int busFree, String busDetail, String tempUsername, String color,
+                                  double distanceTemp, String amountPerSon) {
 
         LatLng latLng = new LatLng(latitude, longitude);
         marker = new MarkerOptions();
@@ -832,7 +749,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
             @Override
             public View getInfoWindow(Marker marker) {
 
-                if (marker.getTitle().substring(marker.getTitle().indexOf("$") + 1, marker.getTitle().length()).equals(username)) {
+                if (marker.getTitle().substring(marker.getTitle().indexOf("$") + 1, marker.getTitle().length()).equals("ตำแหน่ง")) {
 
                     LayoutInflater inflater = getLayoutInflater();
                     View infoWindow = inflater.inflate(R.layout.info_window, null);
@@ -974,12 +891,138 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
+    public void showDialogVersionApp(String _versionAppForDatabase) {
+
+        final Control _Control = new Control();
+
+        if (!_versionAppForDatabase.equals(_Control.getVersionApp(this))) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(BusGps.this);
+            builder.setCancelable(false);
+            builder.setTitle("อัพเดทเวอร์ชันใหม่");
+            builder.setMessage("แอพพลิเคชันสมายแมพที่ท่านใช้งานอยู่ยังไม่ใช่เวอร์ชันปัจจุบัน " +
+                    "กรุณาอัพเดทเป็นเวอร์ชันใหม่ new version." + _versionAppForDatabase);
+            builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    _Control.openGooglePlay(BusGps.this, "ads");
+                }
+            });
+            builder.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+            pbutton.setTextColor(Color.parseColor("#147cce"));
+            pbutton.setTypeface(null, Typeface.BOLD);
+        }
+    }
+
+    public void setDelayAfterSetDatabase() {
+        final Handler handler2 = new Handler();
+        handler2.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mControlProgress.hideDialog();
+                setItemSpinner();
+                moveAnimateCamera(currentLocation);
+
+                selectImage();
+            }
+        }, 5000);
+    }
+
+    public void setValueTemp(String _name, String _type, String _category, String _busFree,
+                             String _busDetail, String _amountPerson, String _color) {
+        _nameTemp = _name;
+        _typeTemp = _type;
+        _categoryTemp = _category;
+        _busFreeTemp = _busFree;
+        _detailBusTemp = _busDetail;
+        _amountPersonTemp = _amountPerson;
+        _colorMarker = _color;
+
+    }
+
+    public void setAlfetStopshared() {
+        // save staus shared in file
+        stausShared = "0+";
+        try {
+            FileOutputStream fOut = openFileOutput(fileStausShared, MODE_PRIVATE);
+            OutputStreamWriter writer = new OutputStreamWriter(fOut);
+
+            writer.write(stausShared);
+            writer.flush();
+            writer.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        checkBtnSharedBus = false;
+        btnStopShared.setVisibility(View.INVISIBLE);
+
+        getDatabase();
+        moveAnimateCamera(currentLocation);
+    }
+
+    public void setAlfetStopsharedt(String _typeBus) {
+        // save staus shared in file
+        stausShared = "1+" + _typeBus + "*" + String.valueOf(selectTraffic);
+        try {
+            FileOutputStream fOut = openFileOutput(fileStausShared, MODE_PRIVATE);
+            OutputStreamWriter writer = new OutputStreamWriter(fOut);
+
+            writer.write(stausShared);
+            writer.flush();
+            writer.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        if (stausAlertUsermanual.equals("show")) {
+            final Dialog dialog = new Dialog(BusGps.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.activity_dialog_usermanual_bus);
+            dialog.setCancelable(false);
+
+            final CheckBox checkBoxAlertUsermanual = (CheckBox) dialog.findViewById(R.id.checkBoxAlertUsermanual);
+
+            Button buttonOk = (Button) dialog.findViewById(R.id.btnOk);
+            buttonOk.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    dialog.cancel();
+
+                    if (checkBoxAlertUsermanual.isChecked()) {
+                        mControlFile.setFile(getApplicationContext(), "not", "userManual");
+                    }
+                }
+            });
+            dialog.show();
+        }
+
+        checkBtnSharedBus = true;
+        btnStopShared.setVisibility(View.VISIBLE);
+
+        Intent i = new Intent(getApplicationContext(), MyService.class);
+        startService(i);
+
+        final Handler handler2 = new Handler();
+        handler2.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ControlProgress.hideDialog();
+                setItemSpinner();
+
+                selectImage();
+            }
+        }, 5000);
+    }
+
     // -------------------- Get Duration , Distance ---------------------------//
 
-    /**
-     * A method to download json data from url
-     */
-    // Fetches data from url passed
+    // A method to download json data from url Fetches data from url passed
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
         // Downloading data in non-ui thread
@@ -991,7 +1034,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
 
             try {
                 // Fetching the data from web service
-                data = Control.downloadUrl(url[0]);
+                data = downloadUrl(url[0]);
             } catch (Exception e) {
             }
             return data;
@@ -1009,6 +1052,68 @@ public class BusGps extends AppCompatActivity implements LocationListener {
             parserTask.execute(result);
         }
     }
+
+    public String getDirectionsUrl(LatLng origin, LatLng dest) {
+
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + sensor;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+
+        return url;
+    }
+
+    public String downloadUrl(String strUrl) throws IOException {
+        String data = "";
+        InputStream iStream = null;
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(strUrl);
+
+            // Creating an http connection to communicate with url
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            // Connecting to url
+            urlConnection.connect();
+
+            // Reading data from url
+            iStream = urlConnection.getInputStream();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+            StringBuffer sb = new StringBuffer();
+
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            data = sb.toString();
+
+            br.close();
+
+        } catch (Exception e) {
+            // Log.bus_spinner_bts_gray("Exception while downloading url", e.toString());
+        } finally {
+            iStream.close();
+            urlConnection.disconnect();
+        }
+        return data;
+    }
+
 
     /**
      * A class to parse the Google Places in JSON format
@@ -1088,127 +1193,11 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                 }
 
                 clickMaker.showInfoWindow();
-                Control.hDialog();
+                ControlProgress.hideDialog();
 
             }
         }
     }
-
-    //  ------------------  Database Mysql -----------------//
-
-    private void getDatabase() {
-
-        if (marker != null) {
-            mMap.clear();
-        }
-
-        addMarkerCurrent(currentLatitude, currentLongitude);
-
-        tempUrl = null;
-        tempUrl = getBusUrl + busType + "&lat=" + currentLatitude + "&lng=" + currentLongitude + "&distance=" + resultNearby;
-
-        if (Control.checkInternet(this)) {
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, tempUrl + "&ramdom=" + Control.randomNumber(), null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-                            try {
-                                JSONArray ja = response.getJSONArray("shared_bus");
-
-
-                                String _busNo = null;
-                                String _busType = null;
-                                String _busDetail = null;
-                                String _amountPerson = null;
-                                String _username = "";
-                                String _color = null;
-                                String _tempTime;
-
-                                double _longitude = 0;
-                                double _latitude = 0;
-                                double _distance = 0;
-
-                                int _busFree = 0;
-
-                                DecimalFormat decim = new DecimalFormat("0.0");
-
-                                JSONObject _jsonObject = null;
-
-                                for (int i = 0; i < ja.length(); i++) {
-
-                                    _jsonObject = ja.getJSONObject(i);
-                                    _latitude = Double.parseDouble(_jsonObject.getString("lat"));
-                                    _longitude = Double.parseDouble(_jsonObject.getString("lng"));
-                                    _busNo = _jsonObject.getString("name");
-                                    // _username = _jsonObject.getString("username");
-                                    _color = _jsonObject.getString("color");
-
-                                    //---------------------------------------------------------------------------
-                                    // 0=bus, 1=bts, 2=brt, 3 = van, 4=public, 5=boat, 6=accident, 7=checkpoint
-                                    //---------------------------------------------------------------------------
-                                    switch (selectTraffic) {
-                                        case 0:
-                                            _busType = _jsonObject.getString("category");
-                                            _busFree = _jsonObject.getInt("bus_free");
-                                            _amountPerson = _jsonObject.getString("amount_person");
-                                            break;
-                                        case 2:
-                                            _amountPerson = _jsonObject.getString("amount_person");
-                                            break;
-                                        case 3:
-                                            _busDetail = _jsonObject.getString("bus_detail");
-                                            _amountPerson = _jsonObject.getString("amount_person");
-                                            break;
-                                        case 4:
-                                            _busDetail = _jsonObject.getString("bus_detail");
-                                            break;
-                                        case 5:
-                                            _amountPerson = _jsonObject.getString("amount_person");
-                                            break;
-                                        case 6:
-                                            _busNo = _jsonObject.getString("category");
-                                            _tempTime = _jsonObject.getString("update_date");
-                                            _busType = _tempTime.substring(_tempTime.indexOf(" ") + 1, _tempTime.length()).substring(0, 5) + " นาที";
-                                            _busDetail = _jsonObject.getString("bus_detail");
-                                            break;
-                                        case 7:
-                                            _busNo = _jsonObject.getString("category");
-                                            _busType = _jsonObject.getString("update_date");
-                                            _busDetail = _jsonObject.getString("bus_detail");
-                                            break;
-                                    }
-
-                                    _distance = Double.parseDouble(decim.format(Double.parseDouble(_jsonObject.getString("distance"))));
-
-                                    addMarkerDatabase(_busNo, _latitude, _longitude, _busType, _busFree, _busDetail, _username, _color, _distance, _amountPerson);
-                                }
-                                Control.hDialog();
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Control.hDialog();
-                        }
-                    }
-            );
-            jor.setShouldCache(false);
-            requestQueue.add(jor);
-        } else {
-            Control.alertInternet(this);
-            Control.hDialog();
-        }
-    }
-
-    //  ------------------  User Interface -----------------//
-
 
     private void setItemSpinner() {
         spinner.setSelection(++selectTraffic);
@@ -1226,7 +1215,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                     switch (which) {
                         case 0:
 
-                            Control.sDialog(BusGps.this);
+                            ControlProgress.showProgressDialogDonTouch(BusGps.this);
 
                             final Dialog dialogMini = new Dialog(BusGps.this);
                             dialogMini.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1246,15 +1235,15 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                                     stopService(new Intent(BusGps.this, MyService.class));
 
                                     if (tempBusType.equals("van")) {
-                                        if (_amountPerson.equals("น้อย")) {
-                                            _amountPerson = "ว่าง";
+                                        if (_amountPersonTemp.equals("น้อย")) {
+                                            _amountPersonTemp = "ว่าง";
                                         } else {
-                                            _amountPerson = "เต็ม";
+                                            _amountPersonTemp = "เต็ม";
                                         }
                                     }
 
-                                    sentService(_type, _name, _category, _busFree,
-                                            _detailBus, _colorMarker, _amountPerson);
+                                    sentService(_typeTemp, _nameTemp, _categoryTemp, _busFreeTemp,
+                                            _detailBusTemp, _colorMarker, _amountPersonTemp);
 
                                     final Handler handler2 = new Handler();
                                     handler2.postDelayed(new Runnable() {
@@ -1274,7 +1263,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                             empty.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    _amountPerson = "น้อย";
+                                    _amountPersonTemp = "น้อย";
                                     full.setChecked(false);
                                     empty.setChecked(true);
                                 }
@@ -1283,7 +1272,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                             full.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    _amountPerson = "เยอะ";
+                                    _amountPersonTemp = "เยอะ";
                                     full.setChecked(true);
                                     empty.setChecked(false);
                                 }
@@ -1297,73 +1286,36 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                                 full.setText("เยอะ");
                             }
 
-                            RequestQueue requestQueue = Volley.newRequestQueue(BusGps.this);
-                            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET,
-                                    "https://www.smilemap.me/android/get.php?main=game&sub="
-                                            + username + "&ramdom=" +
-                                            Control.randomNumber(), null,
-                                    new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject response) {
-                                            try {
-                                                JSONArray _ja = response.getJSONArray("temp");
+                            mControlDatabae.getDatabaseBusGpsStopShared();
 
-                                                for (int i = 0; i < _ja.length(); i++) {
-                                                    JSONObject jsonObject = _ja.getJSONObject(i);
+                            if (_amountPersonTemp.equals("น้อย") || _amountPersonTemp.equals("ว่าง")) {
+                                empty.setChecked(true);
+                            } else {
+                                full.setChecked(true);
+                            }
 
-                                                    _name = jsonObject.getString("name");
-                                                    _type = jsonObject.getString("type");
-                                                    _category = jsonObject.getString("category");
-                                                    _busFree = jsonObject.getString("bus_free");
-                                                    _detailBus = jsonObject.getString("bus_detail");
-                                                    _amountPerson = jsonObject.getString("amount_person");
-                                                    _colorMarker = jsonObject.getString("color");
-                                                }
+                            switch (_typeTemp) {
+                                case "bus":
+                                    typeTv.setText("รถเมล์");
+                                    break;
+                                case "bts":
+                                    typeTv.setText("บีทีเอส");
+                                    break;
+                                case "brt":
+                                    typeTv.setText("บีอาที");
+                                    break;
+                                case "van":
+                                    typeTv.setText("รถตู้");
+                                    break;
+                                case "public":
+                                    typeTv.setText("สาธารณะ");
+                                    break;
+                                case "boat":
+                                    typeTv.setText("เรือ");
+                                    break;
+                            }
 
-                                                if (_amountPerson.equals("น้อย") || _amountPerson.equals("ว่าง")) {
-                                                    empty.setChecked(true);
-                                                } else {
-                                                    full.setChecked(true);
-                                                }
-
-                                                switch (_type) {
-                                                    case "bus":
-                                                        typeTv.setText("รถเมล์");
-                                                        break;
-                                                    case "bts":
-                                                        typeTv.setText("บีทีเอส");
-                                                        break;
-                                                    case "brt":
-                                                        typeTv.setText("บีอาที");
-                                                        break;
-                                                    case "van":
-                                                        typeTv.setText("รถตู้");
-                                                        break;
-                                                    case "public":
-                                                        typeTv.setText("สาธารณะ");
-                                                        break;
-                                                    case "boat":
-                                                        typeTv.setText("เรือ");
-                                                        break;
-                                                }
-
-                                                Control.hDialog();
-                                                dialogMini.show();
-
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            Control.hDialog();
-                                        }
-                                    }
-                            );
-                            jor.setShouldCache(false);
-                            requestQueue.add(jor);
+                            dialogMini.show();
 
                             break;
                         case 1:
@@ -1376,6 +1328,19 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         } else {
             detailStopShared();
         }
+    }
+
+    private void getDatabase() {
+        if (marker != null) {
+            mMap.clear();
+        }
+
+        addMarkerCurrent(currentLatitude, currentLongitude);
+
+        tempUrl = null;
+        tempUrl = busType + "&lat=" + currentLatitude + "&lng=" + currentLongitude + "&distance=" + resultNearby;
+
+        mControlDatabae.getDatabaseBusGps(tempUrl, selectTraffic);
     }
 
 
@@ -1406,63 +1371,15 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, int which) {
 
-                Control.sDialog(BusGps.this);
+                mControlProgress.showProgressDialogDonTouch(BusGps.this);
 
                 // Stop Service && show staus not shared
                 Intent i = new Intent(BusGps.this, MyService.class);
                 stopService(i);
 
-                final String typeDelete = stausShared.substring(2, stausShared.indexOf("*"));
-                final String usernameDelete = username;
+                mControlDatabae.setDatabaseBusGpsStopShared(stausShared.substring(2, stausShared.indexOf("*")));
 
-                RequestQueue requestQueue = Volley.newRequestQueue(BusGps.this);
-                StringRequest jor = new StringRequest(Request.Method.POST, setBusUrl,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-
-                                Control.hDialog();
-
-                                // save staus shared in file
-                                stausShared = "0+";
-                                try {
-                                    FileOutputStream fOut = openFileOutput(fileStausShared, MODE_PRIVATE);
-                                    OutputStreamWriter writer = new OutputStreamWriter(fOut);
-
-                                    writer.write(stausShared);
-                                    writer.flush();
-                                    writer.close();
-                                } catch (IOException ioe) {
-                                    ioe.printStackTrace();
-                                }
-
-                                checkBtnSharedBus = false;
-                                btnStopShared.setVisibility(View.INVISIBLE);
-
-                                getDatabase();
-                                moveAnimateCamera(currentLocation);
-
-                                dialog.cancel();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Control.hDialog();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("main", "delete");
-                        params.put("username", usernameDelete);
-                        params.put("type", typeDelete);
-                        return params;
-                    }
-                };
-                jor.setShouldCache(false);
-                requestQueue.add(jor);
-
+                dialog.cancel();
             }
         });
         builder.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
@@ -1484,211 +1401,10 @@ public class BusGps extends AppCompatActivity implements LocationListener {
     public void sentService(final String _typeBus, final String _busNo, final String _category,
                             final String _stausBusFree, final String _detail, final String _colorMarker, final String _amountPerson) {
 
-        if (Control.checkInternet(this)) {
-
-            readFile(fileUserName);
-            readFile(fileAlertUsermanual);
-
-            Control.sDialog(this);
-
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            StringRequest jor = new StringRequest(Request.Method.POST, setBusUrl,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Control.hDialog();
-                            Control.alertCurrentInternet(BusGps.this);
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("main", "game");
-                    params.put("username", username);
-                    params.put("type", _typeBus);
-                    params.put("name", _busNo);
-                    params.put("category", _category);
-                    params.put("bus_free", _stausBusFree);
-                    params.put("bus_detail", _detail);
-                    params.put("color", _colorMarker);
-                    params.put("amount_person", _amountPerson);
-                    return params;
-                }
-            };
-            jor.setShouldCache(false);
-            requestQueue.add(jor);
-
-            //------------------------------------------------------------
-
-            final String lat = Double.toString(currentLatitude);
-            final String lng = Double.toString(currentLongitude);
-
-            jor = new StringRequest(Request.Method.POST, setBusUrl,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-
-                            // save staus shared in file
-                            stausShared = "1+" + _typeBus + "*" + String.valueOf(selectTraffic);
-                            try {
-                                FileOutputStream fOut = openFileOutput(fileStausShared, MODE_PRIVATE);
-                                OutputStreamWriter writer = new OutputStreamWriter(fOut);
-
-                                writer.write(stausShared);
-                                writer.flush();
-                                writer.close();
-                            } catch (IOException ioe) {
-                                ioe.printStackTrace();
-                            }
-
-                            if (stausAlertUsermanual.equals("show")) {
-                                final Dialog dialog = new Dialog(BusGps.this);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.activity_dialog_usermanual_bus);
-                                dialog.setCancelable(false);
-
-                                final CheckBox checkBoxAlertUsermanual = (CheckBox) dialog.findViewById(R.id.checkBoxAlertUsermanual);
-
-                                Button buttonOk = (Button) dialog.findViewById(R.id.btnOk);
-                                buttonOk.setOnClickListener(new View.OnClickListener() {
-                                    public void onClick(View v) {
-                                        dialog.cancel();
-
-                                        if (checkBoxAlertUsermanual.isChecked()) {
-
-                                            try {
-                                                FileOutputStream fOut = openFileOutput(fileAlertUsermanual, MODE_PRIVATE);
-                                                OutputStreamWriter writer = new OutputStreamWriter(fOut);
-
-                                                writer.write("not");
-                                                writer.flush();
-                                                writer.close();
-                                            } catch (IOException ioe) {
-                                                ioe.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                });
-                                dialog.show();
-                            }
-
-                            checkBtnSharedBus = true;
-                            btnStopShared.setVisibility(View.VISIBLE);
-
-                            Intent i = new Intent(getApplicationContext(), MyService.class);
-                            startService(i);
-
-                            final Handler handler2 = new Handler();
-                            handler2.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Control.hDialog();
-                                    setItemSpinner();
-
-                                    selectImage();
-                                }
-                            }, 5000);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Control.hDialog();
-                            Control.alertCurrentInternet(BusGps.this);
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("main", "bus");
-                    params.put("username", username);
-                    params.put("lat", lat);
-                    params.put("lng", lng);
-                    params.put("name", _busNo);
-                    params.put("type", _typeBus);
-                    params.put("category", _category);
-                    params.put("amount_person", _amountPerson);
-                    params.put("bus_free", _stausBusFree);
-                    params.put("bus_detail", _detail);
-                    params.put("color", _colorMarker);
-
-                    return params;
-                }
-            };
-            jor.setShouldCache(false);
-            requestQueue.add(jor);
-
-        } else {
-            Control.alertInternet(this);
-        }
+        mControlDatabae.setDatabaseBusGpsTemp(Double.toString(currentLatitude), Double.toString(currentLongitude)
+                , _typeBus, _busNo, _category, _stausBusFree, _detail, _colorMarker, _amountPerson);
     }
 
-    private void sharedBus(final String _type, final String _trafficName, final String _detail, final String _category) {
-
-
-        if (Control.checkInternet(this)) {
-
-            readFile(fileUserName);
-
-            Control.sDialog(this);
-
-            final String lat = Double.toString(currentLatitude);
-            final String lng = Double.toString(currentLongitude);
-
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-            StringRequest jor = new StringRequest(Request.Method.POST, setBusUrl,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-
-                            final Handler handler2 = new Handler();
-                            handler2.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Control.hDialog();
-                                    setItemSpinner();
-                                    moveAnimateCamera(currentLocation);
-
-                                    selectImage();
-                                }
-                            }, 5000);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Control.hDialog();
-                            Control.alertCurrentInternet(BusGps.this);
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("main", "bus");
-                    params.put("username", username);
-                    params.put("lat", lat);
-                    params.put("lng", lng);
-                    params.put("name", _trafficName);
-                    params.put("type", _type);
-                    params.put("category", _category);
-                    params.put("bus_detail", _detail);
-                    return params;
-                }
-            };
-            jor.setShouldCache(false);
-            requestQueue.add(jor);
-        } else {
-            Control.alertInternet(this);
-        }
-    }
 
     private void sharedBus(final String type, final Dialog tempDialog) {
 
@@ -2478,12 +2194,11 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         dialog.show();
     }
 
-
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+    private void sharedBus(String _busType, String _trafficName, String _detail, String _category) {
+        mControlDatabae.setDatabaseBusGps(Double.toString(currentLatitude), Double.toString(currentLongitude)
+                , _busType, _trafficName, _detail, _category);
     }
+
 
     private void selectImage() {
 

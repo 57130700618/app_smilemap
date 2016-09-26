@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.blackcatwalk.sharingpower.Tutorial">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary1"
@@ -20,18 +17,18 @@
 
             <ImageView
                 android:id="@+id/backIm"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:layout_width="@dimen/back_btn_width"
+                android:layout_height="@dimen/back_btn_height"
+                android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
             <TextView
+                style="@style/label_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="วิธีการใช้งาน"
-                android:textColor="@color/white"
                 android:textSize="@dimen/label_sub_20sp" />
 
             <ImageView
@@ -54,159 +51,159 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayout6">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="แชร์ตำแหน่งการจราจร"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="1.เปิดการเชื่อมต่อ จีพีเอส, อินเทอร์เน็ต"
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="2.เลือกปุ่มแชร์ตำแหน่ง ดังภาพ"
-            android:textSize="15sp" />
-
-        <ImageView
-            android:layout_width="180dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/tutorial_p1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="3.เลือกประเภทการจราจร หลังจากนั้นทำการกรอกรายละเอียดเพิ่มเติม แล้วกดแชร์ตำแหน่ง"
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="แก้ไขจำนวนผู้โดยสาร(รถเมล์, บีอาที, รถตู้, เรือ)"
-            android:textSize="17sp"
-            android:layout_marginTop="40dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="1.เลือกปุ่มนำทาง ดังภาพ"
-            android:textSize="15sp" />
-
-        <ImageView
-            android:layout_width="180dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/tutorial_p2" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="2.เลือกเมนูแก้ไขจำนวนผู้โดยสาร"
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="3.เลือกจำนวนแล้วกดปุ่มตกลง"
-            android:textSize="15sp" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ยกเลิกการแชร์ตำแหน่ง"
-            android:textSize="17sp"
-            android:layout_marginTop="40dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="1.เลือกปุ่มนำทาง ดังภาพข้างบน"
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="2.เลือกเมนูยกเลิกการแชร์"
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="3.กดตกลงเพื่อยกเลิกการแชร์"
-            android:textSize="15sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="30dp"
-            android:background="@color/light_gray"
-            android:orientation="vertical" />
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="เรียกดูตำแหน่งการจราจร"
-            android:textSize="17sp"
-            android:layout_marginTop="30dp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="1.เลือกเมนู ดังภาพ"
-            android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="แชร์ตำแหน่งการจราจร"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="180dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/tutorial_p3" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="1.เปิดการเชื่อมต่อ จีพีเอส, อินเทอร์เน็ต"
+                android:textSize="15sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="2.เลือกประเภทที่ท่านต้องการ"
-            android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="2.เลือกปุ่มแชร์ตำแหน่ง ดังภาพ"
+                android:textSize="15sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="3.กดที่จุดปักหมุด เพื่อดูรายละเอียดเพิ่มเติม"
-            android:textSize="15sp" />
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/tutorial_p1" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="3.เลือกประเภทการจราจร หลังจากนั้นทำการกรอกรายละเอียดเพิ่มเติม แล้วกดแชร์ตำแหน่ง"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="แก้ไขจำนวนผู้โดยสาร(รถเมล์, บีอาที, รถตู้, เรือ)"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="1.เลือกปุ่มนำทาง ดังภาพ"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/tutorial_p2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="2.เลือกเมนูแก้ไขจำนวนผู้โดยสาร"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="3.เลือกจำนวนแล้วกดปุ่มตกลง"
+                android:textSize="15sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="ยกเลิกการแชร์ตำแหน่ง"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="1.เลือกปุ่มนำทาง ดังภาพข้างบน"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="2.เลือกเมนูยกเลิกการแชร์"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="3.กดตกลงเพื่อยกเลิกการแชร์"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="30dp"
+                android:background="@color/light_gray"
+                android:orientation="vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="เรียกดูตำแหน่งการจราจร"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="1.เลือกเมนู ดังภาพ"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/tutorial_p3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="2.เลือกประเภทที่ท่านต้องการ"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="3.กดที่จุดปักหมุด เพื่อดูรายละเอียดเพิ่มเติม"
+                android:textSize="15sp" />
+
+        </LinearLayout>
 
     </ScrollView>
 
