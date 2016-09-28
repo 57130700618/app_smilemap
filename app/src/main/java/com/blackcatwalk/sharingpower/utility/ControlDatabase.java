@@ -115,9 +115,19 @@ public class ControlDatabase {
         return false;
     }
 
+    private boolean checkInternetProgressCustom() {
+
+        if (ControlCheckConnect.checkInternet(mActivity)) {
+            return true;
+        }
+        ControlCheckConnect.alertCurrentInternet(mActivity);
+        return false;
+    }
+
+
     //------------------------------------------------------------
 
-    public void CallEmergency(final String _detail) {
+    public void reportGeneral(final String _detail, final String _type_report) {
 
         if (checkInternet()) {
 
@@ -140,10 +150,10 @@ public class ControlDatabase {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("main", "report");
+                    params.put("main", "reportGeneral");
                     params.put("username", mUserName);
                     params.put("detail", _detail);
-                    params.put("type_report", "nearby_call");
+                    params.put("type_report", _type_report);
                     return params;
                 }
             };
@@ -153,11 +163,52 @@ public class ControlDatabase {
     }
 
 
+    //------------------------------------------------------------
+
+    public void reportComment(final String _idUser, final String _idUserComment,final String _lat,
+                              final String _lng, final String _type, final String _detail) {
+
+        if (checkInternet()) {
+
+            RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
+            StringRequest jor = new StringRequest(Request.Method.POST, getMSetDatabase(),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            showToast("ส่งข้อมูลสำเร็จ");
+                            ControlProgress.hideDialog();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            showToast("ส่งข้อมูลไม่สำเร็จ");
+                            ControlProgress.hideDialog();
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("main", "reportComment");
+                    params.put("username", _idUser);
+                    params.put("detail", _detail);
+                    params.put("lat", _lat);
+                    params.put("lng", _lng);
+                    params.put("type", _type);
+                    params.put("usercomment", _idUserComment);
+                    return params;
+                }
+            };
+            jor.setShouldCache(false);
+            requestQueue.add(jor);
+        }
+    }
+
     //---------------------------------------------------------------------------------------------------
 
     public void getDatabaseFavoriteMain() {
 
-        if (checkInternet()) {
+        if (checkInternetProgressCustom()) {
 
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getMGetDatabase() + "favorite&sub="
                     + mUserName + ((FavoriteMain) mActivity).getmTempUrl()
@@ -189,37 +240,39 @@ public class ControlDatabase {
                         ((FavoriteMain) mActivity).mFavotiteTv.setVisibility(View.VISIBLE);
                     }
                     ((FavoriteMain) mActivity).mAdapter.notifyDataSetChanged();
-                    ControlProgress.hideDialog();
+                    ((FavoriteMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    ControlProgress.hideDialog();
+                    ((FavoriteMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
                 }
             });
             AppController.getmInstance().
                     addToRequesQueue(jsonArrayRequest);
+        }else {
+            ((FavoriteMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
     public void setFavoriteMain(final String _detailName, final String _job) {
 
-        if (checkInternet()) {
+        if (checkInternetProgressCustom()) {
 
             RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
             StringRequest jor = new StringRequest(Request.Method.POST, getMSetDatabase(),
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            ((FavoriteMain) mActivity).refreshData();
-                            ControlProgress.hideDialog();
+                            ((FavoriteMain) mActivity).fetchData();
+                            ((FavoriteMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             showToast("บันทึกไม่สำเร็จ");
-                            ControlProgress.hideDialog();
+                            ((FavoriteMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
                         }
                     }) {
                 @Override
@@ -239,7 +292,8 @@ public class ControlDatabase {
             };
             jor.setShouldCache(false);
             requestQueue.add(jor);
-
+        }else {
+            ((FavoriteMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -282,7 +336,7 @@ public class ControlDatabase {
 
     public void getDatabaeeLocationCommentMain(String _tempUrl) {
 
-        if (checkInternet()) {
+        if (checkInternetProgressCustom()) {
 
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getMGetDatabase() + _tempUrl + "&ramdom=" + randomNumber(),
                     new Response.Listener<JSONArray>() {
@@ -298,6 +352,7 @@ public class ControlDatabase {
                                     _item.setmComment(obj.getString("comment"));
                                     _item.setmUpdateDate(obj.getString("update_date"));
                                     _item.setmUsers(obj.getString("name"));
+                                    _item.setmId(obj.getInt("id_users"));
                                     _item.setmSex(obj.getString("sex"));
 
                                     ((LocationCommentMain) mActivity).mLocationComment.add(_item);
@@ -305,7 +360,7 @@ public class ControlDatabase {
                                     ex.printStackTrace();
                                 }
                             }
-                            ControlProgress.hideDialog();
+                            ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
                             ((LocationCommentMain) mActivity).mAdapter.notifyDataSetChanged();
                             ((LocationCommentMain) mActivity).mListView.setSelection(
                                     ((LocationCommentMain) mActivity).mListView.getAdapter().getCount() - 1);
@@ -313,17 +368,139 @@ public class ControlDatabase {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    ControlProgress.hideDialog();
+                    ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
                 }
             });
             AppController.getmInstance().addToRequesQueue(jsonArrayRequest);
+        }else{
+            ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
+        }
 
+
+    }
+
+    public void getDatabaeeLocationCommentMainIdUser() {
+
+        if (checkInternet()) {
+
+            RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
+            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, getMGetDatabase() +
+                    "get_id_user&user=" + mUserName + "&ramdom=" + randomNumber(), null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray ja = response.getJSONArray("id_user");
+
+                                ((LocationCommentMain) mActivity).setmIdUser(ja.getJSONObject(0).getInt("id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            ControlProgress.hideDialog();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            ControlProgress.hideDialog();
+                        }
+                    }
+            );
+            jor.setShouldCache(false);
+            requestQueue.add(jor);
         }
     }
 
     //--------------------------------------------------------
 
     public void setDatabaeeLocationCommentMain(final String _lat, final String _lng, final String _comment, final String _type) {
+
+        if (checkInternetProgressCustom()) {
+
+            RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
+            StringRequest jor = new StringRequest(Request.Method.POST, getMSetDatabase(),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            ((LocationCommentMain) mActivity).fetchData();
+                            ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            showToast("ส่งข้อมูลไม่สำเร็จ");
+                            ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("main", "comment_location");
+                    params.put("username", mUserName);
+                    params.put("lat", _lat);
+                    params.put("lng", _lng);
+                    params.put("comment", _comment);
+                    params.put("type", _type);
+                    return params;
+                }
+            };
+            jor.setShouldCache(false);
+            requestQueue.add(jor);
+        }else {
+            ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    //--------------------------------------------------------
+
+    public void setDatabaeeLocationCommentMainEdit(final String _userId, final String _detail,
+                                                   final String _lat, final String _lng,
+                                                   final String _type, final String _updateDate) {
+
+        if (checkInternetProgressCustom()) {
+
+            RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
+            StringRequest jor = new StringRequest(Request.Method.POST, getMSetDatabase(),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            ((LocationCommentMain) mActivity).fetchData();
+                            ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            showToast("ส่งข้อมูลไม่สำเร็จ");
+                            ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("main", "editComment");
+                    params.put("username", _userId);
+                    params.put("comment", _detail);
+                    params.put("lat", _lat);
+                    params.put("lng", _lng);
+                    params.put("type", _type);
+                    params.put("updatedate", _updateDate);
+                    return params;
+                }
+            };
+            jor.setShouldCache(false);
+            requestQueue.add(jor);
+        }else {
+            ((LocationCommentMain) mActivity).mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    //--------------------------------------------------------
+
+    public void setDatabaeeLocationCommentMainDelete(final String _userId, final String _updateDate) {
 
         if (checkInternet()) {
 
@@ -347,18 +524,14 @@ public class ControlDatabase {
                 protected Map<String, String> getParams() {
 
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("main", "comment_location");
-                    params.put("username", mUserName);
-                    params.put("lat", _lat);
-                    params.put("lng", _lng);
-                    params.put("comment", _comment);
-                    params.put("type", _type);
+                    params.put("main", "deleteComment");
+                    params.put("username", _userId);
+                    params.put("updatedate", _updateDate);
                     return params;
                 }
             };
             jor.setShouldCache(false);
             requestQueue.add(jor);
-
         }
     }
 
@@ -370,7 +543,8 @@ public class ControlDatabase {
         if (checkInternet()) {
 
             RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
-            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, _tempUtl + "&ramdom=" + randomNumber(), null,
+            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, getMGetDatabase() +
+                    _tempUtl + "&ramdom=" + randomNumber(), null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -508,7 +682,7 @@ public class ControlDatabase {
                 protected Map<String, String> getParams() {
 
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("main", "report");
+                    params.put("main", "reportGeneral");
                     params.put("username", mUserName);
                     params.put("lat", _lat);
                     params.put("lng", _lng);
@@ -542,6 +716,7 @@ public class ControlDatabase {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             ControlProgress.hideDialog();
+                            new Control().closeApp(mActivity);
                         }
                     }) {
                 @Override
@@ -602,6 +777,7 @@ public class ControlDatabase {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             ControlProgress.hideDialog();
+                            new Control().closeApp(mActivity);
                         }
                     }
             );
@@ -956,6 +1132,7 @@ public class ControlDatabase {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             ControlProgress.hideDialog();
+                            new Control().closeApp(mActivity);
                         }
                     }
             );
@@ -1001,45 +1178,6 @@ public class ControlDatabase {
         }
     }
 
-    //--------------------------------------------------------------------------------------
-
-    public void setDatabaseSettingComment(final String _detail) {
-
-        if (checkInternet()) {
-
-            RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
-            StringRequest jor = new StringRequest(Request.Method.POST, getMSetDatabase(),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            showToast("ส่งข้อมูลสำเร็จ");
-                            ControlProgress.hideDialog();
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            showToast("ส่งข้อมูลไม่สำเร็จ");
-                            ControlProgress.hideDialog();
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("main", "report");
-                    params.put("username", mUserName);
-                    params.put("detail", _detail);
-                    params.put("type_report", "recommend");
-                    return params;
-                }
-            };
-            jor.setShouldCache(false);
-            requestQueue.add(jor);
-        }
-    }
-
-
     //----------------------------------------------------------------------------------------------------
 
     public void setDatabaseTrafficDetail(final String _lat, final String _lng, final String _type,
@@ -1067,7 +1205,7 @@ public class ControlDatabase {
                 protected Map<String, String> getParams() {
 
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("main", "report");
+                    params.put("main", "reportGeneral");
                     params.put("username", mUserName);
                     params.put("lat", _lat);
                     params.put("lng", _lng);
@@ -1088,7 +1226,6 @@ public class ControlDatabase {
     public void getDatabaseLocationGps(final String _tempUrl) {
 
         if (checkInternet()) {
-
             RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
             JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, getMGetDatabase() +
                     "location&sub=" + _tempUrl + "&ramdom=" + randomNumber(), null,
@@ -1115,7 +1252,6 @@ public class ControlDatabase {
                                     //username = jsonObject.getString("username");
                                     LocationDetail = jsonObject.getString("location_detail");
                                     distance = Double.parseDouble(decim.format(Double.parseDouble(jsonObject.getString("distance"))));
-
                                     ((LocationGps) mActivity).addMarkerDatabase(latitude, longitude, LocationDetail, username, distance);
                                 }
                             } catch (JSONException e) {
@@ -1128,6 +1264,7 @@ public class ControlDatabase {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             ControlProgress.hideDialog();
+                            new Control().closeApp(mActivity);
                         }
                     }
             );

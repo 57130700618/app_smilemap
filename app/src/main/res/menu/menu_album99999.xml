@@ -9,5 +9,6 @@
     <item
         android:id="@+id/action_play_next"
         android:orderInCategory="101"
+        android:visible="true"
         android:title="@string/action_play_next" />
 </menu>

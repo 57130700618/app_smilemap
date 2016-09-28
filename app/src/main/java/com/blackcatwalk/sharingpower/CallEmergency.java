@@ -89,7 +89,7 @@ public class CallEmergency extends AppCompatActivity {
         _btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ControlDatabase _controlDatabae = new ControlDatabase(CallEmergency.this);
-                _controlDatabae.CallEmergency(_editText.getText().toString());
+                _controlDatabae.reportGeneral(_editText.getText().toString(),"nearby_call");
                 _dialog.cancel();
             }
         });

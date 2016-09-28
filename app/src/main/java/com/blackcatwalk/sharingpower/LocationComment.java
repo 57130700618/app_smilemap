@@ -6,6 +6,7 @@ public class LocationComment {
     private String mUpdateDate;
     private String mUsers;
     private String mSex;
+    private int mId;
 
     public void setmComment(String _comment) {
         this.mComment = _comment;
@@ -17,6 +18,10 @@ public class LocationComment {
 
     public void setmUsers(String _users) {
         this.mUsers = _users;
+    }
+
+    public void setmId(int mId) {
+        this.mId = mId;
     }
 
     public void setmSex(String _sex) {
@@ -32,5 +37,9 @@ public class LocationComment {
     public String getmUsers() { return mUsers; }
 
     public String getmSex() { return mSex; }
+
+    public int getmId() {
+        return mId;
+    }
 
 }

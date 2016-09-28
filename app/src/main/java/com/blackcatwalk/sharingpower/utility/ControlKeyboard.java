@@ -22,13 +22,15 @@ public class ControlKeyboard {
         }
     }
 
-    public static void hideKeyboardWhenShowViewPage(Activity _activity) {
+    public void hideKeyboardWhenShowViewPage(Activity _activity) {
         _activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     public void hideKeyboardWhenFocusEdittext(Activity _activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager) _activity.getSystemService(INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(_activity.getCurrentFocus().getWindowToken(), 0);
+        if (_activity.getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) _activity.getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(_activity.getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     public void setupUIHidenKeyboardWhenClickOutEdittext(View _view, final Activity _activity) {

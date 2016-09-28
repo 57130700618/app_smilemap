@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.blackcatwalk.sharingpower.google.GoogleMapAddress;
 import com.blackcatwalk.sharingpower.google.GoogleNavigator;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
-import com.blackcatwalk.sharingpower.utility.ControlKeyboard;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
@@ -55,7 +54,6 @@ public class LocationDetail extends AppCompatActivity {
     private TextView distanceTv;
     private TextView durationTv;
     private Button mNavigationBtn;
-    private ControlKeyboard mControlKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +66,6 @@ public class LocationDetail extends AppCompatActivity {
         setContent();
 
         mControlDatabase = new ControlDatabase(this);
-        mControlKeyboard = new ControlKeyboard();
 
         mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,11 +122,11 @@ public class LocationDetail extends AppCompatActivity {
         mNavigationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GoogleNavigator().showDialogNavigator(getApplicationContext(),String.valueOf(mLat),String.valueOf(mLng));
+                new GoogleNavigator().showDialogNavigator(LocationDetail.this,String.valueOf(mLat),String.valueOf(mLng));
             }
         });
 
-        mControlDatabase.getDatabaseLocationDetail("mVoteBtn&lat=" + mLat + "&lng=" + mLng);
+        mControlDatabase.getDatabaseLocationDetail("vote&lat=" + mLat + "&lng=" + mLng);
     }
 
     private void setContent() {
@@ -178,6 +175,12 @@ public class LocationDetail extends AppCompatActivity {
             distanceTv.setText("ระยะทาง: " + mDistance);
         }
 
+        if (mDuration.substring(_tempIndexString + 1, _tempIndexString + 2).equals("ก")) {
+            distanceTv.setText("ระยะทาง: " + mDistance.substring(0, _tempIndexString) + " กิโลเมตร");
+        } else {
+            distanceTv.setText("ระยะทาง: " + mDistance);
+        }
+
         durationTv.setText("ระยะเวลา: " + mDuration);
     }
 
@@ -215,7 +218,7 @@ public class LocationDetail extends AppCompatActivity {
         _dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         _dialog.setContentView(R.layout.activity_dialog_favorite_detail);
 
-        final EditText editDetailName = (EditText) _dialog.findViewById(R.id.editDetailName);
+        final EditText _editDetailName = (EditText) _dialog.findViewById(R.id.editDetailName);
 
         ImageView btnClose = (ImageView) _dialog.findViewById(R.id.btnClose);
         btnClose.setOnClickListener(new View.OnClickListener() {
@@ -229,10 +232,11 @@ public class LocationDetail extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mControlKeyboard.hideKeyboard(LocationDetail.this);
-                mControlDatabase.setFavoriteDatabaseLocationDetail( String.valueOf(mLat).toString(),
-                        String.valueOf(mLng).toString(), editDetailName.getText().toString(), mType);
-                _dialog.cancel();
+                if(_editDetailName.getText().toString().length() >1){
+                    mControlDatabase.setFavoriteDatabaseLocationDetail( String.valueOf(mLat).toString(),
+                            String.valueOf(mLng).toString(), _editDetailName.getText().toString(), mType);
+                    _dialog.cancel();
+                }
             }
         });
         _dialog.show();
@@ -251,15 +255,16 @@ public class LocationDetail extends AppCompatActivity {
             }
         });
 
-        final EditText editText = (EditText) _dialog.findViewById(R.id.editText);
+        final EditText _editText = (EditText) _dialog.findViewById(R.id.editText);
 
         Button btnSend = (Button) _dialog.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mControlKeyboard.hideKeyboard(LocationDetail.this);
-                mControlDatabase.setReportDatabaseLocationDetail(String.valueOf(mLat).toString(),
-                        String.valueOf(mLng).toString(), editText.getText().toString());
-                _dialog.cancel();
+                if(_editText.getText().toString().length() >1) {
+                    mControlDatabase.setReportDatabaseLocationDetail(String.valueOf(mLat).toString(),
+                            String.valueOf(mLng).toString(), _editText.getText().toString());
+                    _dialog.cancel();
+                }
             }
         });
         _dialog.show();

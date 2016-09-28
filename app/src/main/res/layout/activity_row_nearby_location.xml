@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
+    android:paddingLeft="8dp"
+    android:paddingTop="10dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -22,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="20dp"
         android:layout_toEndOf="@+id/tempthumbnail"
         android:layout_toRightOf="@+id/tempthumbnail"
         android:textColor="#FF484646"

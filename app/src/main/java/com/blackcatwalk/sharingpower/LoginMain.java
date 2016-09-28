@@ -241,7 +241,7 @@ public class LoginMain extends AppCompatActivity {
         Nammu.askForPermission(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION,
                 android.Manifest.permission.CALL_PHONE,
-                //android.Manifest.permission.READ_EXTERNAL_STORAGE
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
         }, new PermissionCallback() {
             @Override
             public void permissionGranted() {

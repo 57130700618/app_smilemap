@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -33,6 +36,7 @@ import android.widget.TextView;
 import com.blackcatwalk.sharingpower.customAdapter.CustomSpinnerBusLocattionNerbyMenu;
 import com.blackcatwalk.sharingpower.customAdapter.LocationGpsCustomSpinnerAdapter;
 import com.blackcatwalk.sharingpower.google.JsonParserDirections;
+import com.blackcatwalk.sharingpower.utility.Control;
 import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
 import com.blackcatwalk.sharingpower.utility.ControlFile;
@@ -44,6 +48,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.model.ShareLinkContent;
@@ -232,8 +237,6 @@ public class LocationGps extends AppCompatActivity {
                                                         moveAnimateCamera(mCurrentLocation);
                                                         getDatabase();
                                                     }
-                                                } else {
-                                                    mControlCheckConnect.alertCurrentGps(LocationGps.this);
                                                 }
                                             }
 
@@ -272,7 +275,7 @@ public class LocationGps extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mMap != null) {
-                    readFile("setting.txt");
+                    readFile("setting");
 
                     final Dialog dialog = new Dialog(LocationGps.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -490,7 +493,7 @@ public class LocationGps extends AppCompatActivity {
                                                               type = "garage";
                                                               break;
                                                       }
-                                                      mControlProgress.showProgressDialogDonTouch(getApplicationContext());
+                                                      mControlProgress.showProgressDialogDonTouch(LocationGps.this);
                                                       getDatabase();
                                                   } else {
                                                       mControlCheckConnect.alertCurrentGps(LocationGps.this);
@@ -526,21 +529,23 @@ public class LocationGps extends AppCompatActivity {
 
         String _temp = mControlFile.getFile(this, _tempFileName);
 
-        stausTaffic = _temp.substring(0, 1);
-        maptype = _temp.substring(1, 2);
-        resultNearby = _temp.substring(2, _temp.length());
+        if(!_temp.equals("not found")){
+            stausTaffic = _temp.substring(0, 1);
+            maptype = _temp.substring(1, 2);
+            resultNearby = _temp.substring(2, _temp.length());
 
-        if (mMap != null) {
-            if (stausTaffic.equals("1")) {
-                mMap.setTrafficEnabled(true);
-            } else {
-                mMap.setTrafficEnabled(false);
-            }
+            if (mMap != null) {
+                if (stausTaffic.equals("1")) {
+                    mMap.setTrafficEnabled(true);
+                } else {
+                    mMap.setTrafficEnabled(false);
+                }
 
-            if (maptype.equals("0")) {
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            } else {
-                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                if (maptype.equals("0")) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                } else {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                }
             }
         }
     }

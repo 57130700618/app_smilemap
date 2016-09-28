@@ -400,9 +400,9 @@
     <!-- =========================================== -->
     <string name="smile_map">Smile Map</string>
     <string name="animation_text_1">\"สังคมแผนที่ประเทศไทย\"</string>
-    <string name="animation_text_2">\"จิตสาธารณะ ช่วยเหลือสังคม\"</string>
-    <string name="animation_text_3">\"ไม่พลาดกิจกรรมสำคัญๆ\"</string>
-    <string name="animation_text_4">\"ชีวิตที่สุขสบายมากขึ้น\"</string>
+    <string name="animation_text_2">\"สังคมจิตสาธารณะ\"</string>
+    <string name="animation_text_3">\"สังคมแห่งการแบ่งปัน\"</string>
+    <string name="animation_text_4">\"ชีวิตที่สุขสบาย\"</string>
     <string name="facebook_login">เข้าสู่ระบบโดย Facebook</string>
     <string name="or">หรือ</string>
     <string name="login_smilemap">บัญชีอื่นๆ</string>
@@ -437,5 +437,6 @@
     <string name="general_text_19">ดำเนินการต่อ</string>
     <string name="general_text_20">ส่งข้อมูลสำเร็จ</string>
     <string name="general_text_21">โปรดตรวจสอบอีเมลของท่าน เราส่งรหัสผ่านยืนยันตัวตนไปที่อีเมลเรียบร้อยแล้ว</string>
+    <string name="title_activity_tttttttttttttttttt">Map</string>
 
 </resources>

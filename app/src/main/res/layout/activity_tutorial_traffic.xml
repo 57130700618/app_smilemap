@@ -22,15 +22,6 @@
                 android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
-            <TextView
-                style="@style/label_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="วิธีการใช้งาน"
-                android:textSize="@dimen/label_sub_20sp" />
-
             <ImageView
                 android:id="@+id/videoIm"
                 android:layout_width="45dp"
@@ -38,12 +29,22 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="10dp"
                 android:padding="10dp"
                 android:src="@drawable/ic_video_library" />
 
+            <TextView
+                style="@style/label_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_toEndOf="@+id/backIm"
+                android:text="วิธีการใช้งาน"
+                android:textSize="@dimen/label_sub_20sp" />
+
         </RelativeLayout>
+
     </LinearLayout>
 
     <ScrollView

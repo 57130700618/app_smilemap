@@ -249,10 +249,11 @@ public class TrafficDetail extends AppCompatActivity {
         Button _btnSend = (Button) _dialog.findViewById(R.id.btnSend);
         _btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new ControlDatabase(TrafficDetail.this).setDatabaseTrafficDetail(String.valueOf(mLat),
-                        String.valueOf(mLng),
-                        String.valueOf(mType), mName, _editText.getText().toString());
-                _dialog.cancel();
+                if(_editText.getText().toString().length() > 1){
+                    new ControlDatabase(TrafficDetail.this).setDatabaseTrafficDetail(String.valueOf(mLat),
+                            String.valueOf(mLng), String.valueOf(mType), mName, _editText.getText().toString());
+                    _dialog.cancel();
+                }
             }
         });
         _dialog.show();

@@ -43,6 +43,7 @@ import com.blackcatwalk.sharingpower.utility.Control;
 import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
 import com.blackcatwalk.sharingpower.utility.ControlFile;
+import com.blackcatwalk.sharingpower.utility.ControlKeyboard;
 import com.blackcatwalk.sharingpower.utility.ControlProgress;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -167,6 +168,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
     private ControlCheckConnect mControlCheckConnect;
     private ControlProgress mControlProgress;
     private ControlFile mControlFile;
+    private ControlKeyboard mControlKeyboard;
 
     @SuppressWarnings({"MissingPermission"})
     @Override
@@ -180,6 +182,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         mControlCheckConnect = new ControlCheckConnect();
         mControlProgress = new ControlProgress();
         mControlFile = new ControlFile();
+        mControlKeyboard = new ControlKeyboard();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -624,7 +627,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
 
         String _temp = mControlFile.getFile(this,"stausShared");
 
-        if (_temp.length() > 1) {
+        if(!_temp.equals("not found")){
             stausTaffic = _temp.substring(0, 1);
             maptype = _temp.substring(1, 2);
             resultNearby = _temp.substring(2, _temp.length());
@@ -1599,6 +1602,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                                            String[] bus_number = getResources().getStringArray(R.array.bus_number);
                                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplication(), R.layout.spinner_item, bus_number);
 
+                                           mControlKeyboard.showKeyboard(BusGps.this);
                                            autoComplete = (AutoCompleteTextView) dialogBus.findViewById(R.id.autoComplete);
                                            autoComplete.setAdapter(adapter);
                                            autoComplete.setThreshold(1);

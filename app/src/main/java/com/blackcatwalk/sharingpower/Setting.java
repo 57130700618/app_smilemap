@@ -360,7 +360,7 @@ public class Setting extends AppCompatActivity {
         Button btnSend = (Button) _dialog.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new ControlDatabase(Setting.this).setDatabaseSettingComment(editText.getText().toString());
+                new ControlDatabase(Setting.this).reportGeneral(editText.getText().toString(),"recommend");
                 _dialog.cancel();
             }
         });

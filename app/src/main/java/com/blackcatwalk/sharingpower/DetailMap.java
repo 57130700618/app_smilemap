@@ -1268,7 +1268,7 @@ public class DetailMap extends AppCompatActivity {
 
     private void moveNavigator() {
         if (Latitude != 0 && Longitude != 0) {
-            new GoogleNavigator().showDialogNavigator(getApplicationContext()
+            new GoogleNavigator().showDialogNavigator(DetailMap.this
                     ,String.valueOf(Latitude),String.valueOf(Longitude));
 
         } else {

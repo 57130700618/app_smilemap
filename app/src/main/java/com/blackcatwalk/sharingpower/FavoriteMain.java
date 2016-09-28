@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,9 +21,11 @@ import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.customAdapter.FavoriteCustomListAdapter;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
-import com.blackcatwalk.sharingpower.utility.ControlKeyboard;
+import com.blackcatwalk.sharingpower.utility.ControlProgress;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -29,9 +33,10 @@ public class FavoriteMain extends AppCompatActivity {
 
     private String mTempUrl;
     private ControlDatabase mControlDatabase;
-    private ControlKeyboard mControlKeyBoard;
     public List<Favorite> mFavoriteList = new ArrayList<Favorite>();
     public Favorite mItem;
+    private final String[] mLstsSort = {"สถานที่", "วันที่ (น้อย->มาก)", "วันที่ (มาก->น้อย)"};
+    private final String[] mListsManage = {"ดูแผนที่", "แก้ไข", "ลบรายการ",};
 
     // ----------- User Interface  --------------//
     private ListView mListView;
@@ -40,6 +45,7 @@ public class FavoriteMain extends AppCompatActivity {
     public FavoriteCustomListAdapter mAdapter;
     public TextView mFavotiteTv;
     public ImageView mFavotiteIm;
+    public SwipeRefreshLayout mSwipeRefreshLayout;
 
     public String getmTempUrl() {
         return mTempUrl;
@@ -54,7 +60,9 @@ public class FavoriteMain extends AppCompatActivity {
         bindWidget();
 
         mControlDatabase = new ControlDatabase(this);
-        mControlKeyBoard = new ControlKeyboard();
+
+        setSwipeRefreshLayout();
+        setListView();
 
         mFavotiteTv.setVisibility(View.INVISIBLE);
         mFavotiteIm.setVisibility(View.INVISIBLE);
@@ -65,7 +73,7 @@ public class FavoriteMain extends AppCompatActivity {
         mRefreshIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                refreshData();
+                fetchData();
             }
         });
 
@@ -76,6 +84,25 @@ public class FavoriteMain extends AppCompatActivity {
             }
         });
 
+        mTempUrl = "&job=all";
+        getDatabase();
+    }
+
+    private void setListView() {
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (mListView == null || mListView.getChildCount() == 0) ?
+                                0 : mListView.getChildAt(0).getTop();
+                mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+            }
+        });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -83,53 +110,94 @@ public class FavoriteMain extends AppCompatActivity {
             }
         });
 
-        mTempUrl = "&job=all";
-        getDatabase();
+    }
+
+    private void setSwipeRefreshLayout() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
+        mSwipeRefreshLayout.setColorSchemeResources(new ControlProgress().getColorSchemeSwipeRefresh());
+        mSwipeRefreshLayout.setClickable(false);
     }
 
     private void getDatabase() {
-        mControlDatabase.getDatabaseFavoriteMain();
+      mControlDatabase.getDatabaseFavoriteMain();
     }
 
     private void showDialogSort() {
-        final String[] _lists = {"สถานที่", "วันที่"};
-        new AlertDialog.Builder(FavoriteMain.this).setTitle("เรียงลำดับ").setItems(_lists, new DialogInterface.OnClickListener() {
+
+        new AlertDialog.Builder(FavoriteMain.this).setTitle("เรียงลำดับ").setItems(mLstsSort, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                mTempUrl = null;
-
                 switch (which) {
                     case 0:
-                        mTempUrl = "&job=location";
+                        Collections.sort(mFavoriteList, new SortTypeComparator());
                         break;
                     case 1:
-                        mTempUrl = "&job=date";
+                        Collections.sort(mFavoriteList, new SortDateComparator());
+                        break;
+                    case 2:
+                        Collections.sort(mFavoriteList, new SortDateComparator());
+                        Collections.reverse(mFavoriteList);
                         break;
                 }
-
-                refreshData();
+                sortData();
                 dialog.cancel();
             }
         }).show();
     }
 
-    public void refreshData() {
+    public void fetchData() {
         mFavoriteList = null;
         mFavoriteList = new ArrayList<Favorite>();
 
-        mAdapter = new FavoriteCustomListAdapter(FavoriteMain.this, mFavoriteList);
+        mAdapter = new FavoriteCustomListAdapter(this, mFavoriteList);
         mListView.setAdapter(mAdapter);
 
+        mSwipeRefreshLayout.setRefreshing(true);
         getDatabase();
+    }
+
+    public void sortData() {
+
+        ArrayList<Favorite> _favoriteList = new ArrayList<Favorite>();
+
+        for(int i = 0; i < mFavoriteList.size(); i++){
+            Favorite item = new Favorite();
+            item.setDetail(mFavoriteList.get(i).getDetail());
+            item.setTime(mFavoriteList.get(i).getTime());
+            item.setType(mFavoriteList.get(i).getType());
+            _favoriteList.add(item);
+        }
+
+        mAdapter = new FavoriteCustomListAdapter(this, _favoriteList);
+        mListView.setAdapter(mAdapter);
+    }
+
+    public class SortTypeComparator implements Comparator<Favorite> {
+        @Override
+        public int compare(Favorite o1, Favorite o2) {
+            return o1.getType().compareTo(o2.getType());
+            //return Double.compare(o1.getPercentChange(), o2.getPercentChange());
+            // return Integer.compare(o1.age, o2.age);
+        }
+    }
+
+    public class SortDateComparator implements Comparator<Favorite> {
+        @Override
+        public int compare(Favorite o1, Favorite o2) {
+            return o1.getTime().compareTo(o2.getTime());
+        }
     }
 
     private void showDialogMenu(int _position) {
 
         mItem = mFavoriteList.get(_position);
 
-        final String[] lists = {"ดูแผนที่", "แก้ไข", "ลบรายการ",};
-        new AlertDialog.Builder(FavoriteMain.this).setTitle("รายการโปรด").setItems(lists, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(FavoriteMain.this).setTitle("รายการโปรด").setItems(mListsManage, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -157,8 +225,6 @@ public class FavoriteMain extends AppCompatActivity {
         _dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         _dialog.setContentView(R.layout.activity_dialog_favorite_detail);
 
-        ControlKeyboard.showKeyboard(FavoriteMain.this);
-
         final EditText editDetailName = (EditText) _dialog.findViewById(R.id.editDetailName);
         editDetailName.setText(mItem.getDetail());
         editDetailName.setSelection(editDetailName.getText().length());
@@ -167,7 +233,6 @@ public class FavoriteMain extends AppCompatActivity {
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mControlKeyBoard.hideKeyboard(FavoriteMain.this);
                 _dialog.cancel();
             }
         });
@@ -176,8 +241,10 @@ public class FavoriteMain extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mControlDatabase.setFavoriteMain(editDetailName.getText().toString(), "updatefavorite");
-                _dialog.cancel();
+                if(editDetailName.getText().toString().length() > 1) {
+                    mControlDatabase.setFavoriteMain(editDetailName.getText().toString(), "updatefavorite");
+                    _dialog.cancel();
+                }
             }
         });
         _dialog.show();
@@ -210,6 +277,7 @@ public class FavoriteMain extends AppCompatActivity {
 
     private void bindWidget() {
         mRefreshIm = (ImageView) findViewById(R.id.refreshIm);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSortIm = (ImageView) findViewById(R.id.sortIm);
         mListView = (ListView) findViewById(R.id.listview);
         mFavotiteTv = (TextView) findViewById(R.id.favoriteTv);

@@ -85,8 +85,9 @@ public class ProfileSetting extends AppCompatActivity {
         mNameEt.setText(name);
         mStausEt.setText(staus);
         mStausEt.setSelection(staus.length());
-        mNameEt.setSelection(name.length());
 
+        mNameEt.setSelection(name.length());
+        mNameEt.setInputType(InputType.TYPE_NULL);
         mNameEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -323,7 +324,6 @@ public class ProfileSetting extends AppCompatActivity {
     private void bindWidget() {
         mBackIm = (ImageView) findViewById(R.id.backIm);
         mNameEt = (EditText) findViewById(R.id.nameEt);
-        mNameEt.setInputType(InputType.TYPE_NULL);
         mStausEt = (EditText) findViewById(R.id.stausEt);
         mAlertTextTv = (TextView) findViewById(R.id.alertTextTv);
         mUpdateBtn = (Button) findViewById(R.id.updateBtn);

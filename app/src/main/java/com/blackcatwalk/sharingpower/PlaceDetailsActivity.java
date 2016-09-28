@@ -77,7 +77,7 @@ public class PlaceDetailsActivity extends Activity {
         mNavigatorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GoogleNavigator().showDialogNavigator(getApplicationContext(),String.valueOf(mLat),String.valueOf(mLng));
+                new GoogleNavigator().showDialogNavigator(PlaceDetailsActivity.this,String.valueOf(mLat),String.valueOf(mLng));
             }
         });
 

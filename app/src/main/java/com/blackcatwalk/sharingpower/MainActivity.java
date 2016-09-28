@@ -41,7 +41,7 @@ public class MainActivity extends TabActivity {
         TabHost.TabSpec _spec;
 
         _spec = mTabHost.newTabSpec("one").setIndicator("")
-                .setContent(new Intent().setClass(this, Island.class));
+                .setContent(new Intent().setClass(this, LocationGps.class));
         mTabHost.addTab(_spec);
 
         _spec = mTabHost.newTabSpec("Two").setIndicator("")

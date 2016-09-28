@@ -5,15 +5,26 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary1"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
+
+        <fragment
+            android:id="@+id/streetviewFm"
+            android:name="com.google.android.gms.maps.SupportStreetViewPanoramaFragment"
+            android:layout_width="match_parent"
+            android:layout_height="180dp" />
+
+        <LinearLayout
+            android:id="@+id/googleStreetLy"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:orientation="vertical" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/dark_soft">
 
             <ImageView
                 android:id="@+id/backIm"
@@ -22,15 +33,6 @@
                 android:padding="@dimen/back_btn_padding"
                 android:src="@drawable/icon_back" />
 
-            <TextView
-                android:id="@+id/titleTv"
-                style="@style/label_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/label_sub_20sp" />
-
             <ImageView
                 android:id="@+id/reportBtn"
                 android:layout_width="50dp"
@@ -38,13 +40,23 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="10dp"
                 android:padding="10dp"
                 android:src="@drawable/icon_report" />
 
+            <TextView
+                android:id="@+id/titleTv"
+                style="@style/label_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_toEndOf="@+id/backIm"
+                android:textSize="@dimen/label_sub_20sp" />
+
         </RelativeLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -60,24 +72,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <fragment
-                        android:id="@+id/streetviewFm"
-                        android:name="com.google.android.gms.maps.SupportStreetViewPanoramaFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="130dp" />
-
-                    <LinearLayout
-                        android:id="@+id/googleStreetLy"
-                        android:layout_width="match_parent"
-                        android:layout_height="130dp"
-                        android:orientation="vertical" />
-
-                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

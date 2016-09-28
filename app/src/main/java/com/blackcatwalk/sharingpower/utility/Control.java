@@ -2,15 +2,19 @@
 package com.blackcatwalk.sharingpower.utility;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -56,193 +60,211 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
-public class Control extends AppCompatActivity {
+public class Control extends AppCompatActivity{
+
+        public void closeApp(Context _context) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+            builder.setMessage("ปิดปรับปรุงระบบ 30นาที เพื่ออัพเดทเวอร์ชั่นใหม่");
+            builder.setCancelable(false);
+            builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                   finish();
+                    dialog.cancel();
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+            Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+            pbutton.setTextColor(Color.parseColor("#147cce"));
+            pbutton.setTypeface(null, Typeface.BOLD);
+        }
 
 
-    //---------------------- md5 ----------------------//
+        //---------------------- md5 ----------------------//
 
-    public String md5(final String s) {
-        final String MD5 = "MD5";
-        try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest
-                    .getInstance(MD5);
-            digest.update(s.getBytes());
-            byte messageDigest[] = digest.digest();
+        public String md5(final String s) {
+            final String MD5 = "MD5";
+            try {
+                // Create MD5 Hash
+                MessageDigest digest = java.security.MessageDigest
+                        .getInstance(MD5);
+                digest.update(s.getBytes());
+                byte messageDigest[] = digest.digest();
 
-            // Create Hex String
-            StringBuilder hexString = new StringBuilder();
-            for (byte aMessageDigest : messageDigest) {
-                String h = Integer.toHexString(0xFF & aMessageDigest);
-                while (h.length() < 2)
-                    h = "0" + h;
-                hexString.append(h);
+                // Create Hex String
+                StringBuilder hexString = new StringBuilder();
+                for (byte aMessageDigest : messageDigest) {
+                    String h = Integer.toHexString(0xFF & aMessageDigest);
+                    while (h.length() < 2)
+                        h = "0" + h;
+                    hexString.append(h);
+                }
+                return hexString.toString();
+
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
             }
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            return "";
         }
-        return "";
-    }
 
-    //----------------------  map ----------------------//
+        //----------------------  map ----------------------//
 
-    public String getDirectionsUrl(LatLng origin, LatLng dest) {
+        public String getDirectionsUrl(LatLng origin, LatLng dest) {
 
-        // Origin of route
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+            // Origin of route
+            String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
 
-        // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+            // Destination of route
+            String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
 
-        // Sensor enabled
-        String sensor = "sensor=false";
+            // Sensor enabled
+            String sensor = "sensor=false";
 
-        // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor;
+            // Building the parameters to the web service
+            String parameters = str_origin + "&" + str_dest + "&" + sensor;
 
-        // Output format
-        String output = "json";
+            // Output format
+            String output = "json";
 
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+            // Building the url to the web service
+            String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
 
-        return url;
-    }
+            return url;
+        }
 
-    public String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try {
-            URL url = new URL(strUrl);
+        public String downloadUrl(String strUrl) throws IOException {
+            String data = "";
+            InputStream iStream = null;
+            HttpURLConnection urlConnection = null;
+            try {
+                URL url = new URL(strUrl);
 
-            // Creating an http connection to communicate with url
-            urlConnection = (HttpURLConnection) url.openConnection();
+                // Creating an http connection to communicate with url
+                urlConnection = (HttpURLConnection) url.openConnection();
 
-            // Connecting to url
-            urlConnection.connect();
+                // Connecting to url
+                urlConnection.connect();
 
-            // Reading data from url
-            iStream = urlConnection.getInputStream();
+                // Reading data from url
+                iStream = urlConnection.getInputStream();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+                BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
 
-            StringBuffer sb = new StringBuffer();
+                StringBuffer sb = new StringBuffer();
 
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
+                String line = "";
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                data = sb.toString();
+
+                br.close();
+
+            } catch (Exception e) {
+                // Log.bus_spinner_bts_gray("Exception while downloading url", e.toString());
+            } finally {
+                iStream.close();
+                urlConnection.disconnect();
             }
-
-            data = sb.toString();
-
-            br.close();
-
-        } catch (Exception e) {
-            // Log.bus_spinner_bts_gray("Exception while downloading url", e.toString());
-        } finally {
-            iStream.close();
-            urlConnection.disconnect();
+            return data;
         }
-        return data;
-    }
 
 
-    public int randomNumber() {
-        Random rand = new Random();
-        return rand.nextInt(5000) + 1;
-    }
-
-
-    //---------------------- get Version App ----------------------//
-
-    public String getVersionApp(Activity activity) {
-        PackageManager manager = activity.getPackageManager();
-        PackageInfo info = null;
-        try {
-            info = manager.getPackageInfo(
-                    activity.getPackageName(), 0);
-            return info.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        public int randomNumber() {
+            Random rand = new Random();
+            return rand.nextInt(5000) + 1;
         }
-        return "";
-    }
 
-    //---------------------- goto googleplay ----------------------//
 
-    public void openGooglePlay(Activity activity, String choice) {
+        //---------------------- get Version App ----------------------//
 
-        String appPackageName = null;
-        if (choice.equals("ads")) {
-            appPackageName = activity.getPackageName(); // getPackageName() from Context or Activity object
-        } else {
-            appPackageName = "com.blackcatwalk.smilemap_noads";
+        public String getVersionApp(Activity activity) {
+            PackageManager manager = activity.getPackageManager();
+            PackageInfo info = null;
+            try {
+                info = manager.getPackageInfo(
+                        activity.getPackageName(), 0);
+                return info.versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            return "";
         }
-        try {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-        } catch (android.content.ActivityNotFoundException anfe) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+
+        //---------------------- goto googleplay ----------------------//
+
+        public void openGooglePlay(Activity activity, String choice) {
+
+            String appPackageName = null;
+            if (choice.equals("ads")) {
+                appPackageName = activity.getPackageName(); // getPackageName() from Context or Activity object
+            } else {
+                appPackageName = "com.blackcatwalk.smilemap_noads";
+            }
+            try {
+                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
         }
-    }
 
-    //---------------------- get size screen ----------------------//
+        //---------------------- get size screen ----------------------//
 
-    public double getSizeScrren(Activity activity) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        float widthInInches = metrics.widthPixels / metrics.xdpi;
-        float heightInInches = metrics.heightPixels / metrics.ydpi;
+        public double getSizeScrren(Activity activity) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            float widthInInches = metrics.widthPixels / metrics.xdpi;
+            float heightInInches = metrics.heightPixels / metrics.ydpi;
 
-        double sizeInInches = Math.sqrt(Math.pow(widthInInches, 2) + Math.pow(heightInInches, 2));
+            double sizeInInches = Math.sqrt(Math.pow(widthInInches, 2) + Math.pow(heightInInches, 2));
 
-        return sizeInInches;
-    }
+            return sizeInInches;
+        }
 
 
-    //---------------------- Clear cache ----------------------//
+        //---------------------- Clear cache ----------------------//
 
-    public  void clearCache(Context context) {
-        try {
-            File dir = context.getCacheDir();
+        public void clearCache(Context context) {
+            try {
+                File dir = context.getCacheDir();
+                if (dir != null && dir.isDirectory()) {
+                    deleteDir(dir);
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        public boolean deleteDir(File dir) {
             if (dir != null && dir.isDirectory()) {
-                deleteDir(dir);
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    public  boolean deleteDir(File dir) {
-        if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
+                String[] children = dir.list();
+                for (int i = 0; i < children.length; i++) {
+                    boolean success = deleteDir(new File(dir, children[i]));
+                    if (!success) {
+                        return false;
+                    }
                 }
             }
+            return dir.delete();
         }
-        return dir.delete();
-    }
 
-    //---------------------- Toast Custom ----------------------//
+        //---------------------- Toast Custom ----------------------//
 
-    public void showToast(Activity _activity, String _temp) {
-        LayoutInflater inflater = _activity.getLayoutInflater();
-        View layout = inflater.inflate(R.layout.toast,
-                (ViewGroup) _activity.findViewById(R.id.toast_layout_root));
+        public void showToast(Activity _activity, String _temp) {
+            LayoutInflater inflater = _activity.getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast,
+                    (ViewGroup) _activity.findViewById(R.id.toast_layout_root));
 
-        TextView text = (TextView) layout.findViewById(R.id.text);
-        text.setText(_temp);
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText(_temp);
 
-        Toast toast = new Toast(_activity.getApplicationContext());
-        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 500);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layout);
-        toast.show();
-    }
+            Toast toast = new Toast(_activity.getApplicationContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 500);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        }
 
 }
 

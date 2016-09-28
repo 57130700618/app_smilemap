@@ -75,7 +75,7 @@ public class ControlCheckConnect {
             mDialogGps.setContentView(R.layout.activity_dialog_current_gps);
             mDialogGps.setCancelable(false);
 
-            Button btnClose = (Button) mDialogIntetnet.findViewById(R.id.btnClose);
+            Button btnClose = (Button) mDialogGps.findViewById(R.id.btnClose);
             btnClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

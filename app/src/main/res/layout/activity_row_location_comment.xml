@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:padding="8dp">
+    android:paddingRight="8dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="7dp"
+    android:paddingLeft="8dp">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/tempthumbnail"
@@ -29,6 +31,7 @@
             android:id="@+id/users"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:textSize="15sp"
             android:textStyle="bold" />
 

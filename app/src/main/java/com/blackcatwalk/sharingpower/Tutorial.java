@@ -17,13 +17,13 @@ public class Tutorial extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
 
-        bindWidget();
-
         if (getIntent().getExtras().getString("type").equals("traffic")) {
             setContentView(R.layout.activity_tutorial_traffic);
         } else {
             setContentView(R.layout.activity_tutorial_location);
         }
+
+        bindWidget();
 
         mBackIm.setOnClickListener(new View.OnClickListener() {
             @Override
