@@ -13,7 +13,7 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FF484646"
+        android:textColor="@color/grayfont"
         android:textSize="20sp"
         android:layout_marginRight="10dp"
         android:layout_alignParentTop="true"
@@ -26,13 +26,26 @@
         android:id="@+id/tel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FF484646"
+        android:textColor="@color/grayfont"
         android:textSize="16sp"
         android:layout_below="@+id/name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/name"
         android:layout_alignEnd="@+id/name" />
+
+    <TextView
+        android:id="@+id/distanceTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grayfont"
+        android:textSize="14sp"
+        android:layout_below="@+id/tel"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/tel"
+        android:layout_alignEnd="@+id/tel" />
 
     <ImageView
         android:layout_width="40dp"

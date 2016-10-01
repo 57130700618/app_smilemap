@@ -29,6 +29,16 @@
                 android:textSize="@dimen/label_main_20sp" />
 
             <ImageView
+                android:id="@+id/refreshIm"
+                android:layout_width="43dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/userManualIm"
+                android:padding="10dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_refresh" />
+
+            <ImageView
                 android:id="@+id/main"
                 android:layout_width="43dp"
                 android:layout_height="50dp"

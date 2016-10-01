@@ -35,8 +35,8 @@ public class FavoriteMain extends AppCompatActivity {
     private ControlDatabase mControlDatabase;
     public List<Favorite> mFavoriteList = new ArrayList<Favorite>();
     public Favorite mItem;
-    private final String[] mLstsSort = {"สถานที่", "วันที่ (น้อย->มาก)", "วันที่ (มาก->น้อย)"};
-    private final String[] mListsManage = {"ดูแผนที่", "แก้ไข", "ลบรายการ",};
+    private final String[] mLstsSort = {"สถานที่", "วันที่ (น้อย->มาก)", "วันที่ (มาก->น้อย)", "ยกเลิก"};
+    private final String[] mListsManage = {"ดูแผนที่", "แก้ไข", "ลบรายการ", "ยกเลิก"};
 
     // ----------- User Interface  --------------//
     private ListView mListView;

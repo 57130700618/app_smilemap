@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="อินเทอร์เน็ตปัจจุบัน"
+                android:text="เชื่อมต่ออินเทอร์เน็ตไม่ได้"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -34,24 +34,15 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/label_internet" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:text="เชื่อมต่ออินเทอร์เน็ตไม่ได้"
-        android:textColor="@color/colorAccent"
-        android:textSize="15sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="ตรวจสอบให้แน่ใจว่าท่านไม่ได้"
         android:textColor="@color/gray"
@@ -85,7 +76,7 @@
     <TextView
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:text="_"
         android:textColor="@color/colorHide" />
 

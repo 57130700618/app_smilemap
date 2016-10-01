@@ -263,9 +263,9 @@ public class ProfileSetting extends AppCompatActivity {
        }
     }
 
-    public void setDialogPasswordSuccess() {
+    public void setDialogPasswordSuccess(String _message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ProfileSetting.this);
-        builder.setMessage("เปลี่ยนรหัสผ่านสำเร็จ");
+        builder.setMessage(_message);
         builder.setCancelable(false);
         builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {

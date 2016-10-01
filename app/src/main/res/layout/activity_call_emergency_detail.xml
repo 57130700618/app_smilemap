@@ -31,6 +31,16 @@
                 style="@style/label_sub"
                 android:textSize="@dimen/label_sub_20sp" />
 
+            <ImageView
+                android:id="@+id/userManualIm"
+                android:layout_width="43dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:padding="10dp"
+                android:src="@drawable/icon_user_manual" />
+
         </RelativeLayout>
 
     </LinearLayout>

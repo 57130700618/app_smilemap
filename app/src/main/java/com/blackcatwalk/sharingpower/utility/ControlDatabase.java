@@ -2,6 +2,7 @@ package com.blackcatwalk.sharingpower.utility;
 
 import android.app.Activity;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,8 @@ import com.blackcatwalk.sharingpower.Rank;
 import com.blackcatwalk.sharingpower.RankMain;
 import com.blackcatwalk.sharingpower.RegisterPage1;
 import com.blackcatwalk.sharingpower.RegisterPage2;
+import com.blackcatwalk.sharingpower.TutorialLocation;
+import com.blackcatwalk.sharingpower.TutorialTraffic;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -951,14 +954,16 @@ public class ControlDatabase {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            ((ProfileSetting) mActivity).setDialogPasswordSuccess();
+                            ((ProfileSetting) mActivity).
+                                    setDialogPasswordSuccess("เปลี่ยนรหัสผ่านสำเร็จ");
                             ControlProgress.hideDialog();
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            showToast("เปลี่ยนรหัสผ่านใหม่ไม่สำเร็จ");
+                            ((ProfileSetting) mActivity).
+                                    setDialogPasswordSuccess("เปลี่ยนรหัสผ่านใหม่ไม่สำเร็จ");
                             ControlProgress.hideDialog();
                         }
                     }) {
@@ -1264,7 +1269,6 @@ public class ControlDatabase {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             ControlProgress.hideDialog();
-                            new Control().closeApp(mActivity);
                         }
                     }
             );
@@ -1330,7 +1334,6 @@ public class ControlDatabase {
 
                             try {
                                 JSONArray ja = response.getJSONArray("shared_bus");
-
 
                                 String _busNo = null;
                                 String _busType = null;
@@ -1402,6 +1405,7 @@ public class ControlDatabase {
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Log.d("fafa", String.valueOf(e));
                             }
                             ControlProgress.hideDialog();
                         }
@@ -1420,7 +1424,7 @@ public class ControlDatabase {
 
     //----------------------------------------------------------------------------------------
 
-    public void getDatabaseBusGpsVersion() {
+    public void getVersion() {
 
         if (checkInternet()) {
 
@@ -1440,7 +1444,7 @@ public class ControlDatabase {
                                     jsonObject = ja.getJSONObject(i);
                                     _versionAppForDatabase = jsonObject.getString("version");
                                 }
-                                ((BusGps) mActivity).showDialogVersionApp(_versionAppForDatabase);
+                                ((LocationGps) mActivity).showDialogVersionApp(_versionAppForDatabase);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -1451,6 +1455,7 @@ public class ControlDatabase {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             ControlProgress.hideDialog();
+                            new Control().closeApp(mActivity);
                         }
                     }
             );
@@ -1477,7 +1482,7 @@ public class ControlDatabase {
 
                                 for (int i = 0; i < _ja.length(); i++) {
                                     JSONObject jsonObject = _ja.getJSONObject(i);
-                                    ((BusGps) mActivity).setValueTemp(jsonObject.getString("name"),
+                                    ((BusGps) mActivity).dialogUpdateCountPerons(jsonObject.getString("name"),
                                             jsonObject.getString("type"), jsonObject.getString("category"),
                                             jsonObject.getString("bus_free"), jsonObject.getString("bus_detail"),
                                             jsonObject.getString("amount_person"), jsonObject.getString("color"));
@@ -1497,15 +1502,14 @@ public class ControlDatabase {
             );
             jor.setShouldCache(false);
             requestQueue.add(jor);
-
         }
     }
 
 
     //--------------------------------------------------------------------------------------------------
 
-    public void setDatabaseBusGps(final String _lat, final String _lng, final String _type,
-                                  final String _trafficName, final String _detail, final String _category) {
+    public void setDatabaseSharedAccidentCheckpoint(final String _lat, final String _lng, final String _type,
+                                                    final String _trafficName, final String _detail, final String _category) {
 
         if (checkInternet()) {
 
@@ -1514,7 +1518,7 @@ public class ControlDatabase {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            ((BusGps) mActivity).setDelayAfterSetDatabase();
+                            ((BusGps) mActivity).checkDialogPostFacebook();
                         }
                     },
                     new Response.ErrorListener() {
@@ -1549,11 +1553,11 @@ public class ControlDatabase {
         if (checkInternet()) {
 
             RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
-            StringRequest jor = new StringRequest(Request.Method.POST, mGetDatabase,
+            StringRequest jor = new StringRequest(Request.Method.POST, mSetDatabase,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            ((BusGps) mActivity).setAlfetStopshared();
+                            ((BusGps) mActivity).setupAlfetStopshared();
                             ControlProgress.hideDialog();
                         }
                     },
@@ -1579,9 +1583,9 @@ public class ControlDatabase {
 
     //------------------------------------------------------------------------------------------
 
-    public void setDatabaseBusGpsTemp(final String _lat, final String _lng, final String _typeBus,
-                                      final String _busNo, final String _category, final String _stausBusFree,
-                                      final String _detail, final String _colorMarker, final String _amountPerson) {
+    public void setDatabaseSharedTableGame(final String _lat, final String _lng, final String _typeBus,
+                                           final String _busNo, final String _category, final String _stausBusFree,
+                                           final String _detail, final String _colorMarker, final String _amountPerson) {
 
         if (checkInternet()) {
 
@@ -1590,7 +1594,7 @@ public class ControlDatabase {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            setDatabaseBusGpsTempf(_lat, _lng, _typeBus, _busNo, _category,
+                            setDatabaseSharedTableBus(_lat, _lng, _typeBus, _busNo, _category,
                                     _stausBusFree, _detail, _colorMarker, _amountPerson);
                             ControlProgress.hideDialog();
                         }
@@ -1615,7 +1619,6 @@ public class ControlDatabase {
                     params.put("color", _colorMarker);
                     params.put("amount_person", _amountPerson);
                     return params;
-
                 }
             };
             jor.setShouldCache(false);
@@ -1623,9 +1626,9 @@ public class ControlDatabase {
         }
     }
 
-    public void setDatabaseBusGpsTempf(final String _lat, final String _lng, final String _typeBus, final String _busNo
+    public void setDatabaseSharedTableBus(final String _lat, final String _lng, final String _typeBus, final String _busNo
             , final String _category, final String _stausBusFree, final String _detail,
-                                       final String _colorMarker, final String _amountPerson) {
+                                          final String _colorMarker, final String _amountPerson) {
 
         if (checkInternet()) {
 
@@ -1634,7 +1637,7 @@ public class ControlDatabase {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            ((BusGps) mActivity).setAlfetStopsharedt(_typeBus);
+                            ((BusGps) mActivity).setupAfterSharedBus(_typeBus);
                         }
                     },
                     new Response.ErrorListener() {
@@ -1662,6 +1665,52 @@ public class ControlDatabase {
                     return params;
                 }
             };
+            jor.setShouldCache(false);
+            requestQueue.add(jor);
+        }
+    }
+
+    //------------------------------------------------------------------------------------------
+
+    public void getDatabaeTutorial(final String _type) {
+
+        if (checkInternet()) {
+
+            RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
+            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, getMGetDatabase() +
+                    "picture&type=" + _type + "&ramdom=" + randomNumber(), null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray _ja = response.getJSONArray("temp");
+
+                                String[] _temp = new String[_ja.length()];
+
+                                for (int i = 0; i < _ja.length(); i++) {
+                                    JSONObject jsonObject = _ja.getJSONObject(i);
+
+                                    _temp[i] = jsonObject.getString("url");
+                                }
+                                if(_type.equals("location")){
+                                    ((TutorialLocation) mActivity).setPicture(_temp);
+                                }else {
+                                    ((TutorialTraffic) mActivity).setPicture(_temp);
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            ControlProgress.hideDialog();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            ControlProgress.hideDialog();
+                        }
+                    }
+            );
             jor.setShouldCache(false);
             requestQueue.add(jor);
         }

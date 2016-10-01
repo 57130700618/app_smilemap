@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.blackcatwalk.sharingpower.google.GoogleMapAddress;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
 import com.google.android.gms.maps.*;
@@ -185,7 +186,12 @@ public class TrafficDetail extends AppCompatActivity {
             distanceTv.setText("ระยะทาง: " + mDistance);
         }
 
-        durationTv.setText("ระยะเวลา: " + mDuration);
+        if(mDuration.indexOf("ชม.") != -1){
+            durationTv.setText("ระยะเวลา: " + mDuration.substring(0,mDuration.indexOf("ชม.")) + " ชั่วโมง "
+                    + mDuration.substring(6,mDuration.indexOf("น.")) + " นาที ");
+        }else{
+            durationTv.setText("ระยะเวลา: " + mDuration);
+        }
     }
 
     private void showDetail() {
@@ -249,7 +255,7 @@ public class TrafficDetail extends AppCompatActivity {
         Button _btnSend = (Button) _dialog.findViewById(R.id.btnSend);
         _btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(_editText.getText().toString().length() > 1){
+                if (_editText.getText().toString().length() > 1) {
                     new ControlDatabase(TrafficDetail.this).setDatabaseTrafficDetail(String.valueOf(mLat),
                             String.valueOf(mLng), String.valueOf(mType), mName, _editText.getText().toString());
                     _dialog.cancel();
@@ -257,6 +263,17 @@ public class TrafficDetail extends AppCompatActivity {
             }
         });
         _dialog.show();
+    }
+
+    public void getBundle() {
+        Bundle bundle = getIntent().getExtras();
+        mLat = bundle.getDouble("lat");
+        mLng = bundle.getDouble("lng");
+        mType = bundle.getInt("type");
+        mDistance = bundle.getString("distance");
+        mDuration = bundle.getString("duration");
+        mName = bundle.getString("name");
+        mDetail = bundle.getString("detail");
     }
 
     private void bindWidget() {
@@ -275,14 +292,4 @@ public class TrafficDetail extends AppCompatActivity {
         googleStreetLy = (LinearLayout) findViewById(R.id.googleStreetLy);
     }
 
-    public void getBundle() {
-        Bundle bundle = getIntent().getExtras();
-        mLat = bundle.getDouble("lat");
-        mLng = bundle.getDouble("lng");
-        mType = bundle.getInt("type");
-        mDistance = bundle.getString("distance");
-        mDuration = bundle.getString("duration");
-        mName = bundle.getString("name");
-        mDetail = bundle.getString("detail");
-    }
 }

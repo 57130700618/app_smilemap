@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.blackcatwalk.sharingpower.CallEmergency;
 import com.blackcatwalk.sharingpower.R;
 
 import java.util.List;
@@ -16,25 +17,23 @@ import java.util.List;
 public class CallEmergencyDetailCustomListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<String> mNameList;
-    private List<String> mTelList;
+    List<CallEmergency> mItems;
 
-    public CallEmergencyDetailCustomListAdapter(Context _context, List<String> _strName, List<String> _strTel) {
+    public CallEmergencyDetailCustomListAdapter(Context _context, List<CallEmergency> _items) {
         this.mContext= _context;
-        this.mNameList = _strName;
-        this.mTelList = _strTel;
+        this.mItems = _items;
     }
 
     public int getCount() {
-        return mNameList.size();
+        return mItems.size();
     }
 
     public Object getItem(int position) {
-        return null;
+        return mItems.get(position);
     }
 
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     public View getView(int _position, View _view, ViewGroup _parent) {
@@ -46,14 +45,22 @@ public class CallEmergencyDetailCustomListAdapter extends BaseAdapter {
 
         TextView _name = (TextView) _view.findViewById(R.id.name);
 
-        if(mNameList.get(_position).length() >= 25 && mTelList.get(_position).length() > 5){
-            _name.setText(mNameList.get(_position).substring(0,24) + "...");
+        CallEmergency _item = mItems.get(_position);
+
+        if(_item.getmName().length() >= 25 && _item.getmTel().length() > 5){
+            _name.setText(_item.getmName().substring(0,22) + "...");
         }else{
-            _name.setText(mNameList.get(_position));
+            _name.setText(_item.getmName());
         }
 
         TextView _tel = (TextView) _view.findViewById(R.id.tel);
-        _tel.setText(mTelList.get(_position));
+        _tel.setText(_item.getmTel());
+
+        if(_item.getmDistance() != null){
+            TextView _distanceTv = (TextView) _view.findViewById(R.id.distanceTv);
+            _distanceTv.setVisibility(View.VISIBLE);
+            _distanceTv.setText(_item.getmDistance());
+        }
 
         return _view;
     }

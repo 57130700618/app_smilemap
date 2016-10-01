@@ -3,62 +3,21 @@ package com.blackcatwalk.sharingpower.utility;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.Handler;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.Patterns;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.blackcatwalk.sharingpower.R;
-import com.google.android.gms.maps.model.LatLng;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 
 public class Control extends AppCompatActivity{
 
@@ -107,76 +66,6 @@ public class Control extends AppCompatActivity{
             }
             return "";
         }
-
-        //----------------------  map ----------------------//
-
-        public String getDirectionsUrl(LatLng origin, LatLng dest) {
-
-            // Origin of route
-            String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-
-            // Destination of route
-            String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-
-            // Sensor enabled
-            String sensor = "sensor=false";
-
-            // Building the parameters to the web service
-            String parameters = str_origin + "&" + str_dest + "&" + sensor;
-
-            // Output format
-            String output = "json";
-
-            // Building the url to the web service
-            String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-            return url;
-        }
-
-        public String downloadUrl(String strUrl) throws IOException {
-            String data = "";
-            InputStream iStream = null;
-            HttpURLConnection urlConnection = null;
-            try {
-                URL url = new URL(strUrl);
-
-                // Creating an http connection to communicate with url
-                urlConnection = (HttpURLConnection) url.openConnection();
-
-                // Connecting to url
-                urlConnection.connect();
-
-                // Reading data from url
-                iStream = urlConnection.getInputStream();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-                StringBuffer sb = new StringBuffer();
-
-                String line = "";
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-
-                data = sb.toString();
-
-                br.close();
-
-            } catch (Exception e) {
-                // Log.bus_spinner_bts_gray("Exception while downloading url", e.toString());
-            } finally {
-                iStream.close();
-                urlConnection.disconnect();
-            }
-            return data;
-        }
-
-
-        public int randomNumber() {
-            Random rand = new Random();
-            return rand.nextInt(5000) + 1;
-        }
-
 
         //---------------------- get Version App ----------------------//
 
@@ -247,23 +136,6 @@ public class Control extends AppCompatActivity{
                 }
             }
             return dir.delete();
-        }
-
-        //---------------------- Toast Custom ----------------------//
-
-        public void showToast(Activity _activity, String _temp) {
-            LayoutInflater inflater = _activity.getLayoutInflater();
-            View layout = inflater.inflate(R.layout.toast,
-                    (ViewGroup) _activity.findViewById(R.id.toast_layout_root));
-
-            TextView text = (TextView) layout.findViewById(R.id.text);
-            text.setText(_temp);
-
-            Toast toast = new Toast(_activity.getApplicationContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 500);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
         }
 
 }

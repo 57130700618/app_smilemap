@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -48,7 +47,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.login.LoginManager;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.model.ShareLinkContent;
@@ -92,7 +91,6 @@ public class LocationGps extends AppCompatActivity {
 
     private int mSelectTypeLocation = 0;
     private ControlCheckConnect mControlCheckConnect;
-    private ControlProgress mControlProgress;
     private ControlDatabase mControlDatabae;
     private ControlFile mControlFile;
 
@@ -110,11 +108,12 @@ public class LocationGps extends AppCompatActivity {
     // ----------------- User Interface -------------------//
     private SupportMapFragment mMapFragment;
     private ImageView btnClose;
+    private ImageView mRefreshIm;
     private ImageView btnCureentLocation;
     private TextView titleName;
     private CircleImageView btnShared;
     private Spinner spinner;
-    private ImageView main;
+    private ImageView mSettingIm;
     private ImageView userManualIm;
 
     // ------------------- Database -----------------------//
@@ -123,7 +122,6 @@ public class LocationGps extends AppCompatActivity {
     private String tempUrl;
     private String stausTaffic = "1";
     private String resultNearby = "55"; // nearby 50km
-    private String tempResultNearby = null;
     private String maptype = "0"; // 0 = normal , 1 = map_satelltte
     private LocationGpsCustomSpinnerAdapter adapter;
 
@@ -133,425 +131,27 @@ public class LocationGps extends AppCompatActivity {
     int SELECT_FILE = 1;
     private CallbackManager callbackManager;
 
-    @SuppressWarnings({"MissingPermission"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         getSupportActionBar().hide();
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-        shareDialog = new ShareDialog(this);
-
-        bindWidget();
-
         mControlCheckConnect = new ControlCheckConnect();
-        mControlProgress = new ControlProgress();
         mControlDatabae = new ControlDatabase(this);
         mControlFile = new ControlFile();
 
-        titleName.setText("สถานที่");
-
-        userManualIm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LocationGps.this, Tutorial.class).putExtra("type", "location"));
-            }
-        });
-
-        mMapFragment.getMapAsync(new OnMapReadyCallback() {
-                                     @Override
-                                     public void onMapReady(GoogleMap googleMap) {
-                                         mMap = googleMap;
-                                         LatLng bangkok = new LatLng(14.76553, 100.53904);
-                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bangkok, 8));
-                                         mMap.getUiSettings().setCompassEnabled(false);
-                                         mMap.setTrafficEnabled(true);
-                                         readFile("setting");
-
-                                         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                             public boolean onMarkerClick(Marker marker) {
-
-                                                 if (!marker.getTitle().equals("ตำแหน่งปัจจุบัน")) {
-
-                                                     if (mSelectedMaker != null) {
-                                                         mSelectedMaker.setIcon(BitmapDescriptorFactory.fromResource(getIdMarkerLocation()));
-                                                     }
-
-                                                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_selected));
-
-                                                     mControlProgress.showProgressDialogDonTouch(LocationGps.this);
-                                                     mSelectedMaker = marker;
-
-                                                     DownloadTask downloadTask = new DownloadTask();
-                                                     downloadTask.execute(getDirectionsUrl(mCurrentLocation, marker.getPosition())); // Start downloading json data from Google Directions API
-
-                                                     CameraPosition cameraPosition = new CameraPosition.Builder().target(marker.getPosition()).zoom(mCurrentZoom).tilt(30).build();
-                                                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                                                 }
-                                                 return true;
-                                             }
-                                         });
-
-                                         mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-                                                                               @Override
-                                                                               public void onInfoWindowClick(Marker marker) {
-                                                                                   Intent locationDetail = new Intent(getApplicationContext(), LocationDetail.class);
-                                                                                   locationDetail.putExtra("type", type);
-                                                                                   locationDetail.putExtra("detail", marker.getSnippet().substring(marker.getSnippet().indexOf("$") + 1, marker.getSnippet().length()));
-                                                                                   locationDetail.putExtra("lat", marker.getPosition().latitude);
-                                                                                   locationDetail.putExtra("lng", marker.getPosition().longitude);
-                                                                                   locationDetail.putExtra("duration", mDuration);
-                                                                                   locationDetail.putExtra("distance", mDistance);
-                                                                                   startActivity(locationDetail);
-                                                                               }
-                                                                           }
-
-                                         );
-
-                                         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-                                                                            @Override
-                                                                            public void onCameraChange(CameraPosition pos) {
-                                                                                if (pos.zoom != mCurrentZoom) {
-                                                                                    mCurrentZoom = pos.zoom;
-                                                                                }
-                                                                            }
-                                                                        }
-
-                                         );
-                                     }
-                                 }
-
-        );
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                                            @Override
-                                            public void onConnected(Bundle bundle) {
-                                                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                                                if (mLastLocation != null) {
-                                                    mCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-
-                                                    if (mSelectedMaker == null) {
-                                                        moveAnimateCamera(mCurrentLocation);
-                                                        getDatabase();
-                                                    }
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onConnectionSuspended(int i) {
-                                                mGoogleApiClient.connect();
-                                            }
-                                        }
-
-                )
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                                                   @Override
-                                                   public void onConnectionFailed(ConnectionResult connectionResult) {
-                                                       mControlCheckConnect.alertCurrentGps(LocationGps.this);
-                                                       mGoogleApiClient.connect();
-                                                   }
-                                               }
-
-                )
-                .build();
-
-        btnShared.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             if (mCurrentLocation != null) {
-                                                 sharedLocation();
-                                             } else {
-                                                 mControlCheckConnect.alertCurrentGps(LocationGps.this);
-                                             }
-                                         }
-                                     }
-
-        );
-
-        main.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMap != null) {
-                    readFile("setting");
-
-                    final Dialog dialog = new Dialog(LocationGps.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.activity_dialog_setting);
-
-                    btnClose = (ImageView) dialog.findViewById(R.id.btnClose);
-                    btnClose.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    Switch showTraffic = (Switch) dialog.findViewById(R.id.showTraffic);
-                    showTraffic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                stausTaffic = "1";
-                                mMap.setTrafficEnabled(true);
-
-                            } else {
-                                stausTaffic = "0";
-                                mMap.setTrafficEnabled(false);
-                            }
-                            saveFile();
-                        }
-                    });
-
-                    if (stausTaffic.equals("0")) {
-                        showTraffic.setChecked(false);
-                    }
-
-                    final TextView resultNearbyTxt = (TextView) dialog.findViewById(R.id.resultNearbyTxt);
-
-                    SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seekBar);
-                    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-
-                            switch (progresValue) {
-                                case 0:
-                                    resultNearby = "3";
-                                    break;
-                                case 1:
-                                    resultNearby = "6";
-                                    break;
-                                case 2:
-                                    resultNearby = "12";
-                                    break;
-                                case 3:
-                                    resultNearby = "23";
-                                    break;
-                                case 4:
-                                    resultNearby = "32";
-                                    break;
-                                case 5:
-                                    resultNearby = "55";
-                                    break;
-                            }
-                            saveFile();
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-                        }
-
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-                            showTxtkm(seekBar, resultNearbyTxt);
-                        }
-                    });
-
-                    showTxtkm(seekBar, resultNearbyTxt);
-
-                    final RadioButton satelltte = (RadioButton) dialog.findViewById(R.id.satelltte);
-                    final RadioButton normal = (RadioButton) dialog.findViewById(R.id.normal);
-
-                    normal.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            maptype = "0";
-                            saveFile();
-                            satelltte.setChecked(false);
-                            normal.setChecked(true);
-                            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                        }
-                    });
-
-                    satelltte.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            maptype = "1";
-                            saveFile();
-                            satelltte.setChecked(true);
-                            normal.setChecked(false);
-                            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                        }
-                    });
-
-                    if (maptype.equals("0")) {
-                        normal.setChecked(true);
-                    } else {
-                        satelltte.setChecked(true);
-                    }
-
-                    dialog.show();
-                }
-            }
-
-            void showTxtkm(SeekBar seekBar, TextView resultNearbyTxt) {
-
-                switch (resultNearby) {
-                    case "3":
-                        seekBar.setProgress(0);
-                        tempResultNearby = "2";
-                        break;
-                    case "6":
-                        seekBar.setProgress(1);
-                        tempResultNearby = "5";
-                        break;
-                    case "12":
-                        seekBar.setProgress(2);
-                        tempResultNearby = "10";
-                        break;
-                    case "23":
-                        seekBar.setProgress(3);
-                        tempResultNearby = "20";
-                        break;
-                    case "32":
-                        seekBar.setProgress(4);
-                        tempResultNearby = "30";
-                        break;
-                    case "55":
-                        seekBar.setProgress(5);
-                        tempResultNearby = "50";
-                        break;
-                }
-                resultNearbyTxt.setText("(" + tempResultNearby + " km)");
-            }
-        });
-
-
-        btnCureentLocation.setOnClickListener(new View.OnClickListener() {
-                                                  @Override
-                                                  public void onClick(View v) {
-                                                      if (mCurrentLocation != null) {
-
-                                                          mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                                                          if (mLastLocation != null) {
-                                                              mCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                                                          }
-
-                                                          moveAnimateCamera(mCurrentLocation);
-                                                      } else {
-                                                          mControlCheckConnect.alertCurrentGps(LocationGps.this);
-                                                      }
-                                                  }
-                                              }
-
-        );
-
-        CustomSpinnerBusLocattionNerbyMenu location_data[] = new CustomSpinnerBusLocattionNerbyMenu[]{
-                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.spinner_search_gray, getString(R.string.select_location)),
-                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_restroom_gray, getString(R.string.restroom_name)),
-                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_medical_gray, getString(R.string.pharmacy_name)),
-                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_animal_gray, getString(R.string.veterinary_clinic_name)),
-                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_relax_gray, getString(R.string.officer_name)),
-                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_home_gray, getString(R.string.daily_home_name)),
-                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_garage_gray, getString(R.string.garage_name))};
-
-        adapter = new
-
-                LocationGpsCustomSpinnerAdapter(this, R.layout.activity_spinner,
-                location_data);
-
-        spinner.setAdapter(adapter);
-        spinner.setSelection(0);
-        adapter.notifyDataSetChanged();
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-
-                                          {
-                                              @Override
-                                              public void onItemSelected(AdapterView<?> av, View v, int position, long id) {
-
-
-                                                  if (position == 0) {
-                                                      return;
-                                                  }
-
-                                                  if (mCurrentLocation != null) {
-
-                                                      mSelectedMaker = null;
-
-                                                      tempUrl = null;
-                                                      mSelectTypeLocation = position - 1;
-
-                                                      switch (position) {
-                                                          case 1:
-                                                              type = "restroom";
-                                                              break;
-                                                          case 2:
-                                                              type = "pharmacy";
-                                                              break;
-                                                          case 3:
-                                                              type = "veterinary_clinic";
-                                                              break;
-                                                          case 4:
-                                                              type = "officer";
-                                                              break;
-                                                          case 5:
-                                                              type = "daily_home";
-                                                              break;
-                                                          case 6:
-                                                              type = "garage";
-                                                              break;
-                                                      }
-                                                      mControlProgress.showProgressDialogDonTouch(LocationGps.this);
-                                                      getDatabase();
-                                                  } else {
-                                                      mControlCheckConnect.alertCurrentGps(LocationGps.this);
-                                                  }
-                                              }
-
-                                              @Override
-                                              public void onNothingSelected(AdapterView<?> av) {
-                                                  return;
-                                              }
-                                          }
-
-        );
-    }
-
-    private void getDatabase() {
-
-        if (mMarker != null) {
-            mMap.clear();
-        }
-
-        addMarkerCurrent();
-
-        tempUrl = null;
-        tempUrl = type + "&lat=" + mCurrentLocation.latitude + "&lng="
-                + mCurrentLocation.longitude + "&distance=" + resultNearby;
-
-        mControlDatabae.getDatabaseLocationGps(tempUrl);
-
-    }
-
-    private void readFile(String _tempFileName) {
-
-        String _temp = mControlFile.getFile(this, _tempFileName);
-
-        if(!_temp.equals("not found")){
-            stausTaffic = _temp.substring(0, 1);
-            maptype = _temp.substring(1, 2);
-            resultNearby = _temp.substring(2, _temp.length());
-
-            if (mMap != null) {
-                if (stausTaffic.equals("1")) {
-                    mMap.setTrafficEnabled(true);
-                } else {
-                    mMap.setTrafficEnabled(false);
-                }
-
-                if (maptype.equals("0")) {
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                } else {
-                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                }
-            }
-        }
-    }
-
-    private void saveFile() {
-        mControlFile.setSetting(this, stausTaffic, maptype, resultNearby);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+        AppEventsLogger.activateApp(this);
+
+        bindWidget();
+        setUpMap();
+        setUpEventWigget();
+        setSpinnerMenu();
+
+        mControlDatabae.getVersion();
     }
 
     @Override
@@ -568,18 +168,21 @@ public class LocationGps extends AppCompatActivity {
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
-        mControlProgress.hideDialog();
+        ControlProgress.hideDialog();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        readFile("setting");
+        if (mMap != null) {
+            readFileSetting();
+        }
 
         if (!mControlCheckConnect.checkInternet(this)) {
             mControlCheckConnect.alertInternet(this);
         }
+
         if (!mControlCheckConnect.checkGPS(this)) {
             mControlCheckConnect.alertGps(this);
         }
@@ -588,7 +191,403 @@ public class LocationGps extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mControlProgress.hideDialog();
+        ControlProgress.hideDialog();
+    }
+
+    //--------------------- File System --------------------------
+
+    private void readFileSetting() {
+
+        String _temp = mControlFile.getFile(this, "setting");
+
+        if (!_temp.equals("not found")) {
+            stausTaffic = _temp.substring(0, 1);
+            maptype = _temp.substring(1, 2);
+            resultNearby = _temp.substring(2, _temp.length());
+
+            if (stausTaffic.equals("1")) {
+                mMap.setTrafficEnabled(true);
+            } else {
+                mMap.setTrafficEnabled(false);
+            }
+
+            if (maptype.equals("0")) {
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            } else {
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            }
+        }
+    }
+
+    private void saveFileSetting() {
+        mControlFile.setSetting(this, stausTaffic, maptype, resultNearby);
+    }
+
+    //------------------- Dialog Setting -------------------------
+
+    private void dialogSetting() {
+        if (mMap != null) {
+            readFileSetting();
+
+            final Dialog dialog = new Dialog(LocationGps.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.activity_dialog_setting);
+
+            btnClose = (ImageView) dialog.findViewById(R.id.btnClose);
+            btnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.cancel();
+                }
+            });
+
+            Switch showTraffic = (Switch) dialog.findViewById(R.id.showTraffic);
+            showTraffic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        stausTaffic = "1";
+                        mMap.setTrafficEnabled(true);
+
+                    } else {
+                        stausTaffic = "0";
+                        mMap.setTrafficEnabled(false);
+                    }
+                    saveFileSetting();
+                }
+            });
+
+            if (stausTaffic.equals("0")) {
+                showTraffic.setChecked(false);
+            }
+
+            final TextView resultNearbyTxt = (TextView) dialog.findViewById(R.id.resultNearbyTxt);
+
+            SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seekBar);
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+
+                    switch (progresValue) {
+                        case 0:
+                            resultNearby = "3";
+                            break;
+                        case 1:
+                            resultNearby = "6";
+                            break;
+                        case 2:
+                            resultNearby = "12";
+                            break;
+                        case 3:
+                            resultNearby = "23";
+                            break;
+                        case 4:
+                            resultNearby = "32";
+                            break;
+                        case 5:
+                            resultNearby = "55";
+                            break;
+                    }
+                    saveFileSetting();
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    showTxtkm(seekBar, resultNearbyTxt);
+                }
+            });
+
+            showTxtkm(seekBar, resultNearbyTxt);
+
+            final RadioButton satelltte = (RadioButton) dialog.findViewById(R.id.satelltte);
+            final RadioButton normal = (RadioButton) dialog.findViewById(R.id.normal);
+
+            normal.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    maptype = "0";
+                    saveFileSetting();
+                    satelltte.setChecked(false);
+                    normal.setChecked(true);
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                }
+            });
+
+            satelltte.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    maptype = "1";
+                    saveFileSetting();
+                    satelltte.setChecked(true);
+                    normal.setChecked(false);
+                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                }
+            });
+
+            if (maptype.equals("0")) {
+                normal.setChecked(true);
+            } else {
+                satelltte.setChecked(true);
+            }
+
+            dialog.show();
+        }
+    }
+
+    void showTxtkm(SeekBar seekBar, TextView resultNearbyTxt) {
+        String mTempResultNearby = null;
+        switch (resultNearby) {
+            case "3":
+                seekBar.setProgress(0);
+                mTempResultNearby = "2";
+                break;
+            case "6":
+                seekBar.setProgress(1);
+                mTempResultNearby = "5";
+                break;
+            case "12":
+                seekBar.setProgress(2);
+                mTempResultNearby = "10";
+                break;
+            case "23":
+                seekBar.setProgress(3);
+                mTempResultNearby = "20";
+                break;
+            case "32":
+                seekBar.setProgress(4);
+                mTempResultNearby = "30";
+                break;
+            case "55":
+                seekBar.setProgress(5);
+                mTempResultNearby = "50";
+                break;
+        }
+        resultNearbyTxt.setText("(" + mTempResultNearby + " km)");
+    }
+
+    //--------------------   setUp    ----------------------------
+    @SuppressWarnings({"MissingPermission"})
+    private void setUpMap() {
+        mMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(14.76553, 100.53904), 8));
+                mMap.getUiSettings().setCompassEnabled(false);
+                mMap.setTrafficEnabled(true);
+
+                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    public boolean onMarkerClick(Marker marker) {
+                        if (!marker.getTitle().equals("ตำแหน่งปัจจุบัน")) {
+                            if (mSelectedMaker != null) {
+                                mSelectedMaker.setIcon(BitmapDescriptorFactory.fromResource(getIdMarkerLocation()));
+                            }
+
+                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_selected));
+
+                            ControlProgress.showProgressDialogDonTouch(LocationGps.this);
+                            mSelectedMaker = marker;
+
+                            new DownloadTask().execute(getDirectionsUrl(mCurrentLocation, marker.getPosition()));
+
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                                    new CameraPosition.Builder().target(marker.getPosition()).zoom(mCurrentZoom).tilt(30).build()));
+                        }
+                        return true;
+                    }
+                });
+
+                mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        startActivity(new Intent(getApplicationContext(), LocationDetail.class).putExtra("type", type)
+                                .putExtra("detail", marker.getSnippet().substring(marker.getSnippet().indexOf("$") + 1, marker.getSnippet().length()))
+                                .putExtra("lat", marker.getPosition().latitude)
+                                .putExtra("lng", marker.getPosition().longitude)
+                                .putExtra("duration", mDuration)
+                                .putExtra("distance", mDistance));
+                    }
+                });
+
+                mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                    @Override
+                    public void onCameraChange(CameraPosition pos) {
+                        if (pos.zoom != mCurrentZoom) {
+                            mCurrentZoom = pos.zoom;
+                        }
+                    }
+                });
+
+                readFileSetting();
+            }
+        });
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle bundle) {
+                        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                        if (mLastLocation != null) {
+                            mCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+
+                            if (mSelectedMaker == null) {
+                                moveAnimateCamera(mCurrentLocation);
+                                getDatabase();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        mGoogleApiClient.connect();
+                    }
+                }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(ConnectionResult connectionResult) {
+                        mControlCheckConnect.alertCurrentGps(LocationGps.this);
+                        mGoogleApiClient.connect();
+                    }
+                }).build();
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    private void setUpEventWigget() {
+
+        mRefreshIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDatabase();
+            }
+        });
+
+        titleName.setText("สถานที่");
+
+        userManualIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LocationGps.this, TutorialLocation.class));
+            }
+        });
+
+        btnShared.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurrentLocation != null) {
+                    sharedLocation();
+                } else {
+                    mControlCheckConnect.alertCurrentGps(LocationGps.this);
+                }
+            }
+        });
+
+        mSettingIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogSetting();
+            }
+        });
+
+        btnCureentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCurrentLocation != null) {
+
+                    mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                    if (mLastLocation != null) {
+                        mCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    }
+
+                    moveAnimateCamera(mCurrentLocation);
+                } else {
+                    mControlCheckConnect.alertCurrentGps(LocationGps.this);
+                }
+            }
+        });
+    }
+
+    private void setSpinnerMenu() {
+
+        CustomSpinnerBusLocattionNerbyMenu location_data[] = new CustomSpinnerBusLocattionNerbyMenu[]{
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.spinner_search_gray, getString(R.string.select_location)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_restroom_gray, getString(R.string.restroom_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_medical_gray, getString(R.string.pharmacy_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_animal_gray, getString(R.string.veterinary_clinic_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_relax_gray, getString(R.string.officer_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_home_gray, getString(R.string.daily_home_name)),
+                new CustomSpinnerBusLocattionNerbyMenu(R.drawable.location_spinner_garage_gray, getString(R.string.garage_name))};
+
+        adapter = new LocationGpsCustomSpinnerAdapter(this, R.layout.activity_spinner,
+                location_data);
+
+        spinner.setAdapter(adapter);
+        spinner.setSelection(0);
+        adapter.notifyDataSetChanged();
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> av, View v, int position, long id) {
+
+                if (position == 0) {
+                    return;
+                }
+
+                if (mCurrentLocation != null) {
+
+                    mSelectedMaker = null;
+
+                    tempUrl = null;
+                    mSelectTypeLocation = position - 1;
+
+                    switch (position) {
+                        case 1:
+                            type = "restroom";
+                            break;
+                        case 2:
+                            type = "pharmacy";
+                            break;
+                        case 3:
+                            type = "veterinary_clinic";
+                            break;
+                        case 4:
+                            type = "officer";
+                            break;
+                        case 5:
+                            type = "daily_home";
+                            break;
+                        case 6:
+                            type = "garage";
+                            break;
+                    }
+                    ControlProgress.showProgressDialogDonTouch(LocationGps.this);
+                    getDatabase();
+                } else {
+                    mControlCheckConnect.alertCurrentGps(LocationGps.this);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> av) {
+                return;
+            }
+        });
+    }
+
+    private void getDatabase() {
+
+        if (mMarker != null) {
+            mMap.clear();
+        }
+
+        addMarkerCurrent();
+
+        tempUrl = null;
+        tempUrl = type + "&lat=" + mCurrentLocation.latitude + "&lng="
+                + mCurrentLocation.longitude + "&distance=" + resultNearby;
+
+        mControlDatabae.getDatabaseLocationGps(tempUrl);
     }
 
     //  ------------------  Google map -----------------//
@@ -841,7 +840,7 @@ public class LocationGps extends AppCompatActivity {
                     mDuration = mDuration + "นาที";
                 }
                 mSelectedMaker.showInfoWindow();
-                mControlProgress.hideDialog();
+                ControlProgress.hideDialog();
             }
         }
 
@@ -1130,7 +1129,6 @@ public class LocationGps extends AppCompatActivity {
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
-
         if (accessToken == null) {
             final Dialog dialog = new Dialog(LocationGps.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1228,9 +1226,44 @@ public class LocationGps extends AppCompatActivity {
         builder.show();
     }
 
+    public void showDialogVersionApp(String _versionAppForDatabase) {
+
+        final Control _Control = new Control();
+
+        if(_versionAppForDatabase.equals("close")){
+            _Control.closeApp(this);
+            return;
+        }
+
+        if (!_versionAppForDatabase.equals(_Control.getVersionApp(this))) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LocationGps.this);
+            builder.setCancelable(false);
+            builder.setTitle("อัพเดทเวอร์ชันใหม่");
+            builder.setMessage("แอพพลิเคชันสมายแมพที่ท่านใช้งานอยู่ยังไม่ใช่เวอร์ชันปัจจุบัน " +
+                    "กรุณาอัพเดทเป็นเวอร์ชันใหม่ new version." + _versionAppForDatabase);
+            builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    _Control.openGooglePlay(LocationGps.this, "ads");
+                }
+            });
+            builder.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+            pbutton.setTextColor(Color.parseColor("#147cce"));
+            pbutton.setTypeface(null, Typeface.BOLD);
+        }
+    }
+
     private void bindWidget() {
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        main = (ImageView) findViewById(R.id.main);
+        mRefreshIm = (ImageView) findViewById(R.id.refreshIm);
+        mSettingIm = (ImageView) findViewById(R.id.main);
         userManualIm = (ImageView) findViewById(R.id.userManualIm);
         titleName = (TextView) findViewById(R.id.titleName);
         btnShared = (CircleImageView) findViewById(R.id.btnShared);

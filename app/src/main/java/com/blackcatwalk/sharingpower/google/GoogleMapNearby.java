@@ -2,8 +2,10 @@ package com.blackcatwalk.sharingpower.google;
 
 
 import android.content.Context;
+import android.location.Location;
 import android.os.AsyncTask;
 
+import com.blackcatwalk.sharingpower.CallEmergency;
 import com.blackcatwalk.sharingpower.CallEmergencyDetail;
 import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
 import com.blackcatwalk.sharingpower.utility.ControlProgress;
@@ -14,43 +16,58 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 public class GoogleMapNearby {
 
     private Context mContext;
-    private int count = 0;
-    private int size = 0;
-    private final String mSettingGoogle = "&sensor=true&key=AIzaSyAwJatyU0DGovYEOKYYbDu2KzE0mKEzUPY&language=th";
 
-    public GoogleMapNearby(Context _context) {
+    private DecimalFormat mDecimalFormat = new DecimalFormat("#.#");
+    private double mDistance;
+    private int mCount = 0;
+    private int mSize = 0;
+
+    private boolean mCheck;
+
+    private Location mCurrentLocation = new Location("CurrentLocation");;
+    private Location mLocationB = new Location("point B");
+
+    private StringBuilder mStringBuilder = new StringBuilder();
+
+    private final String mSettingGoogle = "&sensor=true&key=AIzaSyAwJatyU0DGovYEOKYYbDu2KzE0mKEzUPY&language=th";
+    private String mType;
+
+    public GoogleMapNearby(Context _context, double _latitude, double _longitude, String _type) {
         mContext = _context;
-        new PlacesTask().execute(getSb().toString());
+
+        mCurrentLocation.setLatitude(_latitude);
+        mCurrentLocation.setLongitude(_longitude);
+
+        mType = _type;
+
+        setStringBuilder();
+        new PlacesTask().execute(mStringBuilder.toString());
     }
 
     public class PlacesTask extends AsyncTask<String, Integer, String> {
-
-        String data = null;
-
-        // Invoked by execute() method of this object
         @Override
         protected String doInBackground(String... url) {
             try {
-                data = downloadUrl(url[0]);
+                return downloadUrl(url[0]);
             } catch (Exception e) {
             }
-            return data;
+            return null;
         }
 
-        // Executed after the complete execution of doInBackground() method
         @Override
         protected void onPostExecute(String result) {
-
-            // Start parsing the Google places in JSON format
-            // Invokes the "doInBackground()" method of the class ParseTask..
             switch (((CallEmergencyDetail) mContext).getmClassReferrence()) {
                 case "CallNearby":
                     new ParserTaskNearby().execute(result);
@@ -59,52 +76,45 @@ public class GoogleMapNearby {
                     new ParserTaskDetail().execute(result);
                     break;
                 default:
-
             }
         }
     }
 
-    public StringBuilder getSb() {
-        StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        sb.append("location=" + ((CallEmergencyDetail) mContext).getmLatitude()
-                + "," + ((CallEmergencyDetail) mContext).getmLongitude());
-        sb.append("&radius=5000");
-        sb.append("&types=" + ((CallEmergencyDetail) mContext).getmType());
-        sb.append(mSettingGoogle);
-        return sb;
+    public void setStringBuilder() {
+        mStringBuilder.setLength(0);
+        mStringBuilder.append("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        mStringBuilder.append("location=" + mCurrentLocation.getLatitude()
+                + "," + mCurrentLocation.getLongitude());
+        mStringBuilder.append("&radius=5000");
+        mStringBuilder.append("&types=" + mType);
+        mStringBuilder.append(mSettingGoogle);
     }
 
     private String downloadUrl(String s) {
-        String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(s);
 
-            // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
 
-            // Connecting to url
             urlConnection.connect();
 
-            // Reading data from url
             iStream = urlConnection.getInputStream();
 
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
 
-            StringBuffer sb = new StringBuffer();
+            mStringBuilder.setLength(0);
 
             String line = "";
             while ((line = br.readLine()) != null) {
-                sb.append(line);
+                mStringBuilder.append(line);
             }
-
-            data = sb.toString();
 
             br.close();
 
+            return mStringBuilder.toString();
         } catch (Exception e) {
-
         } finally {
             try {
                 iStream.close();
@@ -113,19 +123,17 @@ public class GoogleMapNearby {
             }
             urlConnection.disconnect();
         }
-        return data;
+        return "";
     }
 
 
     //--------------------------------------------------------------------------------------
 
 
-    // A class to parse the Google Places in JSON format
     public class ParserTaskNearby extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
 
         JSONObject jObject;
 
-        // Invoked by execute() method of this object
         @Override
         protected List<HashMap<String, String>> doInBackground(String... jsonData) {
 
@@ -135,7 +143,6 @@ public class GoogleMapNearby {
             try {
                 jObject = new JSONObject(jsonData[0]);
 
-                /** Getting the parsed data as a List construct */
                 places = placeJsonParser.parse(jObject);
 
             } catch (Exception e) {
@@ -143,7 +150,6 @@ public class GoogleMapNearby {
             return places;
         }
 
-        // Executed after the complete execution of doInBackground() method
         @Override
         protected void onPostExecute(List<HashMap<String, String>> list) {
 
@@ -151,19 +157,16 @@ public class GoogleMapNearby {
                 if (list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
 
-                        // Getting a place from the places list
                         HashMap<String, String> hmPlace = list.get(i);
-                        StringBuilder _sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
-                        _sb.append("reference=" + hmPlace.get("reference"));
-                        _sb.append(mSettingGoogle);
+                        mStringBuilder.setLength(0);
+                        mStringBuilder.append("https://maps.googleapis.com/maps/api/place/details/json?");
+                        mStringBuilder.append("reference=" + hmPlace.get("reference"));
+                        mStringBuilder.append(mSettingGoogle);
 
                         ((CallEmergencyDetail) mContext).setmClassReferrence("CallDetail");
 
-                        // Creating locationSpinnerMinicalGray new non-ui thread task to download Google place details
-                        //PlacesTask placesTask = new PlacesTask();
-                        // Invokes the "doInBackground()" method of the class PlaceTask
-                        new PlacesTask().execute(_sb.toString());
-                        size++;
+                        new PlacesTask().execute(mStringBuilder.toString());
+                        mSize++;
                     }
                 } else {
                     ((CallEmergencyDetail) mContext).showAlertDialogNotFoundTelephone();
@@ -175,66 +178,103 @@ public class GoogleMapNearby {
         }
     }
 
-    // A class to parse the Google Place Details in JSON format
-
     public class ParserTaskDetail extends AsyncTask<String, Integer, HashMap<String, String>> {
 
-        JSONObject jObject;
-        private boolean check = false;
+        private JSONObject jObject;
 
-        // Invoked by execute() method of this object
         @Override
         protected HashMap<String, String> doInBackground(String... jsonData) {
 
             HashMap<String, String> hPlaceDetails = null;
             PlaceDetailsJSONParser placeDetailsJsonParser = new PlaceDetailsJSONParser();
-
             try {
                 jObject = new JSONObject(jsonData[0]);
-
-                // Start parsing Google place details in JSON format
                 hPlaceDetails = placeDetailsJsonParser.parse(jObject);
-
             } catch (Exception e) {
             }
             return hPlaceDetails;
         }
 
-        // Executed after the complete execution of doInBackground() method
         @Override
         protected void onPostExecute(HashMap<String, String> hPlaceDetails) {
 
             if (ControlCheckConnect.checkInternet(mContext)) {
-                switch (((CallEmergencyDetail) mContext).getmType()) {
+
+                mLocationB.setLatitude(Double.parseDouble(hPlaceDetails.get("lat")));
+                mLocationB.setLongitude(Double.parseDouble(hPlaceDetails.get("lng")));
+
+                mDecimalFormat.setRoundingMode(RoundingMode.CEILING);
+                mDistance = Double.parseDouble(mDecimalFormat.format(mCurrentLocation.distanceTo(mLocationB)/1000));
+
+                mStringBuilder.setLength(0);
+                mCheck = false;
+
+                if (mDistance <= 1.0) {
+                    if (mDistance == 0.0) {
+                        mStringBuilder.append("10 เมตร");
+                    } else if (mDistance == 0.1) {
+                        mStringBuilder.append("100 เมตร");
+                    } else if (mDistance == 0.2) {
+                        mStringBuilder.append("200 เมตร");
+                    } else if (mDistance == 0.3) {
+                        mStringBuilder.append("300 เมตร");
+                    } else if (mDistance == 0.4) {
+                        mStringBuilder.append("400 เมตร");
+                    } else if (mDistance == 0.5) {
+                        mStringBuilder.append("500 เมตร");
+                    } else if (mDistance == 0.6) {
+                        mStringBuilder.append("600 เมตร");
+                    } else if (mDistance == 0.7) {
+                        mStringBuilder.append("700 เมตร");
+                    } else if (mDistance == 0.8) {
+                        mStringBuilder.append("800 เมตร");
+                    } else if (mDistance == 0.9) {
+                        mStringBuilder.append("900 เมตร");
+                    } else if (mDistance == 1.0) {
+                        mStringBuilder.append("1 กิโลเมตร");
+                    }
+                } else {
+                    mStringBuilder.append(mDistance);
+                    mStringBuilder.append(" กิโลเมตร");
+                }
+
+                switch (mType) {
                     case "hospital":
                         if (hPlaceDetails.get("name").substring(0, 4).equals("ร.พ.") ||
                                 hPlaceDetails.get("name").substring(0, 9).equals("โรงพยาบาล") ||
                                 hPlaceDetails.get("name").substring(0, 5).equals("ศูนย์")) {
-                            check = true;
+                            mCheck = true;
                         }
                         break;
                     case "police":
                         if (hPlaceDetails.get("name").substring(0, 5).equals("สถานี") ||
                                 hPlaceDetails.get("name").substring(0, 3).equals("สน.") ||
                                 hPlaceDetails.get("name").substring(0, 5).equals("ศูนย์")) {
-                            check = true;
+                            mCheck = true;
                         }
                         break;
                 }
 
-                if (!hPlaceDetails.get("formatted_phone").substring(0, 1).equals("-") && check == true) {
-                    ((CallEmergencyDetail) mContext).mNameList.add(hPlaceDetails.get("name"));
-                    ((CallEmergencyDetail) mContext).mTelList.add(hPlaceDetails.get("formatted_phone"));
+                if (!hPlaceDetails.get("formatted_phone").substring(0, 1).equals("-") && mCheck == true) {
+                    ((CallEmergencyDetail) mContext).mListCallEmergency.add(new CallEmergency(
+                            hPlaceDetails.get("name"),hPlaceDetails.get("formatted_phone")
+                    ,String.valueOf(mStringBuilder.toString()),mCurrentLocation.distanceTo(mLocationB)));
 
-                    count++;
+
+
+                    mCount++;
                 } else {
-                    size--;
+                    mSize--;
                 }
 
-                if (size == count) {
-                    if (size != 0) {
-                        count = 0;
-                        size = 0;
+                if (mSize == mCount) {
+                    if (mSize != 0) {
+                        mCount = 0;
+                        mSize = 0;
+
+                        Collections.sort(((CallEmergencyDetail) mContext).mListCallEmergency
+                                , new GoogleMapNearby.SortTypeComparator());
+
                         ((CallEmergencyDetail) mContext).adapter.notifyDataSetChanged();
                     } else {
                         ((CallEmergencyDetail) mContext).showAlertDialogNotFoundTelephone();
@@ -247,171 +287,10 @@ public class GoogleMapNearby {
         }
     }
 
-}
-
-
-
-
-
-/*
-
-  public class PlacesTask extends AsyncTask<String, Integer, String> {
-
-        String data = null;
-
-        // Invoked by execute() method of this object
+    public class SortTypeComparator implements Comparator<CallEmergency> {
         @Override
-        protected String doInBackground(String... url) {
-            try {
-                data = mControl.downloadUrl(url[0]);
-            } catch (Exception e) {
-
-            }
-            return data;
-        }
-
-        // Executed after the complete execution of doInBackground() method
-        @Override
-        protected void onPostExecute(String result) {
-
-            // Start parsing the Google places in JSON format
-            // Invokes the "doInBackground()" method of the class ParseTask..
-            switch (classReferrence) {
-                case "CallNearby":
-                    new ParserTaskNearby().execute(result);
-                    break;
-                case "CallDetail":
-                    new ParserTaskDetail().execute(result);
-                    break;
-            }
-        }
-    }
-
-public class ParserTaskNearby extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
-
-    JSONObject jObject;
-
-    // Invoked by execute() method of this object
-    @Override
-    protected List<HashMap<String, String>> doInBackground(String... jsonData) {
-
-        List<HashMap<String, String>> places = null;
-        PlaceJSONParser placeJsonParser = new PlaceJSONParser();
-
-        try {
-            jObject = new JSONObject(jsonData[0]);
-
-            // Getting the parsed data as a List construct
-            places = placeJsonParser.parse(jObject);
-
-        } catch (Exception e) {
-        }
-        return places;
-    }
-
-    // Executed after the complete execution of doInBackground() method
-    @Override
-    protected void onPostExecute(List<HashMap<String, String>> list) {
-
-        if (list != null) {
-            if (list.size() > 0) {
-                for (int i = 0; i < list.size(); i++) {
-
-                    // Getting a place from the places list
-                    HashMap<String, String> hmPlace = list.get(i);
-                    StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
-                    sb.append("reference=" + hmPlace.get("reference"));
-                    sb.append("&sensor=true");
-                    sb.append("&key=AIzaSyAwJatyU0DGovYEOKYYbDu2KzE0mKEzUPY");
-                    sb.append("&language=th");
-
-                    classReferrence = "CallDetail";
-
-                    // Creating locationSpinnerMinicalGray new non-ui thread task to download Google place details
-                    GoogleMapNearby.PlacesTask placesTask = new GoogleMapNearby.PlacesTask();
-                    // Invokes the "doInBackground()" method of the class PlaceTask
-                    placesTask.execute(sb.toString());
-                    size++;
-                }
-            } else {
-                showAlertDialogNotFoundTelephone();
-                mControl.hideDialog();
-            }
-        }else {
-            finish();
+        public int compare(CallEmergency o1, CallEmergency o2) {
+            return Float.compare(o1.getmRealdistance(), o2.getmRealdistance());
         }
     }
 }
-
-// A class to parse the Google Place Details in JSON format
-
-public class ParserTaskDetail extends AsyncTask<String, Integer, HashMap<String, String>> {
-
-    JSONObject jObject;
-    private boolean check = false;
-
-    // Invoked by execute() method of this object
-    @Override
-    protected HashMap<String, String> doInBackground(String... jsonData) {
-
-        HashMap<String, String> hPlaceDetails = null;
-        PlaceDetailsJSONParser placeDetailsJsonParser = new PlaceDetailsJSONParser();
-
-        try {
-            jObject = new JSONObject(jsonData[0]);
-
-            // Start parsing Google place details in JSON format
-            hPlaceDetails = placeDetailsJsonParser.parse(jObject);
-
-        } catch (Exception e) {
-        }
-        return hPlaceDetails;
-    }
-
-    // Executed after the complete execution of doInBackground() method
-    @Override
-    protected void onPostExecute(HashMap<String, String> hPlaceDetails) {
-
-        if(mControl.checkInternet(getApplicationContext())){
-            switch (type) {
-                case "hospital":
-                    if (hPlaceDetails.get("name").substring(0, 4).equals("ร.พ.") ||
-                            hPlaceDetails.get("name").substring(0, 9).equals("โรงพยาบาล") ||
-                            hPlaceDetails.get("name").substring(0, 5).equals("ศูนย์")) {
-                        check = true;
-                    }
-                    break;
-                case "police":
-                    if (hPlaceDetails.get("name").substring(0, 5).equals("สถานี") ||
-                            hPlaceDetails.get("name").substring(0, 3).equals("สน.") ||
-                            hPlaceDetails.get("name").substring(0, 5).equals("ศูนย์")) {
-                        check = true;
-                    }
-                    break;
-            }
-
-            if (!hPlaceDetails.get("formatted_phone").substring(0, 1).equals("-") && check == true) {
-                mNameList.add(hPlaceDetails.get("name"));
-                mTelList.add(hPlaceDetails.get("formatted_phone"));
-
-                count++;
-            } else {
-                size--;
-            }
-
-            if (size == count) {
-                if (size != 0) {
-                    count = 0;
-                    size = 0;
-                    mAdapter.notifyDataSetChanged();
-                } else {
-                    showAlertDialogNotFoundTelephone();
-                }
-                mControl.hideDialog();
-            }
-        }else{
-            finish();
-        }
-    }
-}
-*/

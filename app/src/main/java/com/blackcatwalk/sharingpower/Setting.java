@@ -30,7 +30,7 @@ import com.blackcatwalk.sharingpower.utility.ControlFile;
 public class Setting extends AppCompatActivity {
 
     private String stausTaffic = "1";
-    private String stausNearby = "6";
+    private String stausNearby = "55";
     private String stausMapType = "0";
     private String tempResultNearby = null;
     private String version;
@@ -164,7 +164,7 @@ public class Setting extends AppCompatActivity {
 
     private void readFile() {
         String _temp = mControlFile.getFile(this,"setting");
-        if (_temp.length() > 1) {
+        if (!_temp.equals("not found")) {
             stausTaffic = _temp.substring(0, 1);
             stausMapType = _temp.substring(1, 2);
             stausNearby = _temp.substring(2, _temp.length());
@@ -217,15 +217,12 @@ public class Setting extends AppCompatActivity {
             }
         });
 
-        final ImageView imagemap = (ImageView) _dialog.findViewById(R.id.imagemap);
-
         final RadioButton satelltte = (RadioButton) _dialog.findViewById(R.id.satelltte);
         final RadioButton normal = (RadioButton) _dialog.findViewById(R.id.normal);
 
         normal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagemap.setImageResource(R.drawable.map_normal);
                 stausMapType = "0";
                 saveFile();
                 satelltte.setChecked(false);
@@ -236,7 +233,6 @@ public class Setting extends AppCompatActivity {
         satelltte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagemap.setImageResource(R.drawable.map_satelltte);
                 stausMapType = "1";
                 saveFile();
                 satelltte.setChecked(true);
@@ -245,10 +241,8 @@ public class Setting extends AppCompatActivity {
         });
 
         if (stausMapType.equals("0")) {
-            imagemap.setImageResource(R.drawable.map_normal);
             normal.setChecked(true);
         } else {
-            imagemap.setImageResource(R.drawable.map_satelltte);
             satelltte.setChecked(true);
         }
         _dialog.show();

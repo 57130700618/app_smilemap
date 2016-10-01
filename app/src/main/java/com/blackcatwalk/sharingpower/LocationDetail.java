@@ -175,13 +175,12 @@ public class LocationDetail extends AppCompatActivity {
             distanceTv.setText("ระยะทาง: " + mDistance);
         }
 
-        if (mDuration.substring(_tempIndexString + 1, _tempIndexString + 2).equals("ก")) {
-            distanceTv.setText("ระยะทาง: " + mDistance.substring(0, _tempIndexString) + " กิโลเมตร");
-        } else {
-            distanceTv.setText("ระยะทาง: " + mDistance);
+        if(mDuration.indexOf("ชม.") != -1){
+            durationTv.setText("ระยะเวลา: " + mDuration.substring(0,mDuration.indexOf("ชม.")) + " ชั่วโมง "
+                    + mDuration.substring(6,mDuration.indexOf("น.")) + " นาที ");
+        }else{
+            durationTv.setText("ระยะเวลา: " + mDuration);
         }
-
-        durationTv.setText("ระยะเวลา: " + mDuration);
     }
 
     private void showDialogVote() {

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.blackcatwalk.sharingpower.Tutorial">
+    tools:context="com.blackcatwalk.sharingpower.TutorialTraffic">
 
     <LinearLayout
         android:id="@+id/layoutLabel"

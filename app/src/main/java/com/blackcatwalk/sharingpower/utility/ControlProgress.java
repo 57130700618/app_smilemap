@@ -2,6 +2,7 @@ package com.blackcatwalk.sharingpower.utility;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 
 import com.blackcatwalk.sharingpower.R;
@@ -14,6 +15,8 @@ public class ControlProgress {
         mProgressDialog = new ProgressDialog(context, R.style.MyTheme);
         mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
         mProgressDialog.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.progress_circle));
+        mProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mProgressDialog.getWindow().setDimAmount(0);
         mProgressDialog.show();
     }
 

@@ -151,10 +151,12 @@ public class LoginSub extends AppCompatActivity {
             public void onClick(View v) {
                 if (mCheckShowPassword) {
                     mPasswordEt.setInputType(InputType.TYPE_CLASS_TEXT);
+                    mShowPasswordIm.setImageResource(R.drawable.icon_show_password);
                     mCheckShowPassword = false;
                 } else {
                     mPasswordEt.setInputType(129);
                     mCheckShowPassword = true;
+                    mShowPasswordIm.setImageResource(R.drawable.icon_hiden_password);
                 }
                 mPasswordEt.setSelection(mPasswordEt.getText().length());
             }
@@ -206,7 +208,8 @@ public class LoginSub extends AppCompatActivity {
         mControlFile.setFile(this, mUserName, "userName");
         mControlFile.setFile(this, "1" , "stausLogin");
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, MainActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         finish();
     }
 

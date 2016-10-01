@@ -16,7 +16,7 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ตำแหน่งปัจจุบัน"
+                android:text="ระบุตำแหน่งปัจจุบันไม่ได้"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -36,17 +36,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="ระบุตำแหน่งปัจจุบันไม่ได้"
-        android:textColor="@color/colorAccent"
-        android:textSize="15sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="ตรวจสอบให้แน่ใจว่าท่านไม่ได้"
         android:textColor="@color/gray"
@@ -91,7 +80,7 @@
     <TextView
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:text="_"
         android:textColor="@color/colorHide" />
 

@@ -41,8 +41,8 @@ public class LocationCommentMain extends AppCompatActivity {
     private Double mLat;
     private Double mLng;
     private ControlDatabase mControlDatabase;
-    private final String[] mListsManage = {"แก้ไข", "ลบ"};
-    private final String[] mListsReport = {"รายงาน"};
+    private final String[] mListsManage = {"แก้ไข", "ลบ", "ยกเลิก"};
+    private final String[] mListsReport = {"รายงาน", "ยกเลิก"};
     private int mIdUser;
     private int mPositionY;
 
@@ -251,8 +251,6 @@ public class LocationCommentMain extends AppCompatActivity {
                     dialog.cancel();
                 }
             }).show();
-
-
         }
         _alertDialog.getWindow().setLayout(400, 400);
 

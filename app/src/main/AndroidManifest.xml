@@ -125,7 +125,7 @@
             android:name=".LocationDetail"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CallEmergency"
+            android:name=".CallEmergencyMain"
             android:screenOrientation="portrait" />
         <activity
             android:name=".CallEmergencyDetail"
@@ -143,7 +143,10 @@
             android:name=".GoogleMapStreet"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Tutorial"
+            android:name=".TutorialTraffic"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TutorialLocation"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Donate"

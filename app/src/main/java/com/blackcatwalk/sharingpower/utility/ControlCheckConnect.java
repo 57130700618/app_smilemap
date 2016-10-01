@@ -55,9 +55,7 @@ public class ControlCheckConnect {
             });
 
             TextView textView = (TextView) mDialogGps.findViewById(R.id.textView);
-            textView.setText("เปิดใช้งาน จีพีเอส");
-            TextView txtTitle = (TextView) mDialogGps.findViewById(R.id.txtTitle);
-            txtTitle.setText(R.string.title_open_gps);
+            textView.setText(R.string.title_open_gps);
             TextView txtDetail = (TextView) mDialogGps.findViewById(R.id.txtDetail);
             txtDetail.setText(R.string.detail_open_gps);
             TextView txtDetailSetting = (TextView) mDialogGps.findViewById(R.id.txtDetailSetting);
@@ -121,9 +119,7 @@ public class ControlCheckConnect {
                 }
             });
             TextView textView = (TextView) mDialogIntetnet.findViewById(R.id.textView);
-            textView.setText("เปิดใช้งาน อินเทอร์เน็ต");
-            TextView txtTitle = (TextView) mDialogIntetnet.findViewById(R.id.txtTitle);
-            txtTitle.setText(R.string.title_open_network);
+            textView.setText(R.string.title_open_network);
             TextView txtDetail = (TextView) mDialogIntetnet.findViewById(R.id.txtDetail);
             txtDetail.setText(R.string.detail_open_network);
 

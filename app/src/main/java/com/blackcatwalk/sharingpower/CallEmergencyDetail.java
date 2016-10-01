@@ -35,8 +35,7 @@ public class CallEmergencyDetail extends AppCompatActivity {
     private double mLatitude;
     private double mLongitude;
     public CallEmergencyDetailCustomListAdapter adapter;
-    public List<String> mNameList = new ArrayList<String>();
-    public List<String> mTelList = new ArrayList<String>();
+    public List<CallEmergency> mListCallEmergency;
 
     // ----------------- Google_Map -------------------//
     private GoogleApiClient mGoogleApiClient;
@@ -46,26 +45,14 @@ public class CallEmergencyDetail extends AppCompatActivity {
     private ListView mListView;
     private TextView mLabelTv;
     private ImageView mBackIm;
-
+    private ImageView mUserManualIm;
 
     public void setmClassReferrence(String _classReferrence) {
         this.mClassReferrence = _classReferrence;
     }
 
-    public String getmType(){
-        return mType;
-    }
-
     public String getmClassReferrence() {
         return mClassReferrence;
-    }
-
-    public double getmLatitude() {
-        return mLatitude;
-    }
-
-    public double getmLongitude() {
-        return mLongitude;
     }
 
     @SuppressWarnings({"MissingPermission"})
@@ -89,20 +76,29 @@ public class CallEmergencyDetail extends AppCompatActivity {
             }
         });
 
-        adapter = new CallEmergencyDetailCustomListAdapter(CallEmergencyDetail.this, mNameList, mTelList);
+        mUserManualIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog("ท่านสามารถดูชื่อสถานที่แบบเต็ม โดยกดเลือกรายการที่ท่านต้องการค้างไว้ จะมีกล่องข้อความแสดงขึ้นมา");
+            }
+        });
+
+        mListCallEmergency = new ArrayList<CallEmergency>();
+        adapter = new CallEmergencyDetailCustomListAdapter(CallEmergencyDetail.this, mListCallEmergency);
 
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mTelList.get(position))));
+                CallEmergency _item = mListCallEmergency.get(position);
+                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + _item.getmTel())));
             }
         });
 
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                showAlertDialog(position);
+                setupDialog(position);
                 return true;
             }
         });
@@ -110,48 +106,23 @@ public class CallEmergencyDetail extends AppCompatActivity {
         if (mType.equals("general")) {
             mLabelTv.setText("สายด่วน แจ้งเหตุ");
 
-            mNameList.add("แจ้งเหตุด่วน-เหตุร้ายทุกชนิด");
-            mTelList.add("191");
-
-            mNameList.add("หน่วยแพทย์ฉุกเฉิน(ทั่วไทย)");
-            mTelList.add("1669");
-
-            mNameList.add("หน่วยแพทย์ฉุกเฉิน(กทม.)");
-            mTelList.add("1646");
-
-            mNameList.add("หน่วยกู้ชีพ วชิรพยาบาล");
-            mTelList.add("1554");
+            mListCallEmergency.add(new CallEmergency("แจ้งเหตุด่วน-เหตุร้ายทุกชนิด","191"));
+            mListCallEmergency.add(new CallEmergency("หน่วยแพทย์ฉุกเฉิน(ทั่วไทย)","1669"));
+            mListCallEmergency.add(new CallEmergency("หน่วยแพทย์ฉุกเฉิน(กทม.)","1646"));
+            mListCallEmergency.add(new CallEmergency("หน่วยกู้ชีพ วชิรพยาบาล","1554"));
 
             //---------------------------------------
-
-            mNameList.add("กรมเจ้าท่า, เหตุด่วนทางน้ำ");
-            mTelList.add("1199");
-
-            mNameList.add("สายด่วนตำรวจท่องเที่ยว");
-            mTelList.add("1155");
-
-            mNameList.add("สายด่วนทางหลวง");
-            mTelList.add("1586");
-
-            mNameList.add("รับแจ้งอัคคีภัย สัตว์เข้าบ้าน");
-            mTelList.add("199");
-
-            mNameList.add("รับแจ้งรถหาย, ถูกขโมย");
-            mTelList.add("1192");
-
-            mNameList.add("ศูนย์เตือนภัยพิบัติแห่งชาติ");
-            mTelList.add("192");
-
-            mNameList.add("ศูนย์ควบคุมและสั่งการจราจร");
-            mTelList.add("1197");
+            mListCallEmergency.add(new CallEmergency("กรมเจ้าท่า, เหตุด่วนทางน้ำ","1199"));
+            mListCallEmergency.add(new CallEmergency("สายด่วนตำรวจท่องเที่ยว","1155"));
+            mListCallEmergency.add(new CallEmergency("สายด่วนทางหลวง","1586"));
+            mListCallEmergency.add(new CallEmergency("ับแจ้งอัคคีภัย สัตว์เข้าบ้าน","199"));
+            mListCallEmergency.add(new CallEmergency("ับแจ้งรถหาย, ถูกขโมย","1192"));
+            mListCallEmergency.add(new CallEmergency("ศูนย์เตือนภัยพิบัติแห่งชาติ","192"));
+            mListCallEmergency.add(new CallEmergency("ศูนย์ควบคุมและสั่งการจราจร","1197"));
 
             //---------------------------------------
-
-            mNameList.add("สถานีวิทยุร่วมด้วยช่วยกัน");
-            mTelList.add("1677");
-
-            mNameList.add("สถานีวิทยุ จส.100");
-            mTelList.add("1586");
+            mListCallEmergency.add(new CallEmergency("สถานีวิทยุร่วมด้วยช่วยกัน","1677"));
+            mListCallEmergency.add(new CallEmergency("สถานีวิทยุ จส.100","1586"));
 
             adapter.notifyDataSetChanged();
             ControlProgress.hideDialog();
@@ -173,7 +144,7 @@ public class CallEmergencyDetail extends AppCompatActivity {
 
                                 setmClassReferrence("CallNearby");
                                 //Search Data Nearby
-                                new GoogleMapNearby(CallEmergencyDetail.this);
+                                new GoogleMapNearby(CallEmergencyDetail.this,mLatitude,mLongitude, mType);
                             } else {
                                 ControlProgress.hideDialog();
                                 _controlCheckConnect.alertCurrentGps(CallEmergencyDetail.this);
@@ -215,9 +186,9 @@ public class CallEmergencyDetail extends AppCompatActivity {
         }
     }
 
-    private void showAlertDialog(int _position) {
+    private void showDialog(String _message) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(CallEmergencyDetail.this);
-        builder.setMessage(mNameList.get(_position));
+        builder.setMessage(_message);
         builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -229,6 +200,12 @@ public class CallEmergencyDetail extends AppCompatActivity {
         Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
         pbutton.setTextColor(Color.parseColor("#147cce"));
         pbutton.setTypeface(null, Typeface.BOLD);
+    }
+
+
+    private void setupDialog(int _position) {
+        CallEmergency _item = mListCallEmergency.get(_position);
+        showDialog(_item.getmName());
     }
 
     public void showAlertDialogNotFoundTelephone() {
@@ -250,6 +227,7 @@ public class CallEmergencyDetail extends AppCompatActivity {
 
         builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                onBackPressed();
                 finish();
             }
         });
@@ -265,6 +243,7 @@ public class CallEmergencyDetail extends AppCompatActivity {
     private void bindWidget() {
         mLabelTv = (TextView) findViewById(R.id.labelTv);
         mBackIm = (ImageView) findViewById(R.id.backIm);
+        mUserManualIm = (ImageView) findViewById(R.id.userManualIm);
         mListView = (ListView) findViewById(R.id.listView);
     }
 }

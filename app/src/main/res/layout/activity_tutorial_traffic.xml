@@ -40,7 +40,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:layout_toEndOf="@+id/backIm"
-                android:text="วิธีการใช้งาน"
+                android:text="วิธีการใช้งานการจราจร"
                 android:textSize="@dimen/label_sub_20sp" />
 
         </RelativeLayout>
@@ -50,7 +50,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout6">
+        android:layout_below="@+id/linearLayout6"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,7 +62,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="แชร์ตำแหน่งการจราจร"
+                android:text="แชร์ตำแหน่ง"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -75,21 +76,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:text="2.เลือกปุ่มแชร์ตำแหน่ง ดังภาพ"
                 android:textSize="15sp" />
 
             <ImageView
+                android:id="@+id/tutorial_p1Im"
                 android:layout_width="180dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/tutorial_p1" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:text="3.เลือกประเภทการจราจร หลังจากนั้นทำการกรอกรายละเอียดเพิ่มเติม แล้วกดแชร์ตำแหน่ง"
                 android:textSize="15sp" />
 
@@ -109,23 +110,23 @@
                 android:textSize="15sp" />
 
             <ImageView
+                android:id="@+id/tutorial_p2Im"
                 android:layout_width="180dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/tutorial_p2" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:text="2.เลือกเมนูแก้ไขจำนวนผู้โดยสาร"
                 android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:text="3.เลือกจำนวนแล้วกดปุ่มตกลง"
                 android:textSize="15sp" />
 
@@ -148,14 +149,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:text="2.เลือกเมนูยกเลิกการแชร์"
                 android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:text="3.กดตกลงเพื่อยกเลิกการแชร์"
                 android:textSize="15sp" />
 
@@ -172,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="เรียกดูตำแหน่งการจราจร"
+                android:text="เรียกดูตำแหน่ง"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -184,23 +185,24 @@
                 android:textSize="15sp" />
 
             <ImageView
+                android:id="@+id/tutorial_p3Im"
                 android:layout_width="180dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/tutorial_p3" />
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:text="2.เลือกประเภทที่ท่านต้องการ"
                 android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="20dp"
                 android:text="3.กดที่จุดปักหมุด เพื่อดูรายละเอียดเพิ่มเติม"
                 android:textSize="15sp" />
 
