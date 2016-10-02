@@ -82,7 +82,7 @@ public class RegisterPage2 extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     mClearTextBtn.setVisibility(View.INVISIBLE);
                     if (mNicknameEt.getText().toString().length() < 5) {
-                        checkForm();
+                        aleartText();
                     } else {
                         mAlertTv.setTextColor(Color.parseColor("#717171"));
                         mAlertTv.setText("ชื่อผู้ใช้ถูกต้อง");
@@ -120,6 +120,7 @@ public class RegisterPage2 extends AppCompatActivity {
             public void onClick(View v) {
                 mMaleRBtn.setChecked(false);
                 mFemaleRBtn.setChecked(true);
+                mLayoutSc.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
 
@@ -141,11 +142,16 @@ public class RegisterPage2 extends AppCompatActivity {
         }
 
         if (mNickname.length() < 5) {
-            mAlertTv.setTextColor(Color.parseColor("#F4511E"));
-            mAlertTv.setText(R.string.general_text_14);
+            aleartText();
         } else {
             new ControlDatabase(this).getDatabaseRegisPage2(mEmail, mPassword, mNickname, mSex);
         }
+    }
+
+    private void aleartText() {
+        mAlertTv.setTextColor(Color.parseColor("#F4511E"));
+        mAlertTv.setText(R.string.general_text_14);
+        mLayoutSc.scrollTo(0,0);
     }
 
     public void sendData() {
@@ -166,7 +172,5 @@ public class RegisterPage2 extends AppCompatActivity {
         mFemaleRBtn = (RadioButton) findViewById(R.id.femaleRBtn);
         mNextBtn = (Button) findViewById(R.id.nextBtn);
         mLayoutSc = (ScrollView) findViewById(R.id.layoutSc);
-        mLayoutSc.setVerticalScrollBarEnabled(false);
-        mLayoutSc.setHorizontalScrollBarEnabled(false);
     }
 }

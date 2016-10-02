@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.R;
@@ -55,7 +56,6 @@ public class RankCustomListAdapter extends BaseAdapter {
         TextView _amountTime = (TextView) _convertView.findViewById(R.id.amountTime);
         TextView _sequeneNumber = (TextView) _convertView.findViewById(R.id.sequeneNumber);
         CircleImageView _tempthumbnail = (CircleImageView) _convertView.findViewById(R.id.tempthumbnail);
-
 
         Rank _item = mItems.get(_position);
 

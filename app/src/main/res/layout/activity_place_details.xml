@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary1"
+        android:background="@color/blue_light2"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -69,7 +69,7 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@color/blueBold"
+            android:background="@color/blue_bold"
             android:text="เมนูการนำทาง"
             android:textSize="18sp"
             android:textColor="@color/white"

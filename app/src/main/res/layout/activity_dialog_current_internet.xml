@@ -23,7 +23,7 @@
                 android:layout_centerVertical="true"
                 android:text="เชื่อมต่ออินเทอร์เน็ตไม่ได้"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/label_sub_20sp"
                 android:textStyle="bold" />
 
         </RelativeLayout>
@@ -64,8 +64,8 @@
         android:layout_height="40dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/a_code_button_blue_bold"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/btn_redius5_blue_bold"
         android:imeOptions="actionDone"
         android:singleLine="true"
         android:text="ตกลง"
@@ -76,8 +76,8 @@
     <TextView
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="_"
-        android:textColor="@color/colorHide" />
+        android:textColor="@color/transparent" />
 
 </LinearLayout>

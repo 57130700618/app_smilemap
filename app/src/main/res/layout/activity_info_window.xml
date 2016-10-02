@@ -2,7 +2,7 @@
     android:id="@+id/layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_info_click_map"
+    android:background="@drawable/background_infowindow_click_map"
     android:orientation="horizontal"
     android:padding="5dp">
 

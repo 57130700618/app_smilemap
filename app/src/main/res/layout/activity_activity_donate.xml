@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary1"
+        android:background="@color/blue_light2"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -49,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ร่วมสมทบทุนในการพัฒนาแอพพลิเคชันสมายแมพ โดยเงินที่ได้จากการบริจาค ผู้พัฒนาจะนำไปต่อยอดเกี่ยวกับเทคโนโลยีใหม่ๆ เพื่อเพิ่มประสิทธิภาพให้กับแอพพลิเคชันสมายแมพ และทำให้ผู้ใช้งานได้รับข้อมูลที่ทันสมัยตลอดเวลา"
+                android:layout_marginTop="10dp"
                 android:textSize="16sp" />
 
             <ImageView

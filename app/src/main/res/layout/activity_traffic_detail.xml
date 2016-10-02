@@ -141,7 +141,7 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@color/blueBold"
+            android:background="@color/blue_bold"
             android:textColor="@color/white"
             android:textSize="17sp"
             android:textStyle="bold" />

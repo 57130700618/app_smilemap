@@ -397,10 +397,16 @@
 
     <!-- =========================================== -->
     <string name="smile_map">Smile Map</string>
-    <string name="animation_text_1">\"สังคมแผนที่ประเทศไทย\"</string>
+   <!-- <string name="animation_text_1">\"สังคมแผนที่ประเทศไทย\"</string>
     <string name="animation_text_2">\"สังคมจิตสาธารณะ\"</string>
     <string name="animation_text_3">\"สังคมแห่งการแบ่งปัน\"</string>
-    <string name="animation_text_4">\"ชีวิตที่สุขสบาย\"</string>
+    <string name="animation_text_4">\"ชีวิตที่สุขสบาย\"</string>-->
+
+    <string name="animation_text_1">\t\t\t\tสังคมแผนที่ประเทศไทย ที่รวมสิ่งสำคัญๆในชีวิตประจำวัน</string>
+    <string name="animation_text_2">\t\t\t\tจิตสาธารณะ แบ่งปันความสุขด้วยการแชร์ตำแหน่งให้กันและกัน</string>
+    <string name="animation_text_3">\t\t\t\tค้นหาเบอร์ฉุกเฉินรอบๆตัว บันทึกสถานที่ชื่นชอบ</string>
+
+
     <string name="facebook_login">เข้าสู่ระบบโดย Facebook</string>
     <string name="or">หรือ</string>
     <string name="login_smilemap">บัญชีอื่นๆ</string>

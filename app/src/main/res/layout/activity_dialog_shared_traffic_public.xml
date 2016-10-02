@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/a_codebg_white2"
+                android:background="@drawable/background_edittext"
                 android:gravity="top"
                 android:hint="ระบุรายละเอียด"
                 android:imeOptions="actionDone"
@@ -139,7 +139,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@color/red_bus"
+                    android:src="@color/red"
                     app:civ_border_color="#ffffff"
                     app:civ_border_width="1dp" />
 
@@ -183,7 +183,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@color/colorPrimary2"
+                    android:src="@color/blue_light3"
                     app:civ_border_color="#ffffff"
                     app:civ_border_width="1dp" />
 
@@ -203,7 +203,7 @@
                 android:layout_height="wrap_content"
                 android:text="__"
                 android:layout_marginTop="150dp"
-                android:textColor="@color/colorHide" />
+                android:textColor="@color/transparent" />
 
         </LinearLayout>
 

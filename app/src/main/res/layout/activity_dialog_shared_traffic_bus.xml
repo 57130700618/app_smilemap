@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="รถเมล์ฟรี"
-            android:textColor="@color/blueBold"
+            android:textColor="@color/blue_bold"
             android:textSize="16sp"
             android:layout_marginTop="5dp" />
 
@@ -126,7 +126,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/a_code_button_blue_bold"
+            android:background="@drawable/btn_redius5_blue_bold"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="ปรับอากาศ"
@@ -139,7 +139,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/a_code_buntton_pink1"
+            android:background="@drawable/btn_redius5_pink"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="ธรรมดา"
@@ -152,7 +152,7 @@
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:text="__"
-        android:textColor="@color/colorHide" />
+        android:textColor="@color/transparent" />
 
 </LinearLayout>
 

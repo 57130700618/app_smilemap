@@ -70,7 +70,7 @@
                         android:layout_width="80dp"
                         android:layout_height="60dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/a_code_button_blue"
+                        android:background="@drawable/btn_redius10_blue"
                         android:src="@drawable/icon_toilet" />
 
                     <TextView
@@ -94,7 +94,7 @@
                         android:layout_width="80dp"
                         android:layout_height="60dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/a_code_button_green1"
+                        android:background="@drawable/btn_redius10_green"
                         android:src="@drawable/icon_medicine" />
 
 
@@ -132,7 +132,7 @@
                         android:id="@+id/dog"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_buntton_pink"
+                        android:background="@drawable/btn_redius10_pink"
                         android:src="@drawable/icon_dog" />
 
                     <TextView
@@ -155,7 +155,7 @@
                         android:id="@+id/relax"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_button_blue_bold1"
+                        android:background="@drawable/btn_redius10_blue_bold"
                         android:src="@drawable/icon_relax" />
 
                     <TextView
@@ -190,7 +190,7 @@
                         android:id="@+id/home"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_buntton_teal"
+                        android:background="@drawable/btn_redius10_teal"
                         android:src="@drawable/icon_home" />
 
                     <TextView
@@ -214,7 +214,7 @@
                         android:id="@+id/tires"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_buntton_orage"
+                        android:background="@drawable/btn_redius10_orange"
                         android:src="@drawable/icon_tires" />
 
                     <TextView

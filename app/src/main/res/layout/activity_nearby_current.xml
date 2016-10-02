@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary1"
+        android:background="@color/blue_light2"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/a_code_button_blue2"
+                android:background="@drawable/btn_redius5_blue"
                 android:text="ค้นหาด้วยตำแหน่งปัจจุบัน"
                 android:textColor="@color/white"
                 android:textSize="18sp"
@@ -77,7 +77,7 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="30dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/button_m_gold"
+                android:background="@drawable/btn_redius5_gold"
                 android:text="ค้นหาโดยการคลิกค้างที่แผนที่"
                 android:textColor="@color/white"
                 android:textSize="18sp"

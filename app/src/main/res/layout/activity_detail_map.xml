@@ -1,233 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/blue_light1"
     android:orientation="vertical">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.blackcatwalk.sharingpower.MapsActivity" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary1"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/backIm"
-                android:layout_width="45dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:src="@drawable/icon_back" />
-
-            <TextView
-                android:id="@+id/labelTv"
-                style="@style/label_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/label_sub_20sp" />
-
-            <ImageView
-                android:id="@+id/mainIm"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="5dp"
-                android:padding="10dp"
-                android:src="@drawable/icon_home1" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
-
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="com.blackcatwalk.sharingpower.MapsActivity" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
             <RelativeLayout
                 android:id="@+id/googleStreetRy"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:visibility="gone">
 
                 <fragment
                     android:id="@+id/streetviewpanorama"
                     android:name="com.google.android.gms.maps.SupportStreetViewPanoramaFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="130dp" />
+                    android:layout_height="180dp" />
 
                 <LinearLayout
                     android:id="@+id/googleStreetLy"
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
+                    android:layout_height="180dp"
                     android:orientation="vertical" />
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayout5"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Spinner
-                    android:id="@+id/spinner"
-                    style="@android:style/Widget.Spinner.DropDown"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:background="@color/line_gray"
-                    android:padding="1dp" />
+                android:background="@color/dark_soft">
 
                 <ImageView
-                    android:id="@+id/cureentLocationBtn"
-                    android:layout_width="50dp"
+                    android:id="@+id/backIm"
+                    android:layout_width="45dp"
                     android:layout_height="50dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/a_code_button_blur_green"
-                    android:padding="12dp"
-                    android:src="@drawable/icon_current_location" />
-
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/navigationBtn"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_above="@+id/linearLayout1"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/icon_shared_1"
-            android:visibility="gone"/>
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/map"
-            android:background="@color/blueBold"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/txtDetailTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/map"
-            android:background="@color/blue"
-            android:orientation="vertical"
-            android:visibility="invisible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
+                    android:padding="10dp"
+                    android:src="@drawable/icon_back" />
 
                 <TextView
-                    android:id="@+id/txtDetailType"
+                    android:id="@+id/labelTv"
+                    style="@style/label_sub"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5sp"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:visibility="invisible" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/label_sub_20sp" />
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/mainIm"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_home1" />
 
-            <ScrollView
-                android:id="@+id/scrollViewDetail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:scrollbars="none"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/txtDetail1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
-
-                </LinearLayout>
-
-            </ScrollView>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/smallGoogleStreetRy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/linearLayout"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_toEndOf="@+id/btnNavigation"
-            android:visibility="gone">
-
-            <fragment
-                android:id="@+id/smallGoogleStreet"
-                android:name="com.google.android.gms.maps.SupportStreetViewPanoramaFragment"
-                android:layout_width="115dp"
-                android:layout_height="75dp" />
-
-            <LinearLayout
-                android:id="@+id/smallGoogleStreetly"
-                android:layout_width="115dp"
-                android:layout_height="75dp"
-                android:orientation="vertical" />
+            </RelativeLayout>
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner"
+                style="@android:style/Widget.Spinner.DropDown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@color/line_gray"
+                android:padding="1dp" />
+
+            <ImageView
+                android:id="@+id/cureentLocationBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_redius5_bluegray"
+                android:padding="12dp"
+                android:src="@drawable/icon_current_location" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/map"
+        android:background="@color/blue_bold"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/txtDetailTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/smallGoogleStreetRy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toEndOf="@+id/navigationBtn"
+        android:visibility="gone">
+
+        <fragment
+            android:id="@+id/smallGoogleStreet"
+            android:name="com.google.android.gms.maps.SupportStreetViewPanoramaFragment"
+            android:layout_width="115dp"
+            android:layout_height="75dp" />
+
+        <LinearLayout
+            android:id="@+id/smallGoogleStreetly"
+            android:layout_width="115dp"
+            android:layout_height="75dp"
+            android:orientation="vertical" />
 
     </RelativeLayout>
 
-</LinearLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/navigationBtn"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/icon_shared_1"
+        android:visibility="gone" />
+
+</RelativeLayout>

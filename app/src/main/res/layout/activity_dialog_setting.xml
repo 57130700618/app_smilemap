@@ -75,8 +75,8 @@
                     android:switchTextAppearance="@style/SwitchTextAppearance"
                     android:textColor="@color/gray"
                     android:textSize="18sp"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_bg"
+                    android:thumb="@drawable/selector_switch_control"
+                    android:track="@drawable/selector_switch_progress"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true" />
 
@@ -120,9 +120,9 @@
                 android:max="5"
                 android:progress="2"
                 android:layout_marginTop="10dp"
-                android:progressDrawable="@drawable/red_scrubber_progress"
+                android:progressDrawable="@drawable/selector_scrubber_progress"
                 android:secondaryProgress="0"
-                android:thumb="@drawable/red_scrubber_control" />
+                android:thumb="@drawable/selector_scrubber_control" />
 
             <LinearLayout
                 android:layout_width="match_parent"

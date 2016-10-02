@@ -15,15 +15,6 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-import pl.tajchert.nammu.Nammu;
-import pl.tajchert.nammu.PermissionCallback;
-
 import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
 import com.blackcatwalk.sharingpower.utility.ControlFile;
@@ -36,6 +27,15 @@ import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 
 public class LoginMain extends AppCompatActivity {
 
@@ -121,8 +121,8 @@ public class LoginMain extends AppCompatActivity {
     }
 
     private void setAnimation() {
-        mAnimationIn.setDuration(3000);
-        mAnimationOut.setDuration(3000);
+        mAnimationIn.setDuration(2500);
+        mAnimationOut.setDuration(2500);
 
         mAnimationTxt.setText(R.string.animation_text_1);
         TimerTask myTask = new TimerTask() {
@@ -134,7 +134,7 @@ public class LoginMain extends AppCompatActivity {
                 });
             }
         };
-        mTimer.schedule(myTask, 0, 6000); // TimerTask, delay, period
+        mTimer.schedule(myTask, 0, 8000); // TimerTask, delay, period
 
         mAnimationOut.setAnimationListener(new Animation.AnimationListener() {
 
@@ -152,9 +152,6 @@ public class LoginMain extends AppCompatActivity {
                         mAnimationTxt.setText(R.string.animation_text_3);
                         break;
                     case 2:
-                        mAnimationTxt.setText(R.string.animation_text_4);
-                        break;
-                    case 3:
                         mAnimationTxt.setText(R.string.animation_text_1);
                         mCountText = -1;
                         break;
@@ -231,7 +228,8 @@ public class LoginMain extends AppCompatActivity {
         mControlFile.setFile(this, _userName,"userName");
         mControlFile.setFile(this, "1","stausLogin");
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, MainActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         finish();
     }
 

@@ -16,7 +16,7 @@ public class GoogleNavigator {
 
     public void showDialogNavigator(final Context _context, final String _lat, final String _lng) {
 
-        final String[] lists = {"ขับรถ", "เดิน"};
+        final String[] lists = {"ขับรถ", "เดิน", "ยกเลิก"};
         new AlertDialog.Builder(_context).setTitle("เลือกประเภทการเดินทาง").setItems(lists, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -30,6 +30,8 @@ public class GoogleNavigator {
                     case 1:
                         mTypeNavigator = parse + "&mode=w";
                         break;
+                    case 2:
+                        return;
                 }
                 dialog.cancel();
 

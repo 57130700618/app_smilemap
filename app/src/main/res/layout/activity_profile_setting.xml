@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:id="@+id/parent"
     android:layout_height="match_parent"
-    android:background="@drawable/a_codebg_white1"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary1"
+        android:background="@color/blue_light2"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/a_codebg_white2"
+                android:background="@drawable/background_edittext"
                 android:hint="ป้อนชื่อผู้ใช้อย่างน้อย  5อักขระ"
                 android:imeOptions="actionDone"
                 android:maxLength="20"
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/a_codebg_white2"
+                android:background="@drawable/background_edittext"
                 android:gravity="top"
                 android:hint="อัพเดทสถานะของฉัน"
                 android:inputType="textMultiLine"
@@ -107,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/a_code_button_blue2"
+                android:background="@drawable/btn_redius5_blue"
                 android:text="อัพเดทข้อมูล"
                 android:textColor="@color/white"
                 android:textSize="15sp"

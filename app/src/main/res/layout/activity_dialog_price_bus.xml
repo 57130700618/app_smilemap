@@ -132,10 +132,10 @@
                 android:textSize="22sp" />
 
             <ImageView
+                android:id="@+id/ImageView1"
                 android:layout_width="150dp"
                 android:layout_height="98dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ticket_weak" />
+                android:layout_marginTop="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -151,10 +151,11 @@
                 android:textSize="17sp" />
 
             <ImageView
+                android:id="@+id/ImageView2"
                 android:layout_width="150dp"
                 android:layout_height="98dp"
                 android:layout_marginTop="25dp"
-                android:src="@drawable/ticket_weak_air" />
+               />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -186,10 +187,10 @@
                 android:textSize="22sp" />
 
             <ImageView
+                android:id="@+id/ImageView3"
                 android:layout_width="150dp"
                 android:layout_height="98dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ticket_month" />
+                android:layout_marginTop="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -205,10 +206,10 @@
                 android:textSize="17sp" />
 
             <ImageView
+                android:id="@+id/ImageView4"
                 android:layout_width="150dp"
                 android:layout_height="98dp"
-                android:layout_marginTop="25dp"
-                android:src="@drawable/ticket_month_air" />
+                android:layout_marginTop="25dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -246,10 +247,10 @@
                 android:textSize="17sp" />
 
             <ImageView
+                android:id="@+id/ImageView5"
                 android:layout_width="150dp"
                 android:layout_height="98dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ticket_month_st1" />
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -265,10 +266,10 @@
                 android:textSize="17sp" />
 
             <ImageView
+                android:id="@+id/ImageView6"
                 android:layout_width="150dp"
                 android:layout_height="98dp"
-                android:layout_marginTop="25dp"
-                android:src="@drawable/ticket_month_st1_air" />
+                android:layout_marginTop="25dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -306,10 +307,10 @@
                 android:textSize="17sp" />
 
             <ImageView
+                android:id="@+id/ImageView7"
                 android:layout_width="150dp"
                 android:layout_height="98dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ticket_month_st2" />
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -325,10 +326,10 @@
                 android:textSize="17sp" />
 
             <ImageView
+                android:id="@+id/ImageView8"
                 android:layout_width="150dp"
                 android:layout_height="98dp"
-                android:layout_marginTop="25dp"
-                android:src="@drawable/ticket_month_st2_air" />
+                android:layout_marginTop="25dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -347,7 +348,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:background="@color/blueBold"
+                android:background="@color/blue_bold"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="5dp">
@@ -373,7 +374,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
                 android:text="_"
-                android:textColor="@color/colorHide" />
+                android:textColor="@color/transparent" />
 
         </LinearLayout>
 

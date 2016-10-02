@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/a_codebg_white1"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -59,7 +59,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/a_code_button_blue_bold"
+        android:background="@drawable/btn_redius5_blue_bold"
         android:text="ตกลง"
         android:textColor="@color/white"
         android:textSize="15sp"
@@ -70,6 +70,6 @@
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:text="____"
-        android:textColor="@color/colorHide" />
+        android:textColor="@color/transparent" />
 
 </LinearLayout>

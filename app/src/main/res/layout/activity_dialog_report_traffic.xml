@@ -80,7 +80,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="40dp"
-                android:background="@drawable/a_code_button_blue_bold"
+                android:background="@drawable/btn_redius5_blue_bold"
                 android:text="ส่งรายงาน"
                 android:textColor="@color/white"
                 android:textSize="15sp"
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:text="__"
                 android:layout_marginTop="150dp"
-                android:textColor="@color/colorHide" />
+                android:textColor="@color/transparent" />
 
         </LinearLayout>
 

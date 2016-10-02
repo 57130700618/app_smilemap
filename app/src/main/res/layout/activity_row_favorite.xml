@@ -16,7 +16,7 @@
             android:id="@+id/logo"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:background="@drawable/a_code_button_blue" />
+            android:background="@drawable/btn_redius10_blue" />
 
         <RelativeLayout
             android:id="@+id/linearLayout3"

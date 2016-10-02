@@ -69,7 +69,7 @@
                         android:layout_width="80dp"
                         android:layout_height="60dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/a_code_buntton_teal"
+                        android:background="@drawable/btn_redius10_teal"
                         android:src="@drawable/icon_bus" />
 
                     <TextView
@@ -93,7 +93,7 @@
                         android:layout_width="80dp"
                         android:layout_height="60dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/a_code_button_blue"
+                        android:background="@drawable/btn_redius10_blue"
                         android:src="@drawable/icon_bts" />
 
 
@@ -131,7 +131,7 @@
                         android:id="@+id/brt"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_button_green1"
+                        android:background="@drawable/btn_redius10_green"
                         android:src="@drawable/icon_brt" />
 
                     <TextView
@@ -154,7 +154,7 @@
                         android:id="@+id/van"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_button_gold"
+                        android:background="@drawable/btn_redius10_gold"
                         android:src="@drawable/icon_van" />
 
                     <TextView
@@ -188,7 +188,7 @@
                         android:id="@+id/publicway"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_buntton_pink"
+                        android:background="@drawable/btn_redius10_pink"
                         android:src="@drawable/icon_public" />
 
                     <TextView
@@ -211,7 +211,7 @@
                         android:id="@+id/boat"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_button_blue_bold1"
+                        android:background="@drawable/btn_redius10_blue_bold"
                         android:src="@drawable/icon_boat" />
 
                     <TextView
@@ -246,7 +246,7 @@
                         android:id="@+id/accident"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_button_red1"
+                        android:background="@drawable/btn_redius5_red"
                         android:src="@drawable/icon_accident" />
 
                     <TextView
@@ -269,7 +269,7 @@
                         android:id="@+id/checkpoint"
                         android:layout_width="80dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/a_code_buntton_orage"
+                        android:background="@drawable/btn_redius10_orange"
                         android:src="@drawable/icon_checkpoint" />
 
                     <TextView

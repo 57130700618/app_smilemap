@@ -103,7 +103,7 @@ public class LocationCommentMain extends AppCompatActivity {
         });
 
         fetchData();
-        mControlDatabase.getDatabaeeLocationCommentMainIdUser();
+        mControlDatabase.getDatabaseLocationCommentMainIdUser();
     }
 
     private void setCommentEt() {
@@ -252,7 +252,7 @@ public class LocationCommentMain extends AppCompatActivity {
                 }
             }).show();
         }
-        _alertDialog.getWindow().setLayout(400, 400);
+        _alertDialog.getWindow().setLayout(400, 550);
 
         Window window = _alertDialog.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();

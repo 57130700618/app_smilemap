@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/a_codebg_white1"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -203,6 +203,6 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:text="__"
-        android:textColor="@color/colorHide" />
+        android:textColor="@color/transparent" />
 
 </LinearLayout>

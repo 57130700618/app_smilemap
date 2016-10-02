@@ -423,7 +423,11 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         mRefreshIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDatabase();
+                if (mCurrentLatitude != 0 && mCurrentLongitude != 0) {
+                    getDatabase();
+                }else {
+                    mControlCheckConnect.alertCurrentGps(BusGps.this);
+                }
             }
         });
 
@@ -1852,7 +1856,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
     public void stopShared() {
         if (!mBusType.equals("bts") && !mBusType.equals("public")) {
             final String[] lists = {"แก้ไขจำนวนผู้โดยสาร", "ยกเลิกการแชร์" ,"ปิดหน้าต่าง"};
-            new AlertDialog.Builder(BusGps.this).setTitle("ท่านกำลังแชร์ตำแหน่งการจราจรอยู่").setItems(lists, new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(BusGps.this).setTitle("กำลังแชร์ตำแหน่งการจราจรอยู่").setItems(lists, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {

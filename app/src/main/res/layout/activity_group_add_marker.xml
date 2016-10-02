@@ -9,7 +9,7 @@
         android:id="@+id/layoutLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary1"
+        android:background="@color/blue_light2"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -53,7 +53,7 @@
                 android:id="@+id/editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/a_codebg_white2"
+                android:background="@drawable/background_edittext"
                 android:gravity="top"
                 android:hint="ระบุรายละเอียด"
                 android:imeOptions="actionDone"
@@ -115,7 +115,7 @@
                 android:layout_height="40dp"
                 android:layout_marginBottom="30dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/a_code_button_blue_bold"
+                android:background="@drawable/btn_redius5_blue_bold"
                 android:text="แชร์ตำแหน่ง"
                 android:textColor="@color/white"
                 android:textSize="18sp" />

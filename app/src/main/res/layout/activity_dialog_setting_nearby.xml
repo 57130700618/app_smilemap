@@ -48,9 +48,9 @@
         android:layout_marginLeft="20dp"
         android:max="5"
         android:progress="2"
-        android:progressDrawable="@drawable/red_scrubber_progress"
+        android:progressDrawable="@drawable/selector_scrubber_progress"
         android:secondaryProgress="0"
-        android:thumb="@drawable/red_scrubber_control" />
+        android:thumb="@drawable/selector_scrubber_control" />
 
     <TextView
         android:id="@+id/resultNearbyTxt"

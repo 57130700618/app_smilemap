@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="40dp"
-                android:background="@drawable/a_code_button_blue_bold"
+                android:background="@drawable/btn_redius5_blue_bold"
                 android:text="@string/ok_bold"
                 android:textColor="@color/white"
                 android:textSize="16sp"
@@ -102,6 +102,6 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:text="__"
-        android:textColor="@color/colorHide" />
+        android:textColor="@color/transparent" />
 
 </LinearLayout>

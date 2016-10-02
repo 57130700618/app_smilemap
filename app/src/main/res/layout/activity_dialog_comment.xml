@@ -61,7 +61,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/a_code_button_blue_bold"
+        android:background="@drawable/btn_redius5_blue_bold"
         android:text="บันทึก"
         android:textColor="@color/white"
         android:textSize="15sp"
@@ -72,6 +72,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="__"
-        android:textColor="@color/colorHide" />
+        android:textColor="@color/transparent" />
 
 </LinearLayout>

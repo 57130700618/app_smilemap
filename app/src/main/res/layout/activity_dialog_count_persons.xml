@@ -89,7 +89,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="40dp"
-                android:background="@drawable/a_code_button_blue_bold"
+                android:background="@drawable/btn_redius5_blue_bold"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:text="ตกลง"
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="_"
-                android:textColor="@color/colorHide" />
+                android:textColor="@color/transparent" />
 
         </LinearLayout>
 

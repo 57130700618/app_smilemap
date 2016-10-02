@@ -46,7 +46,7 @@ public class ControlProgress {
     }
 
     public int[] getColorSchemeSwipeRefresh() {
-        int color[] = {R.color.red_bus, R.color.yellow, R.color.green, R.color.blue};
+        int color[] = {R.color.red, R.color.yellow, R.color.green, R.color.blue};
         return color;
     }
 }

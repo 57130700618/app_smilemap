@@ -149,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/a_codebg_white2"
+                android:background="@drawable/background_edittext"
                 android:gravity="top"
                 android:hint="กรุณากรอกรายละเอียดเกี่ยวกับการก่อสร้าง"
                 android:imeOptions="actionDone"
@@ -162,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/a_code_button_blue_bold"
+                android:background="@drawable/btn_redius5_blue_bold"
                 android:text="แชร์ตำแหน่ง"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="160dp"
                 android:text="_"
-                android:textColor="@color/colorHide" />
+                android:textColor="@color/transparent" />
 
         </LinearLayout>
 

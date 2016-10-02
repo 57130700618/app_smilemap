@@ -23,9 +23,7 @@ public class TutorialTraffic extends AppCompatActivity {
     private ImageView mTutorial_p2Im;
     private ImageView mTutorial_p3Im;
 
-    ImageView[] mResId = {mTutorial_p1Im
-            , mTutorial_p2Im
-            , mTutorial_p3Im};
+    ImageView[] mResId = new ImageView[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,17 +66,7 @@ public class TutorialTraffic extends AppCompatActivity {
                     RoundedBitmapDrawable circularBitmapDrawable =
                             RoundedBitmapDrawableFactory.create(getResources(), resource);
                     circularBitmapDrawable.setCornerRadius(15);
-                    switch (_temp) {
-                        case 0:
-                            mTutorial_p1Im.setImageDrawable(circularBitmapDrawable);
-                            break;
-                        case 1:
-                            mTutorial_p2Im.setImageDrawable(circularBitmapDrawable);
-                            break;
-                        case 2:
-                            mTutorial_p3Im.setImageDrawable(circularBitmapDrawable);
-                            break;
-                    }
+                    mResId[_temp].setImageDrawable(circularBitmapDrawable);
                 }
             });
         }

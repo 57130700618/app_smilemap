@@ -459,7 +459,11 @@ public class LocationGps extends AppCompatActivity {
         mRefreshIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDatabase();
+                if (mCurrentLocation != null) {
+                    getDatabase();
+                }else {
+                    mControlCheckConnect.alertCurrentGps(LocationGps.this);
+                }
             }
         });
 
@@ -494,7 +498,6 @@ public class LocationGps extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mCurrentLocation != null) {
-
                     mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                     if (mLastLocation != null) {
                         mCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
@@ -503,6 +506,9 @@ public class LocationGps extends AppCompatActivity {
                     moveAnimateCamera(mCurrentLocation);
                 } else {
                     mControlCheckConnect.alertCurrentGps(LocationGps.this);
+                    if (mGoogleApiClient != null) {
+                        mGoogleApiClient.connect();
+                    }
                 }
             }
         });

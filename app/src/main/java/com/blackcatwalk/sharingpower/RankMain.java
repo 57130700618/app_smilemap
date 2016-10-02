@@ -1,11 +1,14 @@
 package com.blackcatwalk.sharingpower;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -21,15 +24,23 @@ import java.util.List;
 public class RankMain extends AppCompatActivity {
 
     public List<Rank> mRankList;
+    public int[] mIdUserSequene = new int[100];
     public RankCustomListAdapter mAdapter;
     private String stausRank = "0";
     private ControlFile mControlFile;
     private ControlDatabase mControlDatabase;
+    private int mIdUser;
 
     // ----------- User InterFace --------------//
     private ImageView mSettingsIm;
     private ImageView mBackIm;
     private ListView mListView;
+    private Button mSequeneUserBtn;
+
+
+    public void setmIdUser(int _idUser) {
+        this.mIdUser = _idUser;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +61,23 @@ public class RankMain extends AppCompatActivity {
             }
         });
 
+        mSequeneUserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int _temp = -99;
+
+                for(int i=0;i<mIdUserSequene.length;i++){
+                    if(mIdUserSequene[i] == mIdUser){
+                        _temp = i;
+                        mListView.setSelection(i);
+                        break;
+                    }
+                }
+                showDialogSequene(_temp);
+            }
+        });
+
         mSettingsIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +94,31 @@ public class RankMain extends AppCompatActivity {
         });
 
         stausRank = mControlFile.getFile(getApplicationContext(),"stausRank");
+
+        mControlDatabase.getDatabaseRankIdUser();
         setData();
+    }
+
+    private void showDialogSequene(int _sequene) {
+
+        String _temp;
+
+        if(_sequene != -99){
+            _sequene++;
+            _temp = "ฉันอยู่อันดับที่ " + _sequene;
+        }else{
+            _temp = "ฉันไม่ติดอันดับ";
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(_temp);
+        builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     public void setData() {
@@ -163,5 +215,7 @@ public class RankMain extends AppCompatActivity {
         mBackIm = (ImageView) findViewById(R.id.backIm);
         mSettingsIm = (ImageView) findViewById(R.id.settingsIm);
         mListView = (ListView) findViewById(R.id.listview);
+        mSequeneUserBtn = (Button) findViewById(R.id.sequeneUserBtn);
+
     }
 }

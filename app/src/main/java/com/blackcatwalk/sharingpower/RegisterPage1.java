@@ -130,6 +130,7 @@ public class RegisterPage1 extends AppCompatActivity {
                     mShowPasswordIm.setVisibility(View.VISIBLE);
                 }
                 mClearEmailBtn.setVisibility(View.INVISIBLE);
+                mLayoutSc.fullScroll(ScrollView.FOCUS_DOWN);
                 return false;
             }
         });
@@ -165,6 +166,7 @@ public class RegisterPage1 extends AppCompatActivity {
         if (!isValidEmail(mEmail) || mEmail.length() <=0 ) {
             mAlertTv.setTextColor(Color.parseColor("#F4511E"));
             mAlertTv.setText(R.string.general_text_6);
+            mLayoutSc.scrollTo(0,0);
             return;
         }
 
@@ -214,7 +216,7 @@ public class RegisterPage1 extends AppCompatActivity {
         mShowPasswordIm = (ImageView) findViewById(R.id.showPasswordIm);
         mNextBtn = (Button) findViewById(R.id.nextBtn);
         mLayoutSc = (ScrollView) findViewById(R.id.layoutSc);
-        mLayoutSc.setVerticalScrollBarEnabled(false);
-        mLayoutSc.setHorizontalScrollBarEnabled(false);
+          /*      mLayoutSc.setVerticalScrollBarEnabled(false);
+        mLayoutSc.setHorizontalScrollBarEnabled(false);*/
     }
 }

@@ -2,8 +2,11 @@ package com.blackcatwalk.sharingpower;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -14,7 +17,11 @@ import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.google.GoogleMapAddress;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
-import com.google.android.gms.maps.*;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
+import com.google.android.gms.maps.StreetViewPanorama;
+import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 
@@ -196,18 +203,7 @@ public class TrafficDetail extends AppCompatActivity {
 
     private void showDetail() {
         if (mType == 0) {
-            final Dialog dialog = new Dialog(TrafficDetail.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // no titlebar
-            dialog.setContentView(R.layout.activity_dialog_price_bus);
-
-            ImageView btnClose = (ImageView) dialog.findViewById(R.id.btnClose);
-            btnClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                }
-            });
-            dialog.show();
+            new ControlDatabase(this).getDatabaeTutorial("pricebus");
         } else {
             String _type = "BTS station";
             switch (mType) {
@@ -222,6 +218,58 @@ public class TrafficDetail extends AppCompatActivity {
                     .putExtra("typeList", _type));
         }
     }
+
+    public void setPicture(String[] _url) {
+
+        final Dialog dialog = new Dialog(TrafficDetail.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // no titlebar
+        dialog.setContentView(R.layout.activity_dialog_price_bus);
+
+        final ImageView ImageView1 = (ImageView) dialog.findViewById(R.id.ImageView1);
+        final ImageView ImageView2 = (ImageView) dialog.findViewById(R.id.ImageView2);
+        final ImageView ImageView3 = (ImageView) dialog.findViewById(R.id.ImageView3);
+        final ImageView ImageView4 = (ImageView) dialog.findViewById(R.id.ImageView4);
+        final ImageView ImageView5 = (ImageView) dialog.findViewById(R.id.ImageView5);
+        final ImageView ImageView6 = (ImageView) dialog.findViewById(R.id.ImageView6);
+        final ImageView ImageView7 = (ImageView) dialog.findViewById(R.id.ImageView7);
+        final ImageView ImageView8 = (ImageView) dialog.findViewById(R.id.ImageView8);
+
+        final ImageView[] mResId = new ImageView[8];
+
+        mResId[0] = ImageView1;
+        mResId[1] = ImageView2;
+        mResId[2] = ImageView3;
+        mResId[3] = ImageView4;
+        mResId[4] = ImageView5;
+        mResId[5] = ImageView6;
+        mResId[6] = ImageView7;
+        mResId[7] = ImageView8;
+
+        ImageView btnClose = (ImageView) dialog.findViewById(R.id.btnClose);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+
+        for (int i = 0; i < _url.length; i++) {
+
+            final int _temp = i;
+            Glide.with(this).load(_url[i]).asBitmap().placeholder(R.drawable.loading)
+                    .error(R.drawable.error).centerCrop().into(new BitmapImageViewTarget(mResId[i]) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable =
+                            RoundedBitmapDrawableFactory.create(getResources(), resource);
+                    circularBitmapDrawable.setCornerRadius(15);
+                    mResId[_temp].setImageDrawable(circularBitmapDrawable);
+                }
+            });
+        }
+    }
+
 
     private void showStreetView(LatLng latLng, StreetViewPanorama streetViewPanorama) {
         streetViewPanorama.getPanoramaCamera();

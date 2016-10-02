@@ -2,7 +2,6 @@ package com.blackcatwalk.sharingpower.utility;
 
 import android.app.Activity;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +34,7 @@ import com.blackcatwalk.sharingpower.Rank;
 import com.blackcatwalk.sharingpower.RankMain;
 import com.blackcatwalk.sharingpower.RegisterPage1;
 import com.blackcatwalk.sharingpower.RegisterPage2;
+import com.blackcatwalk.sharingpower.TrafficDetail;
 import com.blackcatwalk.sharingpower.TutorialLocation;
 import com.blackcatwalk.sharingpower.TutorialTraffic;
 
@@ -382,7 +382,7 @@ public class ControlDatabase {
 
     }
 
-    public void getDatabaeeLocationCommentMainIdUser() {
+    public void getDatabaseLocationCommentMainIdUser() {
 
         if (checkInternet()) {
 
@@ -1050,6 +1050,7 @@ public class ControlDatabase {
 
                             count++;
                             ((RankMain) mActivity).mRankList.add(item);
+                            ((RankMain) mActivity).mIdUserSequene[i] = obj.getInt("id");
                         } catch (JSONException ex) {
                             ex.printStackTrace();
                         }
@@ -1067,6 +1068,42 @@ public class ControlDatabase {
             AppController.getmInstance().addToRequesQueue(jsonArrayRequest);
         }
     }
+
+    //------------------------------------------------------------------------
+
+    public void getDatabaseRankIdUser() {
+
+        if (checkInternet()) {
+
+            RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
+            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, getMGetDatabase() +
+                    "get_id_user&user=" + mUserName + "&ramdom=" + randomNumber(), null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray ja = response.getJSONArray("id_user");
+
+                                ((RankMain) mActivity).setmIdUser(ja.getJSONObject(0).getInt("id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            ControlProgress.hideDialog();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            ControlProgress.hideDialog();
+                        }
+                    }
+            );
+            jor.setShouldCache(false);
+            requestQueue.add(jor);
+        }
+    }
+
+    //------------------------------------------------------------------------------------------
 
     public void setDatabaseRankMain(final String _stausRank) {
 
@@ -1405,7 +1442,6 @@ public class ControlDatabase {
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Log.d("fafa", String.valueOf(e));
                             }
                             ControlProgress.hideDialog();
                         }
@@ -1692,9 +1728,12 @@ public class ControlDatabase {
 
                                     _temp[i] = jsonObject.getString("url");
                                 }
+
                                 if(_type.equals("location")){
                                     ((TutorialLocation) mActivity).setPicture(_temp);
-                                }else {
+                                }else if (_type.equals("pricebus")){
+                                    ((TrafficDetail) mActivity).setPicture(_temp);
+                                }else{
                                     ((TutorialTraffic) mActivity).setPicture(_temp);
                                 }
 

@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,7 +26,6 @@ import com.blackcatwalk.sharingpower.customAdapter.NearbyCustomSpinnerAdapter;
 import com.blackcatwalk.sharingpower.google.GoogleNavigator;
 import com.blackcatwalk.sharingpower.google.JsonParserDirections;
 import com.blackcatwalk.sharingpower.google.PlaceJSONParser;
-import com.blackcatwalk.sharingpower.utility.Control;
 import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
 import com.blackcatwalk.sharingpower.utility.ControlProgress;
 import com.google.android.gms.common.ConnectionResult;
@@ -35,6 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
@@ -45,6 +44,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 
 import org.json.JSONObject;
 
@@ -57,9 +57,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -91,20 +88,20 @@ public class DetailMap extends AppCompatActivity {
     private String typeFavorite;
     private String detailFavorite;
     private String type = "";
+    private String TimeFavorite;
 
     // ----------------- User Interface -------------------//
     private Spinner mSprPlaceType;
-    private ScrollView scrollViewDetail;
     private TextView mLabelTv;
     private TextView mTxtDetailTv;
     private ImageView mCureentLocationBtn;
     private CircleImageView mNavigationBtn;
-    private LinearLayout linearLayout;
     private SupportMapFragment mapFragment;
     private ImageView mBackIm;
     private ImageView mMainIm;
     private RelativeLayout smallGoogleStreetRy;
     private SupportStreetViewPanoramaFragment streetViewFracment;
+    private LinearLayout mLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +163,7 @@ public class DetailMap extends AppCompatActivity {
         Longitude = bundle.getDouble("lngFavorite");
         typeFavorite = bundle.getString("typeFavorite");
         detailFavorite = bundle.getString("detailFavorite");
+        TimeFavorite = bundle.getString("timeFavorite");
     }
 
     private void setMarkerCustom() {
@@ -359,8 +357,8 @@ public class DetailMap extends AppCompatActivity {
                 Latitude = 13.71730;
                 Longitude = 100.51352;
                 break;
-            case "ศาลเจ้าพ่อเสือ":
-                markerName = "ศาลเจ้าพ่อเสือ";
+            case "วัดศาลเจ้าพ่อเสือ":
+                markerName = "วัดศาลเจ้าพ่อเสือ";
                 Latitude = 13.75384;
                 Longitude = 100.49820;
                 break;
@@ -966,17 +964,25 @@ public class DetailMap extends AppCompatActivity {
             }
         });
 
-        mNavigationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveNavigator();
-            }
-        });
+
 
         if (typeMoveMap == 9) {
             setupMapFavorite();
+            mNavigationBtn.setImageResource(R.drawable.icon_list);
+            mNavigationBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogDetailFavorite();
+                }
+            });
         } else {
             setupMapNearby();
+            mNavigationBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    moveNavigator();
+                }
+            });
         }
 
         if (typeMoveMap < 7) {
@@ -1002,6 +1008,102 @@ public class DetailMap extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void dialogDetailFavorite() {
+
+        String _tempTypeName = null;
+        switch (typeFavorite) {
+            case "atm":
+                _tempTypeName = "เอทีเอ็ม";
+                break;
+            case "bank":
+                _tempTypeName = "ธนาคาร";
+                break;
+            case "bus_station":
+                _tempTypeName = "ป้ายรถเมล์";
+                break;
+            case "doctor":
+                _tempTypeName = "คลีนิค";
+                break;
+            case "police":
+                _tempTypeName = "ตำรวจ";
+                break;
+            case "hospital":
+                _tempTypeName = "โรงพยาบาล";
+                break;
+            case "restaurant":
+                _tempTypeName = "อาหารและเครื่องดื่ม";
+                break;
+            case "cafe":
+                _tempTypeName = "คาเฟ่";
+                break;
+            case "department_store":
+                _tempTypeName = "ห้างสรรพสินค้า";
+                break;
+            case "shopping_mall":
+                _tempTypeName = "ช้อปปิ้งมอลล์";
+                break;
+            case "grocery_or_supermarket":
+                _tempTypeName = "ซุปเปอร์มาร์เก็ต";
+                break;
+            case "beauty_salon":
+                _tempTypeName = "ร้านเสริมสวย";
+                break;
+            case "gym":
+                _tempTypeName = "ยิม";
+                break;
+            case "post_office":
+                _tempTypeName = "ที่ทำการไปรษณีย์";
+                break;
+            case "school":
+                _tempTypeName = "โรงเรียน";
+                break;
+            case "university":
+                _tempTypeName = "มหาวิทยาลัย";
+                break;
+            case "gas_station":
+                _tempTypeName = "ปั้มน้ำมันและแก็ส";
+                break;
+            case "parking":
+                _tempTypeName = "ที่จอดรถ";
+                break;
+            case "car_repair":
+                _tempTypeName = "อู่ซ่อมรถ";
+                break;
+            case "restroom":
+                _tempTypeName = "ห้องน้ำ";
+                break;
+            case "pharmacy":
+                _tempTypeName = "ร้านขายยา";
+                break;
+            case "clinic":
+                _tempTypeName = "คลีนิค";
+                break;
+            case "veterinary_clinic":
+                _tempTypeName = "คลีนิครักษาสัตว์";
+                break;
+            case "daily_home":
+                _tempTypeName = "ที่พักรายวัน";
+                break;
+            case "officer":
+                _tempTypeName = "จุดพักผ่อน";
+                break;
+            case "garage":
+                _tempTypeName = "ร้านปะยาง";
+                break;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("ประเภท: " + _tempTypeName + "\n\n" + detailFavorite
+        + "\n\n" + TimeFavorite);
+        builder.setPositiveButton("ปิด", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void setupMapNearby() {
@@ -1138,93 +1240,8 @@ public class DetailMap extends AppCompatActivity {
     }
 
     private void setupMapFavorite() {
-        String tempTypeName = null;
 
         markerName = "ตำแหน่งรายการโปรด";
-
-        switch (typeFavorite) {
-            case "atm":
-                tempTypeName = "เอทีเอ็ม";
-                break;
-            case "bank":
-                tempTypeName = "ธนาคาร";
-                break;
-            case "bus_station":
-                tempTypeName = "ป้ายรถเมล์";
-                break;
-            case "doctor":
-                tempTypeName = "คลีนิค";
-                break;
-            case "police":
-                tempTypeName = "ตำรวจ";
-                break;
-            case "hospital":
-                tempTypeName = "โรงพยาบาล";
-                break;
-            case "restaurant":
-                tempTypeName = "อาหารและเครื่องดื่ม";
-                break;
-            case "cafe":
-                tempTypeName = "คาเฟ่";
-                break;
-            case "department_store":
-                tempTypeName = "ห้างสรรพสินค้า";
-                break;
-            case "shopping_mall":
-                tempTypeName = "ช้อปปิ้งมอลล์";
-                break;
-            case "grocery_or_supermarket":
-                tempTypeName = "ซุปเปอร์มาร์เก็ต";
-                break;
-            case "beauty_salon":
-                tempTypeName = "ร้านเสริมสวย";
-                break;
-            case "gym":
-                tempTypeName = "ยิม";
-                break;
-            case "post_office":
-                tempTypeName = "ที่ทำการไปรษณีย์";
-                break;
-            case "school":
-                tempTypeName = "โรงเรียน";
-                break;
-            case "university":
-                tempTypeName = "มหาวิทยาลัย";
-                break;
-            case "gas_station":
-                tempTypeName = "ปั้มน้ำมันและแก็ส";
-                break;
-            case "parking":
-                tempTypeName = "ที่จอดรถ";
-                break;
-            case "car_repair":
-                tempTypeName = "อู่ซ่อมรถ";
-                break;
-            case "restroom":
-                tempTypeName = "ห้องน้ำ";
-                break;
-            case "pharmacy":
-                tempTypeName = "ร้านขายยา";
-                break;
-            case "clinic":
-                tempTypeName = "คลีนิค";
-                break;
-            case "veterinary_clinic":
-                tempTypeName = "คลีนิครักษาสัตว์";
-                break;
-            case "daily_home":
-                tempTypeName = "ที่พักรายวัน";
-                break;
-            case "officer":
-                tempTypeName = "จุดพักผ่อน";
-                break;
-            case "garage":
-                tempTypeName = "ร้านปะยาง";
-                break;
-        }
-
-        LinearLayout linearLayout1 = (LinearLayout) findViewById(R.id.linearLayout1);
-        linearLayout1.setVisibility(View.VISIBLE);
 
         RelativeLayout googleStreetRy = (RelativeLayout) findViewById(R.id.googleStreetRy);
         googleStreetRy.setVisibility(View.VISIBLE);
@@ -1248,21 +1265,18 @@ public class DetailMap extends AppCompatActivity {
             }
         });
 
-        TextView txtDetailType = (TextView) findViewById(R.id.txtDetailType);
-        txtDetailType.setVisibility(View.VISIBLE);
-        txtDetailType.setText("ประเภท: " + tempTypeName);
+        mTxtDetailTv.setText("เมนูการนำทาง");
 
-        if (detailFavorite.length() > 0) {
-            scrollViewDetail.setVisibility(View.VISIBLE);
-            TextView txtDetail1 = (TextView) findViewById(R.id.txtDetail1);
-            txtDetail1.setVisibility(View.VISIBLE);
-            txtDetail1.setText(detailFavorite);
-        }
+        mLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveNavigator();
+            }
+        });
 
         mLabelTv.setText("รายการโปรด");
         mNavigationBtn.setVisibility(View.VISIBLE);
         mSprPlaceType.setVisibility(View.INVISIBLE);
-        linearLayout.setVisibility(View.INVISIBLE);
         addMarkerStart();
     }
 
@@ -1815,9 +1829,8 @@ public class DetailMap extends AppCompatActivity {
         mSprPlaceType = (Spinner) findViewById(R.id.spinner);
         mCureentLocationBtn = (ImageView) findViewById(R.id.cureentLocationBtn);
         mNavigationBtn = (CircleImageView) findViewById(R.id.navigationBtn);
+        mLinearLayout = (LinearLayout) findViewById(R.id.linearLayout);
         mTxtDetailTv = (TextView) findViewById(R.id.txtDetailTv);
-        linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-        scrollViewDetail = (ScrollView) findViewById(R.id.scrollViewDetail);
     }
 }
 

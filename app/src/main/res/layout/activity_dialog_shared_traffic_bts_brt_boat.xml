@@ -96,7 +96,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="45dp"
-        android:background="@drawable/a_code_button_blue_bold"
+        android:background="@drawable/btn_redius5_blue_bold"
         android:text="@string/shared_current"
         android:textColor="@color/white"
         android:textSize="18sp" />
@@ -105,7 +105,7 @@
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:text="__"
-        android:textColor="@color/colorHide" />
+        android:textColor="@color/transparent" />
 
 </LinearLayout>
 

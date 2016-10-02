@@ -146,12 +146,12 @@ public class DetailStation extends AppCompatActivity {
             case "BTS station":
                 adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.locationName, mBtsStaionMain);
                 mTempNum = 2;
-                mLists = new String[]{"สายสุขุมวิท", "สายสีลม", "ทั้งหมด"};
+                mLists = new String[]{"สายสุขุมวิท", "สายสีลม", "ทั้งหมด", "ยกเลิก"};
                 break;
             case "Boat station":
                 adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.locationName, mBoatStationMain);
                 mTempNum = 3;
-                mLists = new String[]{"สายนิด้า", "สายภูเขาทอง", "สายเจ้าพระยา", "ทั้งหมด"};
+                mLists = new String[]{"สายนิด้า", "สายภูเขาทอง", "สายเจ้าพระยา", "ทั้งหมด", "ยกเลิก"};
                 break;
             case "MRT station":
                 adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.locationName, mMrtStation);
@@ -197,20 +197,22 @@ public class DetailStation extends AppCompatActivity {
                 new AlertDialog.Builder(DetailStation.this).setItems(mLists, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBtsStaionLine1);
-                                break;
-                            case 1:
-                                adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBtsStaionLine2);
-                                break;
-                            case 2:
-                                adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBtsStaionMain);
-                                break;
+                        if (which != 3) {
+                            switch (which) {
+                                case 0:
+                                    adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBtsStaionLine1);
+                                    break;
+                                case 1:
+                                    adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBtsStaionLine2);
+                                    break;
+                                case 2:
+                                    adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBtsStaionMain);
+                                    break;
+                            }
+                            mListView.setAdapter(adapter);
+                            mListView.invalidateViews();
                         }
                         dialog.cancel();
-                        mListView.setAdapter(adapter);
-                        mListView.invalidateViews();
                     }
                 }).show();
                 break;
@@ -218,23 +220,25 @@ public class DetailStation extends AppCompatActivity {
                 new AlertDialog.Builder(DetailStation.this).setItems(mLists, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBoatStationLine1);
-                                break;
-                            case 1:
-                                adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBoatStationLine2);
-                                break;
-                            case 2:
-                                adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBoatStationLine3);
-                                break;
-                            case 3:
-                                adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBoatStationMain);
-                                break;
+                        if (which != 4) {
+                            switch (which) {
+                                case 0:
+                                    adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBoatStationLine1);
+                                    break;
+                                case 1:
+                                    adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBoatStationLine2);
+                                    break;
+                                case 2:
+                                    adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBoatStationLine3);
+                                    break;
+                                case 3:
+                                    adapter = new ArrayAdapter<String>(DetailStation.this, R.layout.list_item, R.id.locationName, mBoatStationMain);
+                                    break;
+                            }
+                            mListView.setAdapter(adapter);
+                            mListView.invalidateViews();
                         }
                         dialog.cancel();
-                        mListView.setAdapter(adapter);
-                        mListView.invalidateViews();
                     }
                 }).show();
                 break;

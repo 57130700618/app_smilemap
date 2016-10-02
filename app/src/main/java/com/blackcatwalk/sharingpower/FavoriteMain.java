@@ -204,9 +204,13 @@ public class FavoriteMain extends AppCompatActivity {
                 switch (which) {
                     case 0:
                         startActivity(new Intent(getApplicationContext(), DetailMap.class)
-                                .putExtra("latFavorite", mItem.getLat()).putExtra("lngFavorite", mItem.getLng())
-                                .putExtra("typeFavorite", mItem.getType()).putExtra("typeFavorite", mItem.getType())
-                                .putExtra("detailFavorite", mItem.getDetail()).putExtra("typeMoveMap", 9));
+                                .putExtra("latFavorite", mItem.getLat())
+                                .putExtra("lngFavorite", mItem.getLng())
+                                .putExtra("typeFavorite", mItem.getType())
+                                .putExtra("typeFavorite", mItem.getType())
+                                .putExtra("detailFavorite", mItem.getDetail())
+                                .putExtra("timeFavorite", mItem.getTime())
+                                .putExtra("typeMoveMap", 9));
                         break;
                     case 1:
                         showDialogEdit();
