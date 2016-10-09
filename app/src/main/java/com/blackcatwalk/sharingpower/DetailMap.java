@@ -60,6 +60,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.blackcatwalk.sharingpower.R.id.map;
+
 
 public class DetailMap extends AppCompatActivity {
 
@@ -78,7 +80,6 @@ public class DetailMap extends AppCompatActivity {
     private Marker makerStreet;
     private String distance;
     private String duration;
-    private String temp = null;
     private String markerName = null;
     private int mSelectType;
 
@@ -1241,6 +1242,8 @@ public class DetailMap extends AppCompatActivity {
 
     private void setupMapFavorite() {
 
+        mMap.setPadding(0, 400, 0, 0);
+
         markerName = "ตำแหน่งรายการโปรด";
 
         RelativeLayout googleStreetRy = (RelativeLayout) findViewById(R.id.googleStreetRy);
@@ -1477,11 +1480,10 @@ public class DetailMap extends AppCompatActivity {
         // Executed after the complete execution of doInBackground() method
         @Override
         protected void onPostExecute(String result) {
-            ParserTask parserTask = new ParserTask();
-
-            // Start parsing the Google places in JSON format
-            // Invokes the "doInBackground()" method of the class ParseTask
-            parserTask.execute(result);
+            if(result != null) {
+                ParserTask parserTask = new ParserTask();
+                parserTask.execute(result);
+            }
         }
     }
 
@@ -1749,13 +1751,18 @@ public class DetailMap extends AppCompatActivity {
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 
 
-            ArrayList<LatLng> points = null;
-            distance = "";
-            duration = "";
+            if (result == null) {
+                return;
+            }
 
             if (result.size() < 1) {
                 return;
             }
+
+
+            ArrayList<LatLng> points = null;
+            distance = "";
+            duration = "";
 
             // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
@@ -1825,7 +1832,7 @@ public class DetailMap extends AppCompatActivity {
         mBackIm = (ImageView) findViewById(R.id.backIm);
         mLabelTv = (TextView) findViewById(R.id.labelTv);
         mMainIm = (ImageView) findViewById(R.id.mainIm);
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(map);
         mSprPlaceType = (Spinner) findViewById(R.id.spinner);
         mCureentLocationBtn = (ImageView) findViewById(R.id.cureentLocationBtn);
         mNavigationBtn = (CircleImageView) findViewById(R.id.navigationBtn);

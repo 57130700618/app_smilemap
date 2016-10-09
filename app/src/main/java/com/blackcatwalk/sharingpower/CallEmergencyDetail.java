@@ -115,8 +115,8 @@ public class CallEmergencyDetail extends AppCompatActivity {
             mListCallEmergency.add(new CallEmergency("กรมเจ้าท่า, เหตุด่วนทางน้ำ","1199"));
             mListCallEmergency.add(new CallEmergency("สายด่วนตำรวจท่องเที่ยว","1155"));
             mListCallEmergency.add(new CallEmergency("สายด่วนทางหลวง","1586"));
-            mListCallEmergency.add(new CallEmergency("ับแจ้งอัคคีภัย สัตว์เข้าบ้าน","199"));
-            mListCallEmergency.add(new CallEmergency("ับแจ้งรถหาย, ถูกขโมย","1192"));
+            mListCallEmergency.add(new CallEmergency("รับแจ้งอัคคีภัย สัตว์เข้าบ้าน","199"));
+            mListCallEmergency.add(new CallEmergency("รับแจ้งรถหาย, ถูกขโมย","1192"));
             mListCallEmergency.add(new CallEmergency("ศูนย์เตือนภัยพิบัติแห่งชาติ","192"));
             mListCallEmergency.add(new CallEmergency("ศูนย์ควบคุมและสั่งการจราจร","1197"));
 
@@ -156,11 +156,13 @@ public class CallEmergencyDetail extends AppCompatActivity {
                             if (mGoogleApiClient != null) {
                                 mGoogleApiClient.connect();
                             }
+                            ControlProgress.hideDialog();
                         }
                     })
                     .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
                         public void onConnectionFailed(ConnectionResult connectionResult) {
+                            ControlProgress.hideDialog();
                             _controlCheckConnect.alertCurrentGps(CallEmergencyDetail.this);
                         }
                     })

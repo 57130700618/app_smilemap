@@ -96,7 +96,6 @@ public class RankMain extends AppCompatActivity {
         stausRank = mControlFile.getFile(getApplicationContext(),"stausRank");
 
         mControlDatabase.getDatabaseRankIdUser();
-        setData();
     }
 
     private void showDialogSequene(int _sequene) {
@@ -125,8 +124,9 @@ public class RankMain extends AppCompatActivity {
         mControlFile.setFile(getApplicationContext(), stausRank,"stausRank");
         mRankList = null;
         mRankList = new ArrayList<Rank>();
-        mAdapter = new RankCustomListAdapter(RankMain.this, mRankList);
+        mAdapter = new RankCustomListAdapter(RankMain.this, mRankList ,mIdUser);
         mListView.setAdapter(mAdapter);
+        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         mControlDatabase.getDatabaseRankMain();
     }

@@ -27,6 +27,7 @@ import com.blackcatwalk.sharingpower.LocationDetail;
 import com.blackcatwalk.sharingpower.LocationGps;
 import com.blackcatwalk.sharingpower.LoginMain;
 import com.blackcatwalk.sharingpower.LoginSub;
+import com.blackcatwalk.sharingpower.NearbyPlacesMain;
 import com.blackcatwalk.sharingpower.Profile;
 import com.blackcatwalk.sharingpower.ProfileSetting;
 import com.blackcatwalk.sharingpower.R;
@@ -46,6 +47,8 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ControlDatabase {
 
@@ -666,7 +669,7 @@ public class ControlDatabase {
         if (checkInternet()) {
 
             RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
-            StringRequest jor = new StringRequest(Request.Method.POST, mGetDatabase,
+            StringRequest jor = new StringRequest(Request.Method.POST, mSetDatabase,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -797,8 +800,9 @@ public class ControlDatabase {
 
             RequestQueue requestQueue = Volley.newRequestQueue(mActivity);
 
-            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, getMGetDatabase() +
-                    "users&sub=" + mUserName + "&ramdom=" + randomNumber(), null,
+            JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET,
+                    getMGetDatabase() + "users&sub=" + mUserName +
+                            "&ramdom=" + randomNumber(), null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -811,7 +815,7 @@ public class ControlDatabase {
 
                                     jsonObject = ja.getJSONObject(i);
 
-                                    ((Profile) mActivity).setProfile(jsonObject.getString("name"), jsonObject.getString("sex")
+                                    ((Profile) mActivity).setProfile(jsonObject.getString("url"),jsonObject.getString("name"), jsonObject.getString("sex")
                                             , jsonObject.getInt("count_traffic"), jsonObject.getInt("count_location"),
                                             jsonObject.getInt("point")
                                             , jsonObject.getString("staus"), jsonObject.getInt("sum_hour"));
@@ -1085,6 +1089,7 @@ public class ControlDatabase {
                                 JSONArray ja = response.getJSONArray("id_user");
 
                                 ((RankMain) mActivity).setmIdUser(ja.getJSONObject(0).getInt("id"));
+                                ((RankMain) mActivity).setData();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -1733,6 +1738,8 @@ public class ControlDatabase {
                                     ((TutorialLocation) mActivity).setPicture(_temp);
                                 }else if (_type.equals("pricebus")){
                                     ((TrafficDetail) mActivity).setPicture(_temp);
+                                }else if (_type.equals("nearby")) {
+                                    ((NearbyPlacesMain) mActivity).setPicture(_temp);
                                 }else{
                                     ((TutorialTraffic) mActivity).setPicture(_temp);
                                 }
@@ -1754,4 +1761,38 @@ public class ControlDatabase {
             requestQueue.add(jor);
         }
     }
+
+    public void setDatabaseProfileUploadPic(final String _pictureUrl) {
+
+        if (checkInternet()) {
+
+            RequestQueue _requestQueue = Volley.newRequestQueue(getApplicationContext());
+            StringRequest jor = new StringRequest(Request.Method.POST, getMSetDatabase(),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            ControlProgress.hideDialog();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            ((Profile) mActivity).alertDialogNotSuccess();
+                            ControlProgress.hideDialog();
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("main", "insert_url_picture_profile");
+                    params.put("username", mUserName);
+                    params.put("picture", _pictureUrl);
+                    return params;
+                }
+            };
+            jor.setShouldCache(false);
+            _requestQueue.add(jor);
+        }
+    }
+
 }

@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -34,7 +33,7 @@ import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.customAdapter.CustomSpinnerBusLocattionNerbyMenu;
 import com.blackcatwalk.sharingpower.customAdapter.LocationGpsCustomSpinnerAdapter;
-import com.blackcatwalk.sharingpower.google.JsonParserDirections;
+import com.blackcatwalk.sharingpower.google.GoogleMapCalculateDistanceDuration;
 import com.blackcatwalk.sharingpower.utility.Control;
 import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
@@ -70,18 +69,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -93,6 +85,7 @@ public class LocationGps extends AppCompatActivity {
     private ControlCheckConnect mControlCheckConnect;
     private ControlDatabase mControlDatabae;
     private ControlFile mControlFile;
+    private GoogleMapCalculateDistanceDuration mGoogleMapCalculateDistanceDuration;
 
     // ------------------- Google_Map ---------------------//
     private GoogleMap mMap;
@@ -115,6 +108,8 @@ public class LocationGps extends AppCompatActivity {
     private Spinner spinner;
     private ImageView mSettingIm;
     private ImageView userManualIm;
+    private ImageView mZoomInIm;
+    private ImageView mZoomOutIm;
 
     // ------------------- Database -----------------------//
     private String type = "restroom";
@@ -140,6 +135,7 @@ public class LocationGps extends AppCompatActivity {
         mControlCheckConnect = new ControlCheckConnect();
         mControlDatabae = new ControlDatabase(this);
         mControlFile = new ControlFile();
+        mGoogleMapCalculateDistanceDuration = new GoogleMapCalculateDistanceDuration(this,0);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -379,6 +375,8 @@ public class LocationGps extends AppCompatActivity {
                 mMap.getUiSettings().setCompassEnabled(false);
                 mMap.setTrafficEnabled(true);
 
+                mMap.setPadding(0,250,0,0);
+
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
                         if (!marker.getTitle().equals("ตำแหน่งปัจจุบัน")) {
@@ -391,7 +389,7 @@ public class LocationGps extends AppCompatActivity {
                             ControlProgress.showProgressDialogDonTouch(LocationGps.this);
                             mSelectedMaker = marker;
 
-                            new DownloadTask().execute(getDirectionsUrl(mCurrentLocation, marker.getPosition()));
+                            mGoogleMapCalculateDistanceDuration.getDuration(mCurrentLocation,marker.getPosition());
 
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
                                     new CameraPosition.Builder().target(marker.getPosition()).zoom(mCurrentZoom).tilt(30).build()));
@@ -434,7 +432,7 @@ public class LocationGps extends AppCompatActivity {
                             mCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
                             if (mSelectedMaker == null) {
-                                moveAnimateCamera(mCurrentLocation);
+                                moveAnimateCamera();
                                 getDatabase();
                             }
                         }
@@ -497,21 +495,43 @@ public class LocationGps extends AppCompatActivity {
         btnCureentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCurrentLocation != null) {
                     mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                     if (mLastLocation != null) {
                         mCurrentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                        moveAnimateCamera();
+                    } else {
+                        mControlCheckConnect.alertCurrentGps(LocationGps.this);
                     }
-
-                    moveAnimateCamera(mCurrentLocation);
-                } else {
-                    mControlCheckConnect.alertCurrentGps(LocationGps.this);
-                    if (mGoogleApiClient != null) {
-                        mGoogleApiClient.connect();
-                    }
-                }
             }
         });
+
+        mZoomInIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zoomMap(1);
+            }
+        });
+
+        mZoomOutIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zoomMap(0);
+            }
+        });
+    }
+
+    private void zoomMap(int typeZoom) {
+        if(mMap != null){
+            switch (typeZoom){
+                case 0:
+                    mMap.animateCamera(CameraUpdateFactory.zoomOut());
+                    break;
+                case 1:
+                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
+                    break;
+            }
+            mCurrentZoom = mMap.getCameraPosition().zoom;
+        }
     }
 
     private void setSpinnerMenu() {
@@ -704,8 +724,8 @@ public class LocationGps extends AppCompatActivity {
         mMap.addMarker(mMarker);
     }
 
-    public void moveAnimateCamera(LatLng latLung) {
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLung).zoom(14).tilt(30).build();
+    public void moveAnimateCamera() {
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mCurrentLocation).zoom(14).tilt(30).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
@@ -734,7 +754,7 @@ public class LocationGps extends AppCompatActivity {
     }
 
     public void setMap() {
-        moveAnimateCamera(mCurrentLocation);
+        moveAnimateCamera();
         spinner.setSelection(++mSelectTypeLocation);
         adapter.notifyDataSetChanged();
         mSelectTypeLocation--;
@@ -742,180 +762,13 @@ public class LocationGps extends AppCompatActivity {
         selectImage();
     }
 
-// -------------------- Get Duration , Distance ---------------------------//
-
-    // Fetches data from url passed
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-
-        // Downloading data in non-ui thread
-        @Override
-        protected String doInBackground(String... url) {
-
-            // For storing data from web service
-            String data = "";
-
-            try {
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-            } catch (Exception e) {
-            }
-            return data;
-        }
-
-        // Executes in UI thread, after the execution of
-        // doInBackground()
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-        }
+    public void showDuration(String duration) {
+        mDuration = duration;
+        mSelectedMaker.showInfoWindow();
+        ControlProgress.hideDialog();
     }
-
-    /**
-     * A class to parse the Google Places in JSON format
-     */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
-
-            try {
-                jObject = new JSONObject(jsonData[0]);
-                JsonParserDirections parser = new JsonParserDirections();
-
-                // Starts parsing data
-                routes = parser.parse(jObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            mDuration = "";
-
-            if (result.size() < 1) {
-                return;
-            }
-
-            // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
-
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
-
-                    if (j == 0) {    // Get distance from the list
-                        //distance = (String) point.get("distance");
-                        continue;
-                    } else if (j == 1) { // Get mDuration from the list
-                        mDuration = (String) point.get("duration");
-                        continue;
-                    }
-                }
-
-                int a = mDuration.length();
-                if (a > 7) {
-                    int b;
-                    String temp = "";
-
-                    b = mDuration.indexOf("r");
-                    temp = mDuration.substring(b + 2, a - 4);
-
-                    b = mDuration.indexOf("h");
-                    b = b - 1;
-                    mDuration = mDuration.substring(0, b);
-                    mDuration = mDuration + " ชม. ";
-
-                    mDuration = mDuration + temp + "น.";
-                } else {
-                    a -= 4;
-                    mDuration = mDuration.substring(0, a);
-                    mDuration = mDuration + "นาที";
-                }
-                mSelectedMaker.showInfoWindow();
-                ControlProgress.hideDialog();
-            }
-        }
-
-    }
-
-    public String getDirectionsUrl(LatLng origin, LatLng dest) {
-
-        // Origin of route
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-
-        // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-
-        // Sensor enabled
-        String sensor = "sensor=false";
-
-        // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor;
-
-        // Output format
-        String output = "json";
-
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-        return url;
-    }
-
-    public String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try {
-            URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
-            urlConnection.connect();
-
-            // Reading data from url
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb = new StringBuffer();
-
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            data = sb.toString();
-
-            br.close();
-
-        } catch (Exception e) {
-            // Log.bus_spinner_bts_gray("Exception while downloading url", e.toString());
-        } finally {
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
-    }
-
 
     //  ------------------  User Interface -----------------//
-
 
     private void sharedLocation() {
         final Dialog dialog = new Dialog(LocationGps.this);
@@ -1275,6 +1128,8 @@ public class LocationGps extends AppCompatActivity {
         btnShared = (CircleImageView) findViewById(R.id.btnShared);
         btnCureentLocation = (ImageView) findViewById(R.id.btnCureentLocation);
         spinner = (Spinner) findViewById(R.id.spinner);
+        mZoomInIm = (ImageView) findViewById(R.id.zoomInIm);
+        mZoomOutIm = (ImageView) findViewById(R.id.zoomOutIm);
     }
 }
 

@@ -160,12 +160,12 @@ public class LocationDetail extends AppCompatActivity {
         }
 
         if (mDetail.length() > 0) {
-            mDetailLocationTv.setText("รายละเอียด: " + mDetail);
-        } else {
-            mDetailLocationTv.setText("รายละเอียด: -");
+            mDetailLocationTv.setText(mDetail);
+        }else {
+            mDetailLocationTv.setVisibility(View.GONE);
         }
 
-        addressTv.setText("ที่อยู่: " + GoogleMapAddress.getAddress(this, mLat, mLng));
+        addressTv.setText(GoogleMapAddress.getAddress(this, mLat, mLng));
 
         int _tempIndexString = mDistance.indexOf(" ");
 
@@ -259,7 +259,7 @@ public class LocationDetail extends AppCompatActivity {
         Button btnSend = (Button) _dialog.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(_editText.getText().toString().length() >1) {
+                if(_editText.getText().length() >1) {
                     mControlDatabase.setReportDatabaseLocationDetail(String.valueOf(mLat).toString(),
                             String.valueOf(mLng).toString(), _editText.getText().toString());
                     _dialog.cancel();

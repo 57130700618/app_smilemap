@@ -303,8 +303,8 @@ public class PlaceDetailsActivity extends Activity {
 
             String name = hPlaceDetails.get("name");
             //String vicinity = hPlaceDetails.get("vicinity");
-            mLat = hPlaceDetails.get("mLat");
-            mLng = hPlaceDetails.get("mLng");
+            mLat = hPlaceDetails.get("lat");
+            mLng = hPlaceDetails.get("lng");
             String formatted_address = hPlaceDetails.get("formatted_address");
             String formatted_phone = hPlaceDetails.get("formatted_phone");
             //String website = hPlaceDetails.get("website");

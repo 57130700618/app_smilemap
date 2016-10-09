@@ -115,23 +115,42 @@
             android:background="@color/white"
             android:cacheColorHint="#00000000"
             android:paddingBottom="20dp"
+            android:paddingTop="10dp"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"
             android:divider="@null"
             android:scrollbars="none" />
 
-        <Button
-            android:id="@+id/sequeneUserBtn"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_alignBottom="@+id/listview"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="40dp"
             android:background="@color/m12"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="อันดับของฉัน"
-            android:textColor="@color/white" />
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginRight="7dp"
+                android:src="@drawable/icon_search"/>
+
+            <Button
+                android:id="@+id/sequeneUserBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@color/m12"
+                android:paddingRight="20dp"
+                android:text="อันดับของฉัน"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+
+
 
     </RelativeLayout>
 

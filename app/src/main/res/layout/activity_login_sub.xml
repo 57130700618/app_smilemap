@@ -110,7 +110,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignTop="@+id/passwordEt"
                     android:layout_marginRight="3dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="7dp"
                     android:padding="5dp"
                     android:src="@drawable/icon_hiden_password"
                     android:visibility="invisible" />

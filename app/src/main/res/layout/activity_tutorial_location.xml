@@ -61,7 +61,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="คุณสามารถรับหรือแชร์ตำแหน่งสถานที่สำคัญๆในการดำรงชีวิตประจำวัน และเก็บข้อมูลสถานที่ไว้ในรายการโปรดของคุณได้"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="แชร์ตำแหน่ง"
+                android:layout_marginTop="30dp"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 

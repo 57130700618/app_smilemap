@@ -2,8 +2,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -23,8 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
-                android:padding="10dp"
                 android:layout_marginLeft="10dp"
+                android:padding="10dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/label_main_20sp" />
 
@@ -33,9 +33,9 @@
                 android:layout_width="43dp"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
                 android:layout_toStartOf="@+id/userManualIm"
                 android:padding="10dp"
-                android:layout_marginRight="5dp"
                 android:src="@drawable/icon_refresh" />
 
             <ImageView
@@ -56,7 +56,6 @@
                 android:layout_toStartOf="@+id/main"
                 android:padding="10dp"
                 android:src="@drawable/icon_user_manual" />
-
 
         </RelativeLayout>
 
@@ -89,17 +88,42 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:background="@color/line_gray"
-                android:padding="1dp"/>
+                android:padding="1dp" />
 
-            <ImageView
-                android:id="@+id/btnCureentLocation"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/btn_redius5_bluegray"
-                android:padding="12dp"
-                android:src="@drawable/icon_current_location" />
+                android:gravity="right"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/btnCureentLocation"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_redius5_bluegray"
+                    android:padding="12dp"
+                    android:src="@drawable/icon_current_location" />
+
+                <ImageView
+                    android:id="@+id/zoomInIm"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/icon_zoom_in" />
+
+
+                <ImageView
+                    android:id="@+id/zoomOutIm"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/icon_zoom_out" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -125,16 +149,6 @@
             android:layout_marginLeft="20dp"
             android:src="@drawable/icon_shared_1"
             android:visibility="gone" />
-
-
-        <ImageView
-            android:id="@+id/home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/map"
-            android:layout_alignLeft="@+id/map"
-            android:layout_marginBottom="35dp"
-            android:layout_marginLeft="35dp" />
 
     </RelativeLayout>
 

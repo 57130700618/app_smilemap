@@ -29,9 +29,9 @@ public class MainActivity extends TabActivity {
         int _size;
 
         if (_sizeInInches >= 9.5) {
-            _size = 135;
+            _size = 70;
         } else if (_sizeInInches >= 6.5) {
-            _size = 95;
+            _size = 60;
         } else {
             _size = 55;
         }

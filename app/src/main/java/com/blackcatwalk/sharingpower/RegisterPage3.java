@@ -7,19 +7,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.blackcatwalk.sharingpower.utility.ControlFile;
-
 public class RegisterPage3 extends AppCompatActivity {
+
+    private String mPassword = "";
+    private String mHidePassword = "";
+    private String mEmail = "";
 
     // -------------- User Interface ------------------//
     private TextView mEmailTv;
     private TextView mPasswordTv;
     private Button mLoginBtn;
-
-    // ---------------- Data Preview -----------------//
-    private String mPassword = "";
-    private String mHidePassword = "";
-    private String mEmail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +24,17 @@ public class RegisterPage3 extends AppCompatActivity {
         setContentView(R.layout.activity_register_page3);
 
         bindWidget();
+        getBundle();
+        setUpEventWigget();
+    }
 
-        Bundle bundle = getIntent().getExtras();
-        mPassword = bundle.getString("password");
-        mEmail = bundle.getString("email");
+    private void getBundle() {
+        Bundle _bundle = getIntent().getExtras();
+        mPassword = _bundle.getString("password");
+        mEmail = _bundle.getString("email");
+    }
 
+    private void setUpEventWigget() {
         mEmailTv.setText(mEmail);
 
         for (int i = 1; i <= mPassword.length(); i++) {
@@ -42,15 +45,8 @@ public class RegisterPage3 extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ControlFile _controlFile = new ControlFile();
-
-                _controlFile.setFile(RegisterPage3.this, mEmail, "userName");
-                _controlFile.setFile(RegisterPage3.this, "1", "stausLogin");
-
                 startActivity(new Intent(getApplicationContext(), MainActivity.class).
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                finish();
             }
         });
     }

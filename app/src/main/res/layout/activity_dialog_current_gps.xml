@@ -12,76 +12,84 @@
         android:gravity="center_horizontal"
         android:padding="10dp">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ระบุตำแหน่งปัจจุบันไม่ได้"
-                android:textColor="@color/white"
-                android:textSize="@dimen/label_sub_20sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ระบุตำแหน่งปัจจุบันไม่ได้"
+            android:textColor="@color/white"
+            android:textSize="@dimen/label_sub_20sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/label_gps" />
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="ตรวจสอบให้แน่ใจว่าท่านไม่ได้"
-        android:textColor="@color/gray"
-        android:textSize="18sp" />
+        android:orientation="vertical"
+        android:padding="10dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:gravity="center"
-        android:text="อยู่จุดอับสัญญาณ หรือ ไม่ได้ปิด GPS"
-        android:textColor="@color/gray"
-        android:textSize="18sp" />
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/label_gps" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="เมนู > ตั้งค่า > บริการระบุตำแหน่ง(ที่ตั้ง) > เปิดการเชื่อมต่อ GPS(โหมดแม่นยำสูง)"
-        android:textColor="@color/gray"
-        android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="ตรวจสอบให้แน่ใจว่าท่านไม่ได้"
+            android:textColor="@color/gray"
+            android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btnClose"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/btn_redius5_blue_bold"
-        android:imeOptions="actionDone"
-        android:singleLine="true"
-        android:text="ตกลง"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:text="อยู่จุดอับสัญญาณ หรือ ไม่ได้ปิด GPS"
+            android:textColor="@color/gray"
+            android:textSize="16sp" />
 
-    <TextView
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="_"
-        android:textColor="@color/transparent" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="เมนู > ตั้งค่า > บริการระบุตำแหน่ง(ที่ตั้ง) > เปิดการเชื่อมต่อ GPS(โหมดแม่นยำสูง)"
+            android:textColor="@color/gray"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/btn_redius5_blue_bold"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:text="ตกลง"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="_"
+            android:textColor="@color/transparent" />
+
+    </LinearLayout>
 
 </LinearLayout>

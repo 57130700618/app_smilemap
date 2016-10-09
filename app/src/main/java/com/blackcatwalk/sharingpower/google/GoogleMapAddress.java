@@ -11,7 +11,9 @@ import java.util.Locale;
 public class GoogleMapAddress {
 
     public static String getAddress(Context context,double lat,double lng){
-        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
+
+        Geocoder geocoder = new Geocoder(context, new Locale("th"));
 
         if(lat != 0 && lng !=0){
             try {

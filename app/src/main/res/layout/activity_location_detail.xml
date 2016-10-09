@@ -263,18 +263,34 @@
                         android:background="@color/light_gray" />
 
                     <TextView
-                        android:id="@+id/detailLocationTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
                         android:textColor="@color/gray"
+                        android:text="รายละเอียด"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/detailLocationTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray"
                         android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/gray"
+                        android:text="ที่อยู่"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/addressTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
                         android:textColor="@color/gray"
                         android:textSize="17sp" />
 

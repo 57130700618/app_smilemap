@@ -19,124 +19,125 @@ import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Control extends AppCompatActivity{
+public class Control extends AppCompatActivity {
 
-        public void closeApp(Context _context) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(_context);
-            builder.setMessage("ปิดปรับปรุงระบบ 30นาที เพื่ออัพเดทเวอร์ชั่นใหม่");
-            builder.setCancelable(false);
-            builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                   finish();
-                    dialog.cancel();
-                }
-            });
-
-            AlertDialog alert = builder.create();
-            alert.show();
-            Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-            pbutton.setTextColor(Color.parseColor("#147cce"));
-            pbutton.setTypeface(null, Typeface.BOLD);
-        }
-
-
-        //---------------------- md5 ----------------------//
-
-        public String md5(final String s) {
-            final String MD5 = "MD5";
-            try {
-                // Create MD5 Hash
-                MessageDigest digest = java.security.MessageDigest
-                        .getInstance(MD5);
-                digest.update(s.getBytes());
-                byte messageDigest[] = digest.digest();
-
-                // Create Hex String
-                StringBuilder hexString = new StringBuilder();
-                for (byte aMessageDigest : messageDigest) {
-                    String h = Integer.toHexString(0xFF & aMessageDigest);
-                    while (h.length() < 2)
-                        h = "0" + h;
-                    hexString.append(h);
-                }
-                return hexString.toString();
-
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+    public void closeApp(Context _context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setMessage("ปิดปรับปรุงระบบ 30นาที เพื่ออัพเดทเวอร์ชั่นใหม่");
+        builder.setCancelable(false);
+        builder.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                System.exit(0);
+                dialog.cancel();
             }
-            return "";
-        }
+        });
 
-        //---------------------- get Version App ----------------------//
+        AlertDialog alert = builder.create();
+        alert.show();
+        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(Color.parseColor("#147cce"));
+        pbutton.setTypeface(null, Typeface.BOLD);
+    }
 
-        public String getVersionApp(Activity activity) {
-            PackageManager manager = activity.getPackageManager();
-            PackageInfo info = null;
-            try {
-                info = manager.getPackageInfo(
-                        activity.getPackageName(), 0);
-                return info.versionName;
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+
+    //---------------------- md5 ----------------------//
+
+    public String md5(final String s) {
+        final String MD5 = "MD5";
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
             }
-            return "";
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
+        return "";
+    }
 
-        //---------------------- goto googleplay ----------------------//
+    //---------------------- get Version App ----------------------//
 
-        public void openGooglePlay(Activity activity, String choice) {
-
-            String appPackageName = null;
-            if (choice.equals("ads")) {
-                appPackageName = activity.getPackageName(); // getPackageName() from Context or Activity object
-            } else {
-                appPackageName = "com.blackcatwalk.smilemap_noads";
-            }
-            try {
-                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-            } catch (android.content.ActivityNotFoundException anfe) {
-                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-            }
+    public String getVersionApp(Activity activity) {
+        PackageManager manager = activity.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(
+                    activity.getPackageName(), 0);
+            return info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
+        return "";
+    }
 
-        //---------------------- get size screen ----------------------//
+    //---------------------- goto googleplay ----------------------//
 
-        public double getSizeScrren(Activity activity) {
-            DisplayMetrics metrics = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            float widthInInches = metrics.widthPixels / metrics.xdpi;
-            float heightInInches = metrics.heightPixels / metrics.ydpi;
+    public void openGooglePlay(Activity activity, String choice) {
 
-            double sizeInInches = Math.sqrt(Math.pow(widthInInches, 2) + Math.pow(heightInInches, 2));
-
-            return sizeInInches;
+        String appPackageName = null;
+        if (choice.equals("ads")) {
+            appPackageName = activity.getPackageName(); // getPackageName() from Context or Activity object
+        } else {
+            appPackageName = "com.blackcatwalk.smilemap_noads";
         }
-
-
-        //---------------------- Clear cache ----------------------//
-
-        public void clearCache(Context context) {
-            try {
-                File dir = context.getCacheDir();
-                if (dir != null && dir.isDirectory()) {
-                    deleteDir(dir);
-                }
-            } catch (Exception e) {
-            }
+        try {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
 
-        public boolean deleteDir(File dir) {
+    //---------------------- get size screen ----------------------//
+
+    public double getSizeScrren(Activity activity) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        float widthInInches = metrics.widthPixels / metrics.xdpi;
+        float heightInInches = metrics.heightPixels / metrics.ydpi;
+
+        double sizeInInches = Math.sqrt(Math.pow(widthInInches, 2) + Math.pow(heightInInches, 2));
+
+        return sizeInInches;
+    }
+
+
+    //---------------------- Clear cache ----------------------//
+
+    public void clearCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
             if (dir != null && dir.isDirectory()) {
-                String[] children = dir.list();
-                for (int i = 0; i < children.length; i++) {
-                    boolean success = deleteDir(new File(dir, children[i]));
-                    if (!success) {
-                        return false;
-                    }
+                deleteDir(dir);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
                 }
             }
-            return dir.delete();
         }
+        return dir.delete();
+    }
 
 }
 

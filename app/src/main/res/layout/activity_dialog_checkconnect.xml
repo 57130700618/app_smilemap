@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/txtDetailSetting"
@@ -54,7 +54,7 @@
             android:gravity="center"
             android:text="เมนู > ตั้งค่า > บริการระบุตำแหน่ง(ที่ตั้ง) > เปิดการเชื่อมต่อ GPS(โหมดแม่นยำสูง)"
             android:textColor="@color/gray"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:visibility="gone" />
 
         <Button

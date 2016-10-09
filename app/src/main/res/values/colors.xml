@@ -3,6 +3,7 @@
 
     <color name="transparent">#00ffffff</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="light_gray">#efecec</color>
     <color name="line_gray">#cecbcb</color>
     <color name="dark_soft">#b4222222</color>
@@ -38,6 +39,7 @@
     <color name="m12">#F4511E</color>
     <color name="m13">#00ACC1</color>
     <color name="m14">#388E3C</color>
+    <color name="m15">#a1cbfd</color>
 
 
 

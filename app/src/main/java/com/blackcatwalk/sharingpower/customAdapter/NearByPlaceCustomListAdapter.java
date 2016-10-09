@@ -9,15 +9,20 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.R;
+import com.bumptech.glide.Glide;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.blackcatwalk.sharingpower.R.id.tempthumbnail;
 
 
 public class NearByPlaceCustomListAdapter extends BaseAdapter {
 
     Context mContext;
     String[] mName;
-    int[] mPicture;
+    String[] mPicture;
 
-    public NearByPlaceCustomListAdapter(Context _context, String[] _name, int[] _picture) {
+    public NearByPlaceCustomListAdapter(Context _context, String[] _name, String[] _picture) {
         this.mContext= _context;
         this.mName = _name;
         this.mPicture = _picture;
@@ -45,9 +50,10 @@ public class NearByPlaceCustomListAdapter extends BaseAdapter {
         TextView name = (TextView) _view.findViewById(R.id.name);
         name.setText(mName[_position]);
 
-        de.hdodenhof.circleimageview.CircleImageView tempthumbnail = (de.hdodenhof.circleimageview.CircleImageView) _view.findViewById(R.id.tempthumbnail);
-        tempthumbnail.setImageResource(mPicture[_position]);
+        CircleImageView _tempthumbnail = (CircleImageView) _view.findViewById(tempthumbnail);
 
+        Glide.with(mContext).load(mPicture[_position]).asBitmap().placeholder(R.drawable.loading)
+                .error(R.drawable.error).centerCrop().into(_tempthumbnail);
         return _view;
     }
 }

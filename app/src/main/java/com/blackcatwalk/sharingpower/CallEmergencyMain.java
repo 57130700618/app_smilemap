@@ -88,9 +88,11 @@ public class CallEmergencyMain extends AppCompatActivity {
         Button _btnSend = (Button) _dialog.findViewById(R.id.btnSend);
         _btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ControlDatabase _controlDatabae = new ControlDatabase(CallEmergencyMain.this);
-                _controlDatabae.reportGeneral(_editText.getText().toString(),"nearby_call");
-                _dialog.cancel();
+                if(_editText.getText().length() > 1){
+                    ControlDatabase _controlDatabae = new ControlDatabase(CallEmergencyMain.this);
+                    _controlDatabae.reportGeneral(_editText.getText().toString(),"nearby_call");
+                    _dialog.cancel();
+                }
             }
         });
         _dialog.show();

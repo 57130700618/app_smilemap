@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.blackcatwalk.sharingpower.customAdapter.NearByPlaceCustomListAdapter;
+import com.blackcatwalk.sharingpower.utility.ControlDatabase;
 
 
 public class NearbyPlacesMain extends AppCompatActivity {
@@ -33,19 +34,6 @@ public class NearbyPlacesMain extends AppCompatActivity {
             }
         });
 
-        int[] resId = {R.drawable.nearby_1
-                , R.drawable.nearby_2
-                , R.drawable.nearby_3
-                , R.drawable.nearby_4
-                , R.drawable.nearby_5
-                , R.drawable.nearby_6};
-
-        String[] list = {"BTS station", "MRT station"
-                , "Airport Rail Link", "BRT station", "Boat station", "Temples"};
-
-        mAdpter = new NearByPlaceCustomListAdapter(getApplicationContext(), list, resId);
-
-        mListView.setAdapter(mAdpter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DetailStation.class);
@@ -72,6 +60,17 @@ public class NearbyPlacesMain extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        new ControlDatabase(this).getDatabaeTutorial("nearby");
+    }
+
+
+    public void setPicture(String[] _url) {
+        String[] list = {"BTS station", "MRT station"
+                , "Airport Rail Link", "BRT station", "Boat station", "Temples"};
+
+        mAdpter = new NearByPlaceCustomListAdapter(getApplicationContext(), list, _url);
+        mListView.setAdapter(mAdpter);
     }
 
     private void bindWidget() {

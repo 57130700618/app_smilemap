@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.utility.Control;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
+import com.blackcatwalk.sharingpower.utility.ControlFile;
 
 public class RegisterPage2 extends AppCompatActivity {
 
@@ -155,6 +156,12 @@ public class RegisterPage2 extends AppCompatActivity {
     }
 
     public void sendData() {
+
+        ControlFile _controlFile = new ControlFile();
+
+        _controlFile.setFile(this, mEmail, "userName");
+        _controlFile.setFile(this, "1", "stausLogin");
+
         Intent login = new Intent(getApplicationContext(), RegisterPage3.class);
         login.putExtra("email", mEmail);
         login.putExtra("password", mTempPassword);

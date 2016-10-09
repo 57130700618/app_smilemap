@@ -252,7 +252,7 @@ public class LocationCommentMain extends AppCompatActivity {
                 }
             }).show();
         }
-        _alertDialog.getWindow().setLayout(400, 550);
+        _alertDialog.getWindow().setLayout(500, 550);
 
         Window window = _alertDialog.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
@@ -340,7 +340,7 @@ public class LocationCommentMain extends AppCompatActivity {
         Button _btnSend = (Button) _dialog.findViewById(R.id.btnSend);
         _btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(_editText.getText().toString().length() > 1){
+                if(_editText.getText().length() > 1){
                     new ControlDatabase(LocationCommentMain.this).reportComment( String.valueOf(mIdUser),
                             String.valueOf(_userIdComment) ,String.valueOf(mLat), String.valueOf(mLng),
                             mType, _editText.getText().toString());

@@ -197,6 +197,8 @@ public class RegisterPage1 extends AppCompatActivity {
             builder.setMessage(R.string.general_text_9);
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    mLayoutSc.scrollTo(0,0);
+                    dialog.dismiss();
                 }
             });
             AlertDialog alert = builder.create();

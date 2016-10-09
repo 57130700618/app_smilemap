@@ -6,11 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.R;
 import com.blackcatwalk.sharingpower.Rank;
+import com.blackcatwalk.sharingpower.RankMain;
 
 import java.util.List;
 
@@ -18,13 +18,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RankCustomListAdapter extends BaseAdapter {
 
+    private int mIdUser;
     private LayoutInflater mInflater;
     private Activity mActivity;
     private List<Rank> mItems;
 
-    public RankCustomListAdapter(Activity _activity, List<Rank> _items) {
+    public RankCustomListAdapter(Activity _activity, List<Rank> _items ,int _stausRank) {
         this.mActivity = _activity;
         this.mItems = _items;
+        this.mIdUser = _stausRank;
     }
 
     @Override
@@ -63,6 +65,15 @@ public class RankCustomListAdapter extends BaseAdapter {
         _name.setText(_item.getmName());
         _point.setText(_item.getmPoint() + " แต้ม");
         _amountTime.setText(_item.getmSumHour() + " ชั่วโมง");
+
+
+
+        if( ((RankMain) mActivity).mIdUserSequene[_position] == mIdUser){
+            _convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.m15));
+        }else{
+            _convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+        }
+
 
        /* if(item.getPicture().length() > 0){
            Glide.with(activity).load(item.getPicture()).into(tempthumbnail);

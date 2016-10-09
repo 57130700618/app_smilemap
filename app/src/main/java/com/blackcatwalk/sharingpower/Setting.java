@@ -349,13 +349,15 @@ public class Setting extends AppCompatActivity {
             }
         });
 
-        final EditText editText = (EditText) _dialog.findViewById(R.id.editText);
+        final EditText _editText = (EditText) _dialog.findViewById(R.id.editText);
 
         Button btnSend = (Button) _dialog.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new ControlDatabase(Setting.this).reportGeneral(editText.getText().toString(),"recommend");
-                _dialog.cancel();
+                if(_editText.getText().length() >1) {
+                    new ControlDatabase(Setting.this).reportGeneral(_editText.getText().toString(), "recommend");
+                    _dialog.cancel();
+                }
             }
         });
         _dialog.show();

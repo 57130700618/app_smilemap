@@ -2,16 +2,13 @@ package com.blackcatwalk.sharingpower;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +35,7 @@ import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.customAdapter.BusGpsCustomSpinnerAdapter;
 import com.blackcatwalk.sharingpower.customAdapter.CustomSpinnerBusLocattionNerbyMenu;
-import com.blackcatwalk.sharingpower.google.JsonParserDirections;
+import com.blackcatwalk.sharingpower.google.GoogleMapCalculateDistanceDuration;
 import com.blackcatwalk.sharingpower.utility.Control;
 import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
 import com.blackcatwalk.sharingpower.utility.ControlDatabase;
@@ -76,15 +73,6 @@ import com.google.maps.android.ui.IconGenerator;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BusGps extends AppCompatActivity implements LocationListener {
@@ -112,6 +100,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
     private ControlDatabase mControlDatabae;
     private ControlCheckConnect mControlCheckConnect;
     private ControlFile mControlFile;
+    private GoogleMapCalculateDistanceDuration mGoogleMapCalculateDistanceDuration;
 
     private StringBuilder mStringBuilder = new StringBuilder();
 
@@ -138,10 +127,13 @@ public class BusGps extends AppCompatActivity implements LocationListener {
     private CircleImageView mSharedBusIm;
     private CircleImageView mStopSharedIm;
     private ImageView mCureentLocationIm;
+    private ImageView mZoomInIm;
+    private ImageView mZoomOutIm;
     private SupportMapFragment mMapFragment;
 
     private boolean mCheckBtnSharedBus = false;    // true = show button navigator
     private int mSelectTraffic = 0;     // 0=bus, 1=brt, 2=bts, 3=boat, 4=checkpoint, 5=accident, 6=public
+
 
     @SuppressWarnings({"MissingPermission"})
     @Override
@@ -154,6 +146,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         mControlDatabae = new ControlDatabase(this);
         mControlCheckConnect = new ControlCheckConnect();
         mControlFile = new ControlFile();
+        mGoogleMapCalculateDistanceDuration = new GoogleMapCalculateDistanceDuration(this, 1);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
@@ -425,7 +418,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
             public void onClick(View v) {
                 if (mCurrentLatitude != 0 && mCurrentLongitude != 0) {
                     getDatabase();
-                }else {
+                } else {
                     mControlCheckConnect.alertCurrentGps(BusGps.this);
                 }
             }
@@ -475,6 +468,34 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                 }
             }
         });
+
+        mZoomInIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zoomMap(1);
+            }
+        });
+
+        mZoomOutIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zoomMap(0);
+            }
+        });
+    }
+
+    private void zoomMap(int typeZoom) {
+        if (mMap != null) {
+            switch (typeZoom) {
+                case 0:
+                    mMap.animateCamera(CameraUpdateFactory.zoomOut());
+                    break;
+                case 1:
+                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
+                    break;
+            }
+            mCurrentZoom = mMap.getCameraPosition().zoom;
+        }
     }
 
     private void setSpinnerMenu() {
@@ -561,6 +582,8 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                 mMap.getUiSettings().setCompassEnabled(false);
                 mMap.setTrafficEnabled(true);
 
+                mMap.setPadding(0,250,0,0);
+
                 mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
 
@@ -568,7 +591,9 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                             mClickMaker = marker;
 
                             ControlProgress.showProgressDialogDonTouch(BusGps.this);
-                            new DownloadTask().execute(getDirectionsUrl(marker.getPosition()));
+
+                            mGoogleMapCalculateDistanceDuration.
+                                    getDuration(new LatLng(mCurrentLatitude, mCurrentLongitude), marker.getPosition());
 
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
                                     .target(marker.getPosition()).zoom(mCurrentZoom).tilt(30).build()));
@@ -606,6 +631,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
                     public View getInfoWindow(Marker marker) {
                         return setUpInfoWindow();
                     }
+
                     @Override
                     public View getInfoContents(Marker marker) {
                         return null;
@@ -670,7 +696,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
-    public void onLocationChanged(Location _location)  {
+    public void onLocationChanged(Location _location) {
         mCurrentLatitude = _location.getLatitude();
         mCurrentLongitude = _location.getLongitude();
         getDatabase();
@@ -763,7 +789,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
 
     private void moveAnimateCamera() {
         CameraPosition _cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(mCurrentLatitude,mCurrentLongitude)).zoom(14).tilt(30).build();
+                .target(new LatLng(mCurrentLatitude, mCurrentLongitude)).zoom(14).tilt(30).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(_cameraPosition));
     }
 
@@ -1214,7 +1240,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
             @Override
             public void onClick(View v) {
                 mBusNo = _autoComplete.getText().toString();
-                sharedBus(_full,"รถปรับอากาศ", _dialogBusShared, _dialogSharedMain);
+                sharedBus(_full, "รถปรับอากาศ", _dialogBusShared, _dialogSharedMain);
 
             }
         });
@@ -1224,7 +1250,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
             @Override
             public void onClick(View v) {
                 mBusNo = _autoComplete.getText().toString();
-                sharedBus(_full,"รถธรรมดา", _dialogBusShared, _dialogSharedMain);
+                sharedBus(_full, "รถธรรมดา", _dialogBusShared, _dialogSharedMain);
             }
         });
         _dialogBusShared.show();
@@ -1855,7 +1881,7 @@ public class BusGps extends AppCompatActivity implements LocationListener {
 
     public void stopShared() {
         if (!mBusType.equals("bts") && !mBusType.equals("public")) {
-            final String[] lists = {"แก้ไขจำนวนผู้โดยสาร", "ยกเลิกการแชร์" ,"ปิดหน้าต่าง"};
+            final String[] lists = {"แก้ไขจำนวนผู้โดยสาร", "ยกเลิกการแชร์", "ปิดหน้าต่าง"};
             new AlertDialog.Builder(BusGps.this).setTitle("กำลังแชร์ตำแหน่งการจราจรอยู่").setItems(lists, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -2044,6 +2070,12 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         _builder.show();
     }
 
+    public void showDuration(String _duration) {
+        mDuration = _duration;
+        mClickMaker.showInfoWindow();
+        ControlProgress.hideDialog();
+    }
+
     //--------------------------------------------------------------------------------------------------
 
     private void bindWidget() {
@@ -2056,181 +2088,8 @@ public class BusGps extends AppCompatActivity implements LocationListener {
         mSharedBusIm = (CircleImageView) findViewById(R.id.btnShared);
         mStopSharedIm = (CircleImageView) findViewById(R.id.btnStopShared);
         mCureentLocationIm = (ImageView) findViewById(R.id.btnCureentLocation);
-    }
-
-    // ****************************************************************************************************
-    // **************************        Get Duration , Distance         **********************************
-    // ****************************************************************************************************
-
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-
-        // Downloading data in non-ui thread
-        @Override
-        protected String doInBackground(String... url) {
-
-            // For storing data from web service
-            String data = "";
-
-            try {
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-            } catch (Exception e) {
-            }
-            return data;
-        }
-
-        // Executes in UI thread, after the execution of
-        // doInBackground()
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-        }
-    }
-
-    public String getDirectionsUrl(LatLng dest) {
-
-        // Origin of route
-        String str_origin = "origin=" + mCurrentLatitude + "," + mCurrentLongitude;
-
-        // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-
-        // Sensor enabled
-        String sensor = "sensor=false";
-
-        // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor;
-
-        // Output format
-        String output = "json";
-
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-        return url;
-    }
-
-    public String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try {
-            URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
-            urlConnection.connect();
-
-            // Reading data from url
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb = new StringBuffer();
-
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            data = sb.toString();
-
-            br.close();
-
-        } catch (Exception e) {
-            // Log.bus_spinner_bts_gray("Exception while downloading url", e.toString());
-        } finally {
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
-    }
-
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
-
-            try {
-                jObject = new JSONObject(jsonData[0]);
-                JsonParserDirections parser = new JsonParserDirections();
-
-                // Starts parsing data
-                routes = parser.parse(jObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-
-            //mDistance = "";
-            mDuration = "";
-
-            if (result.size() < 1) {
-                return;
-            }
-            // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
-
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
-
-                    if (j == 0) {    // Get mDistance from the list
-                        // mDistance = (String) point.get("mDistance");
-                        continue;
-                    } else if (j == 1) { // Get duration from the list
-                        mDuration = (String) point.get("duration");
-                        break;
-                    }
-                }
-                //int a = mDistance.length();
-                //a -= 2;
-                //mDistance = mDistance.substring(0, a);
-                //mDistance = mDistance + "กม.";
-
-                int a = mDuration.length();
-                if (a > 7) {
-                    int b;
-                    String temp = "";
-
-                    b = mDuration.indexOf("r");
-                    temp = mDuration.substring(b + 2, a - 4);
-
-                    b = mDuration.indexOf("h");
-                    b = b - 1;
-                    mDuration = mDuration.substring(0, b);
-                    mDuration = mDuration + " ชม. ";
-
-                    mDuration = mDuration + temp + "น.";
-                } else {
-                    a -= 4;
-                    mDuration = mDuration.substring(0, a);
-                    mDuration = mDuration + " นาที";
-                }
-
-                mClickMaker.showInfoWindow();
-                ControlProgress.hideDialog();
-            }
-        }
+        mZoomInIm = (ImageView) findViewById(R.id.zoomInIm);
+        mZoomOutIm = (ImageView) findViewById(R.id.zoomOutIm);
     }
 }
 

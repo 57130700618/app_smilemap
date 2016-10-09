@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.blackcatwalk.sharingpower.utility.ControlCheckConnect;
@@ -54,6 +55,7 @@ public class LoginMain extends AppCompatActivity {
     private Button mLoginSmileMapBtn;
     private LoginButton mTempLoginFacebookBtn;
     private TextView mAnimationTxt;
+    private ScrollView mLayoutSc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,7 +241,10 @@ public class LoginMain extends AppCompatActivity {
         Nammu.askForPermission(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION,
                 android.Manifest.permission.CALL_PHONE,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+
         }, new PermissionCallback() {
             @Override
             public void permissionGranted() {
@@ -292,6 +297,9 @@ public class LoginMain extends AppCompatActivity {
         mLoginSmileMapBtn = (Button) findViewById(R.id.loginSmileMapBtn);
         mLoginFacebookBtn = (Button) findViewById(R.id.loginFacebookBtn);
         mTempLoginFacebookBtn = (LoginButton) findViewById(R.id.tempLoginFacebookBtn);
+        mLayoutSc = (ScrollView) findViewById(R.id.layoutSc);
+        mLayoutSc.setVerticalScrollBarEnabled(false);
+        mLayoutSc.setHorizontalScrollBarEnabled(false);
     }
 }
 
